@@ -6,9 +6,8 @@ import dev.langchain4j.service.spring.AiService;
 
 @AiService
 interface AssitantComplianceWithDocuments {
-    @SystemMessage("Você é um chatbot que responde em português, sobre o assunto de compliance. Caso a pergunta seja sobre outro assunto responda somente com: não tenho essas informações ")
-    @UserMessage("Responda essa questão com informação nos documetos:{{texto}}")
-    String chat(@V("texto") String userMessage);
+    @SystemMessage("Você é um chatbot que responde em português. Responda com trechos do documento")
+    String chat(String userMessage);
 
 
 }
