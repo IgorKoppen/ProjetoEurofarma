@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(value={"/chatbot"})
 public class CompliaceChatBotController {
 
-
     ChatBotEuroData chatBotEuroData;
     ChatBotCompliance chatBotCompliance;
 

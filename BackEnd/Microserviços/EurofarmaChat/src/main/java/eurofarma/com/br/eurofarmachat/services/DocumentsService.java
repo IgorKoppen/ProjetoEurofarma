@@ -6,6 +6,7 @@ import dev.langchain4j.data.document.parser.apache.tika.ApacheTikaDocumentParser
 import dev.langchain4j.data.document.splitter.DocumentSplitters;
 import dev.langchain4j.data.embedding.Embedding;
 import dev.langchain4j.data.segment.TextSegment;
+import dev.langchain4j.model.Tokenizer;
 import dev.langchain4j.model.embedding.AllMiniLmL6V2EmbeddingModel;
 import dev.langchain4j.model.embedding.EmbeddingModel;
 import dev.langchain4j.store.embedding.EmbeddingStore;
@@ -69,7 +70,7 @@ public class DocumentsService implements FileStorage {
         EmbeddingModel embeddingModel = new AllMiniLmL6V2EmbeddingModel();
         Path path = GetPath.toPath(("/documents/" + filename), this.getClass());
         Document document = loadDocument(path,  new ApacheTikaDocumentParser());
-        DocumentSplitter splitter = DocumentSplitters.recursive(250, 0);
+        DocumentSplitter splitter = DocumentSplitters.recursive(500, 30);
         List<TextSegment> segments = splitter.split(document);
         List<Embedding> embedding = embeddingModel.embedAll(segments).content();
         textSegmentEmbeddingStore.addAll(embedding, segments);

@@ -9,8 +9,8 @@ public class EmbeddingStoreContentRetrieverFactory {
         return EmbeddingStoreContentRetriever.builder()
                 .embeddingModel(new AllMiniLmL6V2EmbeddingModel())
                 .embeddingStore(new EmbeddingStoreFactory().embeddingStore(index))
-                .maxResults(8)
                 .minScore(0.7)
+                .maxResults(20)
                 .build();
     }
 }

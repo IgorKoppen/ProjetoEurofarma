@@ -12,7 +12,7 @@ public class ContentAggregatorFactory {
         ScoringModel scoringModel = CohereScoringModel.withApiKey("J3of50dKfqI5o0LMRdPTsuqgr2LJFJ1PriyAdklJ");
         return ReRankingContentAggregator.builder()
                 .scoringModel(scoringModel)
-                .minScore(0.8)
+                .minScore(0.7)
                 .build();
     }
 }
