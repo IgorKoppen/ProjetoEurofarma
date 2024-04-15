@@ -2,7 +2,7 @@ package eurofarma.com.br.eurofarmachat.services;
 
 import dev.langchain4j.data.document.Document;
 import dev.langchain4j.data.document.DocumentSplitter;
-import dev.langchain4j.data.document.parser.apache.pdfbox.ApachePdfBoxDocumentParser;
+import dev.langchain4j.data.document.parser.apache.tika.ApacheTikaDocumentParser;
 import dev.langchain4j.data.document.splitter.DocumentSplitters;
 import dev.langchain4j.data.embedding.Embedding;
 import dev.langchain4j.data.segment.TextSegment;
@@ -27,23 +27,10 @@ public class DocumentsService implements FileStorage {
 
     private final Path root = GetPath.toPath("/documents/", this.getClass());
 
-    private void vectorSave(String filename,String vectorIndex) {
-        EmbeddingStoreFactory embeddingStoreFactory = new EmbeddingStoreFactory();
-        EmbeddingStore<TextSegment> textSegmentEmbeddingStore = embeddingStoreFactory.embeddingStore(vectorIndex);
-        EmbeddingModel embeddingModel = new AllMiniLmL6V2EmbeddingModel();
-        Path path = GetPath.toPath(("/documents/" + filename), this.getClass());
-        Document document = loadDocument(path, new ApachePdfBoxDocumentParser());
-        DocumentSplitter splitter = DocumentSplitters.recursive(195, 0);
-        List<TextSegment> segments = splitter.split(document);
-        List<Embedding> embedding = embeddingModel.embedAll(segments).content();
-        textSegmentEmbeddingStore.addAll(embedding, segments);
-    }
-
     @Override
     public void saveToChatCompliance(MultipartFile file) {
         try{
             file.transferTo(root.resolve(Objects.requireNonNull(file.getOriginalFilename())));
-            vectorSave(file.getOriginalFilename(),"eurocompliance");
         } catch (FileAlreadyExistsException e) {
             throw new RuntimeException("A file of that name already exists.");
         } catch (IOException e) {
@@ -57,7 +44,6 @@ public class DocumentsService implements FileStorage {
     public void saveToChatEuroData(MultipartFile file) {
         try{
             file.transferTo(root.resolve(Objects.requireNonNull(file.getOriginalFilename())));
-            vectorSave(file.getOriginalFilename(),"eurobot");
         } catch (FileAlreadyExistsException e) {
             throw new RuntimeException("A file of that name already exists.");
         } catch (IOException e) {
@@ -75,5 +61,17 @@ public class DocumentsService implements FileStorage {
     @Override
     public void loadToChatEuroData(String fileName) {
         vectorSave(fileName,"eurobot");
+    }
+
+    private void vectorSave(String filename,String vectorIndex) {
+        EmbeddingStoreFactory embeddingStoreFactory = new EmbeddingStoreFactory();
+        EmbeddingStore<TextSegment> textSegmentEmbeddingStore = embeddingStoreFactory.embeddingStore(vectorIndex);
+        EmbeddingModel embeddingModel = new AllMiniLmL6V2EmbeddingModel();
+        Path path = GetPath.toPath(("/documents/" + filename), this.getClass());
+        Document document = loadDocument(path,  new ApacheTikaDocumentParser());
+        DocumentSplitter splitter = DocumentSplitters.recursive(250, 0);
+        List<TextSegment> segments = splitter.split(document);
+        List<Embedding> embedding = embeddingModel.embedAll(segments).content();
+        textSegmentEmbeddingStore.addAll(embedding, segments);
     }
 }
