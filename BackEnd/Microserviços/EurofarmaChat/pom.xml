@@ -73,7 +73,12 @@
         <dependency>
             <groupId>dev.langchain4j</groupId>
             <artifactId>langchain4j-document-parser-apache-pdfbox</artifactId>
-            <version>0.25.0</version>
+            <version>${langchain4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>dev.langchain4j</groupId>
+            <artifactId>langchain4j-embeddings-bge-small-en-v15-q</artifactId>
+            <version>${langchain4j.version}</version>
         </dependency>
     </dependencies>
 
