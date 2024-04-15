@@ -2,8 +2,10 @@ package eurofarma.com.br.eurofarmachat.services.chatbot.Implements;
 import dev.langchain4j.model.chat.ChatLanguageModel;
 import dev.langchain4j.rag.content.retriever.EmbeddingStoreContentRetriever;
 import dev.langchain4j.service.AiServices;
+import eurofarma.com.br.eurofarmachat.factorys.embeddingStoreContentRetrieverFactory;
 import eurofarma.com.br.eurofarmachat.services.chatbot.AiChat;
 import eurofarma.com.br.eurofarmachat.services.chatbot.AiChatCompliance;
+import eurofarma.com.br.eurofarmachat.services.chatbot.AichatEuroFarma;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -12,11 +14,12 @@ public class ChatBotCompliance implements AiChat {
     private final AiChat aiChatCompliance;
     private final ChatLanguageModel ollama;
 
-    public ChatBotCompliance(ChatLanguageModel chatLanguageModel, EmbeddingStoreContentRetriever contentRetriever){
+    public ChatBotCompliance(ChatLanguageModel chatLanguageModel){
         this.ollama = chatLanguageModel;
-        this.aiChatCompliance = AiServices.builder(AiChatCompliance.class)
+        embeddingStoreContentRetrieverFactory embeddingStoreFactory = new embeddingStoreContentRetrieverFactory();
+        this.aiChatCompliance = AiServices.builder(AichatEuroFarma.class)
                 .chatLanguageModel(chatLanguageModel)
-                .contentRetriever(contentRetriever).build();
+                .contentRetriever(embeddingStoreFactory.embeddingStoreContentRetriever("eurocompliance")).build();
     }
     @Override
     public String chat(String pergunta) {

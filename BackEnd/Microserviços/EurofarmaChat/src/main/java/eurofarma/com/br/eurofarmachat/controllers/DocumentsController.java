@@ -20,22 +20,35 @@ public class DocumentsController {
         this.documentsService = documentsService;
     }
 
-    @PostMapping
-    public ResponseEntity<String> uploadDocs(@RequestParam("file") MultipartFile file) {
+    @PostMapping("/uploadDocsToCompliance")
+    public ResponseEntity<String> uploadDocsToCompliance(@RequestParam("file") MultipartFile file) {
 
         if(file.isEmpty()) {
             return new ResponseEntity<>("Uploaded file is empty", HttpStatus.BAD_REQUEST);
         }
-        documentsService.save(file);
-
+        documentsService.saveToChatCompliance(file);
+        return new ResponseEntity<>("Upload Completo", HttpStatus.OK);
+    }
+    
+    @PostMapping("/uploadDocsToEuroData")
+    public ResponseEntity<String> uploadDocsToEuroData(@RequestParam("file") MultipartFile file) {
+        if(file.isEmpty()) {
+            return new ResponseEntity<>("Uploaded file is empty", HttpStatus.BAD_REQUEST);
+        }
+        documentsService.saveToChatEuroData(file);
         return new ResponseEntity<>("Upload Completo", HttpStatus.OK);
     }
 
-    @GetMapping
-    public ResponseEntity<String> loadDocs(@RequestParam("file") MultipartFile file) {
+    
+    @GetMapping("/loadDocsToCompliace")
+    public ResponseEntity<String> loadDocsToCompliace(@RequestParam("file") MultipartFile file) {
+        documentsService.loadToChatCompliance(file.getOriginalFilename());
+        return new ResponseEntity<>("Upload Completo", HttpStatus.OK);
+    }
 
-        documentsService.load(file);
-
+    @GetMapping("/loadDocsToEuroData")
+    public ResponseEntity<String> loadDocsToEuroData(@RequestParam("file") MultipartFile file) {
+        documentsService.loadToChatEuroData(file.getOriginalFilename());
         return new ResponseEntity<>("Upload Completo", HttpStatus.OK);
     }
 }

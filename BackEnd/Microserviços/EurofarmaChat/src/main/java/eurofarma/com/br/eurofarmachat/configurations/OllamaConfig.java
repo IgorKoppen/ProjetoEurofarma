@@ -9,7 +9,7 @@ public class OllamaConfig {
 
     @Bean
     public ChatLanguageModel chatLanguageModel() {
-        return OllamaChatModel.builder().modelName("llama2").baseUrl("http://localhost:11434").temperature(0.3).build();
+        return OllamaChatModel.builder().modelName("llama2").baseUrl("http://localhost:11434").temperature(0.2).build();
     }
 
 }
