@@ -1,0 +1,9 @@
+package eurofarma.com.br.eurofarmachat.services.chatbot;
+import dev.langchain4j.service.SystemMessage;
+import dev.langchain4j.service.spring.AiService;
+
+@AiService
+public interface AiChatCompliance extends AiChat {
+    @SystemMessage("Você é um chatbot de compliance da Eurofarma, você responde apenas em português.")
+    String chat(String userMessage);
+}

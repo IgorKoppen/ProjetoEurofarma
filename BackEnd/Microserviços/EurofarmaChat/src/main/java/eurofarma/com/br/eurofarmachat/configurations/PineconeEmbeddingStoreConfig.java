@@ -5,6 +5,7 @@ import dev.langchain4j.model.embedding.EmbeddingModel;
 import dev.langchain4j.rag.content.retriever.EmbeddingStoreContentRetriever;
 import dev.langchain4j.store.embedding.EmbeddingStore;
 import dev.langchain4j.store.embedding.pinecone.PineconeEmbeddingStore;
+import io.pinecone.PineconeClientConfig;
 import jakarta.annotation.PreDestroy;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -26,7 +27,6 @@ public class PineconeEmbeddingStoreConfig {
     @Value("${pinecone.apikey}")
     private String apikey;
 
-    private PineconeEmbeddingStore store;
 
 
     @Bean
@@ -45,13 +45,12 @@ public class PineconeEmbeddingStoreConfig {
 
     @Bean
     public EmbeddingStore<TextSegment> embeddingStore() {
-        this.store = PineconeEmbeddingStore.builder()
+       return PineconeEmbeddingStore.builder()
                 .apiKey(apikey)
                 .environment(environment)
                 .projectId(projectId)
                 .index(index)
                 .build();
-        return this.store;
     }
 
 }

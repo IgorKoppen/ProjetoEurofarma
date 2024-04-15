@@ -1,7 +1,8 @@
 package eurofarma.com.br.eurofarmachat.controllers;
 
 
-import eurofarma.com.br.eurofarmachat.services.CompliaceChatBotService;
+import eurofarma.com.br.eurofarmachat.services.chatbot.Implements.ChatBotCompliance;
+import eurofarma.com.br.eurofarmachat.services.chatbot.Implements.ChatBotEuroData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -9,19 +10,25 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping(value={"/compliaceChatBot"})
+@RequestMapping(value={"/chatbot"})
 public class CompliaceChatBotController {
 
 
-    CompliaceChatBotService compliaceChatBotService;
+    ChatBotEuroData chatBotEuroData;
+    ChatBotCompliance chatBotCompliance;
 
     @Autowired
-    CompliaceChatBotController(CompliaceChatBotService compliaceChatBotService){
-        this.compliaceChatBotService = compliaceChatBotService;
+    public CompliaceChatBotController(ChatBotEuroData chatBotEuroData, ChatBotCompliance chatBotCompliance) {
+        this.chatBotEuroData = chatBotEuroData;
+        this.chatBotCompliance = chatBotCompliance;
     }
 
-    @GetMapping
-    public String model(@RequestParam(value = "message", defaultValue = "Olá") String message) {
-        return compliaceChatBotService.chat(message);
+    @GetMapping("/chatBotCompliance")
+    public String chatWithEuroCompliance(@RequestParam(value = "message", defaultValue = "Olá") String message) {
+        return chatBotCompliance.chat(message);
+    }
+    @GetMapping("/chatBotEuroData")
+    public String chatWithEuroData(@RequestParam(value = "message", defaultValue = "Olá") String message) {
+        return chatBotEuroData.chat(message);
     }
 }
