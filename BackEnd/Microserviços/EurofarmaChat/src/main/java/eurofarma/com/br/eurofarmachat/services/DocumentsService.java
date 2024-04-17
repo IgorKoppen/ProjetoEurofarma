@@ -20,8 +20,6 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-
-import static dev.langchain4j.data.document.Metadata.metadata;
 import static dev.langchain4j.data.document.loader.FileSystemDocumentLoader.*;
 
 @Service
@@ -68,11 +66,10 @@ public class DocumentsService implements FileStorage {
     private void vectorSave(String filename,String vectorIndex) {
         EmbeddingStoreFactory embeddingStoreFactory = new EmbeddingStoreFactory();
         EmbeddingStore<TextSegment> textSegmentEmbeddingStore = embeddingStoreFactory.embeddingStore(vectorIndex);
-
         EmbeddingModel embeddingModel = new AllMiniLmL6V2EmbeddingModel();
         Path path = GetPath.toPath(("/documents/" + filename), this.getClass());
         Document document = loadDocument(path,  new ApacheTikaDocumentParser());
-        DocumentSplitter splitter = DocumentSplitters.recursive(450, 30);
+        DocumentSplitter splitter = DocumentSplitters.recursive(350, 30);
         List<TextSegment> segments = splitter.split(document);
         List<TextSegment> segmentsWithMetadata = new ArrayList<>();
         for (TextSegment textSegment : segments) {
@@ -85,5 +82,9 @@ public class DocumentsService implements FileStorage {
         textSegmentEmbeddingStore.addAll(embedding,segmentsWithMetadata);
     }
     private void vectorDeleter(String filename,String vectorIndex) {
+
+
+
+
     }
 }

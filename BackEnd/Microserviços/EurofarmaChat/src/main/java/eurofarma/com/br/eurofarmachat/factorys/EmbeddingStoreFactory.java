@@ -1,11 +1,9 @@
 package eurofarma.com.br.eurofarmachat.factorys;
-import dev.langchain4j.data.segment.TextSegment;
-import dev.langchain4j.store.embedding.EmbeddingStore;
 import eurofarma.com.br.eurofarmachat.services.PineconeEmbeddingStoreCustomMetadata;
 
 public class EmbeddingStoreFactory {
 
-    public EmbeddingStore<TextSegment> embeddingStore(String index) {
+    public PineconeEmbeddingStoreCustomMetadata embeddingStore(String index) {
         return PineconeEmbeddingStoreCustomMetadata.builder()
                 .apiKey("a0d185f6-a92e-4d14-ac9f-c7d018fe5309")
                 .environment("aped-4627-b74a")

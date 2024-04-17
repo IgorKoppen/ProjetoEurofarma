@@ -8,6 +8,7 @@ class EurofarmaChatApplicationTests {
 
     @Test
     void contextLoads() {
+
     }
 
 }

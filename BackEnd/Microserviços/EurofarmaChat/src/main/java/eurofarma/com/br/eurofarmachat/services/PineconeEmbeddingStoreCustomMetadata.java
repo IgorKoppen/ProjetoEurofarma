@@ -9,7 +9,6 @@ import dev.langchain4j.store.embedding.CosineSimilarity;
 import dev.langchain4j.store.embedding.EmbeddingMatch;
 import dev.langchain4j.store.embedding.EmbeddingStore;
 import dev.langchain4j.store.embedding.RelevanceScore;
-import dev.langchain4j.store.embedding.pinecone.PineconeEmbeddingStore;
 import io.pinecone.PineconeClient;
 import io.pinecone.PineconeClientConfig;
 import io.pinecone.PineconeConnection;
@@ -69,7 +68,7 @@ public class PineconeEmbeddingStoreCustomMetadata implements EmbeddingStore<Text
         List<String> ids = (List)embeddings.stream().map((ignored) -> {
             return Utils.randomUUID();
         }).collect(Collectors.toList());
-      //  this.addAllInternal(ids, embeddings, textSegments);
+        this.addAllInternal(ids, embeddings, textSegments);
         return ids;
     }
 
@@ -79,18 +78,16 @@ public class PineconeEmbeddingStoreCustomMetadata implements EmbeddingStore<Text
 
     private void addAllInternal(List<String> ids, List<Embedding> embeddings, List<TextSegment> textSegments) {
         UpsertRequest.Builder upsertRequestBuilder = UpsertRequest.newBuilder().setNamespace(this.nameSpace);
-
         for(int i = 0; i < embeddings.size(); ++i) {
             String id = (String)ids.get(i);
             Embedding embedding = (Embedding)embeddings.get(i);
             Vector.Builder vectorBuilder = Vector.newBuilder().setId(id).addAllValues(embedding.vectorAsList());
             Struct struct = Struct.newBuilder().putFields(this.metadataTextKey, Value.newBuilder().setStringValue(((TextSegment) textSegments.get(i)).text()).build())
-                    .putFields("File", Value.newBuilder().setStringValue(textSegments.get(i).metadata("filename")).build())
+                    .putFields("RelatedFile", Value.newBuilder().setStringValue(textSegments.get(i).metadata("filename")).build())
                     .build();
             vectorBuilder.setMetadata(struct);
             upsertRequestBuilder.addVectors(vectorBuilder.build());
         }
-
         this.connection.getBlockingStub().upsert(upsertRequestBuilder.build());
     }
 
@@ -163,8 +160,8 @@ public class PineconeEmbeddingStoreCustomMetadata implements EmbeddingStore<Text
             return this;
         }
 
-        public PineconeEmbeddingStore build() {
-            return new PineconeEmbeddingStore(this.apiKey, this.environment, this.projectId, this.index, this.nameSpace, this.metadataTextKey);
+        public PineconeEmbeddingStoreCustomMetadata build() {
+            return new PineconeEmbeddingStoreCustomMetadata(this.apiKey, this.environment, this.projectId, this.index, this.nameSpace, this.metadataTextKey);
         }
     }
 }
