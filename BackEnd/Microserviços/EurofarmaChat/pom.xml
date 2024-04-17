@@ -80,6 +80,11 @@
             <artifactId>langchain4j-document-parser-apache-tika</artifactId>
             <version>${langchain4j.version}</version>
         </dependency>
+        <dependency>
+            <groupId>io.pinecone</groupId>
+            <artifactId>pinecone-client</artifactId>
+            <version>1.0.0</version>
+        </dependency>
     </dependencies>
 
     <build>

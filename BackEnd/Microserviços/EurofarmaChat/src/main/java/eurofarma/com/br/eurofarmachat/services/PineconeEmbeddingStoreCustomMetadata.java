@@ -9,33 +9,25 @@ import dev.langchain4j.store.embedding.CosineSimilarity;
 import dev.langchain4j.store.embedding.EmbeddingMatch;
 import dev.langchain4j.store.embedding.EmbeddingStore;
 import dev.langchain4j.store.embedding.RelevanceScore;
-import io.pinecone.PineconeClient;
-import io.pinecone.PineconeClientConfig;
-import io.pinecone.PineconeConnection;
-import io.pinecone.PineconeConnectionConfig;
-import io.pinecone.proto.FetchRequest;
-import io.pinecone.proto.QueryRequest;
-import io.pinecone.proto.ScoredVector;
-import io.pinecone.proto.UpsertRequest;
+import io.pinecone.clients.Index;
+import io.pinecone.clients.Pinecone;
 import io.pinecone.proto.Vector;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import io.pinecone.unsigned_indices_model.QueryResponseWithUnsignedIndices;
+import io.pinecone.unsigned_indices_model.ScoredVectorWithUnsignedIndices;
+
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class PineconeEmbeddingStoreCustomMetadata implements EmbeddingStore<TextSegment> {
     private static final String DEFAULT_NAMESPACE = "default";
     private static final String DEFAULT_METADATA_TEXT_KEY = "text_segment";
-    private final PineconeConnection connection;
+    private final Index connection;
     private final String nameSpace;
     private final String metadataTextKey;
 
-    public PineconeEmbeddingStoreCustomMetadata(String apiKey, String environment, String projectId, String index, String nameSpace, String metadataTextKey) {
-        PineconeClientConfig configuration = (new PineconeClientConfig()).withApiKey(apiKey).withEnvironment(environment).withProjectName(projectId);
-        PineconeClient pineconeClient = new PineconeClient(configuration);
-        PineconeConnectionConfig connectionConfig = (new PineconeConnectionConfig()).withIndexName(index);
-        this.connection = pineconeClient.connect(connectionConfig);
+    public PineconeEmbeddingStoreCustomMetadata(String apiKey, String index, String nameSpace, String metadataTextKey) {
+        Pinecone pc = new Pinecone.Builder(apiKey).build();
+        this.connection = pc.getIndexConnection(index);
         this.nameSpace = nameSpace == null ? "default" : nameSpace;
         this.metadataTextKey = metadataTextKey == null ? "text_segment" : metadataTextKey;
     }
@@ -57,15 +49,15 @@ public class PineconeEmbeddingStoreCustomMetadata implements EmbeddingStore<Text
     }
 
     public List<String> addAll(List<Embedding> embeddings) {
-        List<String> ids = (List)embeddings.stream().map((ignored) -> {
+        List<String> ids = embeddings.stream().map((ignored) -> {
             return Utils.randomUUID();
         }).collect(Collectors.toList());
-        this.addAllInternal(ids, embeddings, (List)null);
+        this.addAllInternal(ids, embeddings, null);
         return ids;
     }
 
     public List<String> addAll(List<Embedding> embeddings, List<TextSegment> textSegments) {
-        List<String> ids = (List)embeddings.stream().map((ignored) -> {
+        List<String> ids = embeddings.stream().map((ignored) -> {
             return Utils.randomUUID();
         }).collect(Collectors.toList());
         this.addAllInternal(ids, embeddings, textSegments);
@@ -77,28 +69,24 @@ public class PineconeEmbeddingStoreCustomMetadata implements EmbeddingStore<Text
     }
 
     private void addAllInternal(List<String> ids, List<Embedding> embeddings, List<TextSegment> textSegments) {
-        UpsertRequest.Builder upsertRequestBuilder = UpsertRequest.newBuilder().setNamespace(this.nameSpace);
         for(int i = 0; i < embeddings.size(); ++i) {
-            String id = (String)ids.get(i);
-            Embedding embedding = (Embedding)embeddings.get(i);
-            Vector.Builder vectorBuilder = Vector.newBuilder().setId(id).addAllValues(embedding.vectorAsList());
-            Struct struct = Struct.newBuilder().putFields(this.metadataTextKey, Value.newBuilder().setStringValue(((TextSegment) textSegments.get(i)).text()).build())
+            String id = ids.get(i);
+            Embedding embedding = embeddings.get(i);
+            Struct struct = Struct.newBuilder().putFields(this.metadataTextKey, Value.newBuilder().setStringValue((textSegments.get(i)).text()).build())
                     .putFields("RelatedFile", Value.newBuilder().setStringValue(textSegments.get(i).metadata("filename")).build())
                     .build();
-            vectorBuilder.setMetadata(struct);
-            upsertRequestBuilder.addVectors(vectorBuilder.build());
+          this.connection.upsert(id,embedding.vectorAsList(),null,null,struct,this.nameSpace);
         }
-        this.connection.getBlockingStub().upsert(upsertRequestBuilder.build());
     }
 
     public List<EmbeddingMatch<TextSegment>> findRelevant(Embedding referenceEmbedding, int maxResults, double minScore) {
-        QueryRequest queryRequest = QueryRequest.newBuilder().addAllVector(referenceEmbedding.vectorAsList()).setNamespace(this.nameSpace).setTopK(maxResults).build();
-        List<String> matchedVectorIds = (List)this.connection.getBlockingStub().query(queryRequest).getMatchesList().stream().map(ScoredVector::getId).collect(Collectors.toList());
+        QueryResponseWithUnsignedIndices query = this.connection.query(maxResults, referenceEmbedding.vectorAsList(), null, null, null, this.nameSpace, null, true, true);
+        List<String> matchedVectorIds = query.getMatchesList().stream().map(ScoredVectorWithUnsignedIndices::getId).collect(Collectors.toList());
         if (matchedVectorIds.isEmpty()) {
             return Collections.emptyList();
         } else {
-            Collection<Vector> matchedVectors = this.connection.getBlockingStub().fetch(FetchRequest.newBuilder().addAllIds(matchedVectorIds).setNamespace(this.nameSpace).build()).getVectorsMap().values();
-            List<EmbeddingMatch<TextSegment>> matches = (List)matchedVectors.stream().map((vector) -> {
+            Collection<Vector> matchedVectors = this.connection.fetch(matchedVectorIds,this.nameSpace).getVectorsMap().values();
+            List<EmbeddingMatch<TextSegment>> matches = matchedVectors.stream().map((vector) -> {
                 return this.toEmbeddingMatch(vector, referenceEmbedding);
             }).filter((match) -> {
                 return match.score() >= minScore;
@@ -121,8 +109,7 @@ public class PineconeEmbeddingStoreCustomMetadata implements EmbeddingStore<Text
 
     public static class Builder {
         private String apiKey;
-        private String environment;
-        private String projectId;
+
         private String index;
         private String nameSpace;
         private String metadataTextKey;
@@ -132,16 +119,6 @@ public class PineconeEmbeddingStoreCustomMetadata implements EmbeddingStore<Text
 
         public Builder apiKey(String apiKey) {
             this.apiKey = apiKey;
-            return this;
-        }
-
-        public Builder environment(String environment) {
-            this.environment = environment;
-            return this;
-        }
-
-        public Builder projectId(String projectId) {
-            this.projectId = projectId;
             return this;
         }
 
@@ -161,7 +138,7 @@ public class PineconeEmbeddingStoreCustomMetadata implements EmbeddingStore<Text
         }
 
         public PineconeEmbeddingStoreCustomMetadata build() {
-            return new PineconeEmbeddingStoreCustomMetadata(this.apiKey, this.environment, this.projectId, this.index, this.nameSpace, this.metadataTextKey);
+            return new PineconeEmbeddingStoreCustomMetadata(this.apiKey, this.index, this.nameSpace, this.metadataTextKey);
         }
     }
 }
