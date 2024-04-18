@@ -1,7 +1,6 @@
-package eurofarma.com.br.eurofarmachat.factorys;
-import eurofarma.com.br.eurofarmachat.services.PineconeEmbeddingStoreCustomMetadata;
+package eurofarma.com.br.eurofarmachat.models;
 
-public class EmbeddingStoreFactory {
+public class EmbeddingStore {
 
     public PineconeEmbeddingStoreCustomMetadata embeddingStore(String index) {
         return PineconeEmbeddingStoreCustomMetadata.builder()

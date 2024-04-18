@@ -1,19 +1,16 @@
-package eurofarma.com.br.eurofarmachat.services.chatbot.Implements;
+package eurofarma.com.br.eurofarmachat.models.chatbot.Implements;
 import dev.langchain4j.service.AiServices;
-import eurofarma.com.br.eurofarmachat.services.ChatLanguageModelSingleton;
-import eurofarma.com.br.eurofarmachat.factorys.EmbeddingStoreContentRetrieverFactory;
-import eurofarma.com.br.eurofarmachat.factorys.RetrievalAugmentorFactory;
-import eurofarma.com.br.eurofarmachat.services.chatbot.AiChat;
-import eurofarma.com.br.eurofarmachat.services.chatbot.AiChatCompliance;
-import org.springframework.stereotype.Service;
+import eurofarma.com.br.eurofarmachat.models.ChatLanguageModelSingleton;
+import eurofarma.com.br.eurofarmachat.models.EmbeddingStoreContentRetriever;
+import eurofarma.com.br.eurofarmachat.models.RetrievalAugmentor;
+import eurofarma.com.br.eurofarmachat.models.chatbot.AiChat;
+import eurofarma.com.br.eurofarmachat.models.chatbot.AiChatCompliance;
 
-@Service
 public class ChatBotCompliance implements AiChat {
-
     private final AiChat aiChatCompliance;
-    RetrievalAugmentorFactory retrievalAugmentorFactory = new RetrievalAugmentorFactory();
+    RetrievalAugmentor retrievalAugmentorFactory = new RetrievalAugmentor();
     ChatLanguageModelSingleton chatLanguageModelFactory =  ChatLanguageModelSingleton.getInstance();
-    EmbeddingStoreContentRetrieverFactory embeddingStoreContentRetriever = new EmbeddingStoreContentRetrieverFactory();
+    EmbeddingStoreContentRetriever embeddingStoreContentRetriever = new EmbeddingStoreContentRetriever();
 
     public ChatBotCompliance(){
         this.aiChatCompliance = AiServices.builder(AiChatCompliance.class)

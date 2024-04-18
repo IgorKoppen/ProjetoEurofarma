@@ -1,4 +1,4 @@
-package eurofarma.com.br.eurofarmachat.services.chatbot;
+package eurofarma.com.br.eurofarmachat.models.chatbot;
 
 public interface AiChat {
      String chat(String message);

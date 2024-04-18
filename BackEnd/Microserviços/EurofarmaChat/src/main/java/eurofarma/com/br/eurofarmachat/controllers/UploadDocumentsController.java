@@ -1,7 +1,7 @@
 package eurofarma.com.br.eurofarmachat.controllers;
 
 
-import eurofarma.com.br.eurofarmachat.services.DocumentsService;
+import eurofarma.com.br.eurofarmachat.services.UploadDocumentsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -9,20 +9,18 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 @RestController
-@RequestMapping(value={"/documents"})
-public class DocumentsController {
+@RequestMapping(value={"/uploadDocument"})
+public class UploadDocumentsController {
 
-
-    private final DocumentsService documentsService;
+    private final UploadDocumentsService documentsService;
 
     @Autowired
-    public DocumentsController(DocumentsService documentsService) {
+    public UploadDocumentsController(UploadDocumentsService documentsService) {
         this.documentsService = documentsService;
     }
 
     @PostMapping("/uploadDocsToCompliance")
     public ResponseEntity<String> uploadDocsToCompliance(@RequestParam("file") MultipartFile file) {
-
         if(file.isEmpty()) {
             return new ResponseEntity<>("Uploaded file is empty", HttpStatus.BAD_REQUEST);
         }
@@ -39,16 +37,4 @@ public class DocumentsController {
         return new ResponseEntity<>("Upload Completo", HttpStatus.OK);
     }
 
-    
-    @GetMapping("/loadDocsToCompliace")
-    public ResponseEntity<String> loadDocsToCompliace(@RequestParam("file") MultipartFile file) {
-        documentsService.loadToChatCompliance(file.getOriginalFilename());
-        return new ResponseEntity<>("Upload Completo", HttpStatus.OK);
-    }
-
-    @GetMapping("/loadDocsToEuroData")
-    public ResponseEntity<String> loadDocsToEuroData(@RequestParam("file") MultipartFile file) {
-        documentsService.loadToChatEuroData(file.getOriginalFilename());
-        return new ResponseEntity<>("Upload Completo", HttpStatus.OK);
-    }
 }
