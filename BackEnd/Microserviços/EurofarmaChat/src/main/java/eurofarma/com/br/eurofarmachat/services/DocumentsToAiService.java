@@ -11,10 +11,10 @@ import dev.langchain4j.data.embedding.Embedding;
 import dev.langchain4j.data.segment.TextSegment;
 import dev.langchain4j.model.embedding.AllMiniLmL6V2EmbeddingModel;
 import dev.langchain4j.model.embedding.EmbeddingModel;
-import eurofarma.com.br.eurofarmachat.models.EmbeddingStore;
+import dev.langchain4j.store.embedding.EmbeddingStore;
+import eurofarma.com.br.eurofarmachat.models.EmbeddingStoreCreater;
 import eurofarma.com.br.eurofarmachat.util.GetPath;
 import io.pinecone.clients.AsyncIndex;
-import io.pinecone.clients.Index;
 import io.pinecone.clients.Pinecone;
 import org.springframework.stereotype.Service;
 
@@ -44,8 +44,8 @@ public class DocumentsToAiService {
     }
 
     private void vectorSave(String filename, String vectorIndex) {
-        EmbeddingStore embeddingStoreFactory = new EmbeddingStore();
-        dev.langchain4j.store.embedding.EmbeddingStore<TextSegment> textSegmentEmbeddingStore = embeddingStoreFactory.embeddingStore(vectorIndex);
+        EmbeddingStoreCreater embeddingStore = new EmbeddingStoreCreater(vectorIndex);
+        EmbeddingStore<TextSegment> textSegmentEmbeddingStore = embeddingStore.getPineconeEmbeddingStoreCustomMetadata();
         EmbeddingModel embeddingModel = new AllMiniLmL6V2EmbeddingModel();
         Path path = GetPath.toPath(("/static/documents/" + filename), this.getClass());
         Document document = loadDocument(path, new ApacheTikaDocumentParser());

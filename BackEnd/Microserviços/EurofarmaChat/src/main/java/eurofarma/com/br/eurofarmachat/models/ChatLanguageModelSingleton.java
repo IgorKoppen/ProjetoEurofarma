@@ -8,7 +8,7 @@ public class ChatLanguageModelSingleton {
     private final ChatLanguageModel model;
 
     private ChatLanguageModelSingleton() {
-        Double temperature = 0.6;
+        Double temperature = 0.5;
         String urlIsRunning = "http://localhost:11434";
         String modelName = "llama2";
         model = OllamaChatModel.builder().modelName(modelName).baseUrl(urlIsRunning).temperature(temperature).build();
