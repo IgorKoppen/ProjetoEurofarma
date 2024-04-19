@@ -1,10 +1,9 @@
 package eurofarma.com.br.eurofarmachat.controllers;
+import eurofarma.com.br.eurofarmachat.dtos.AnswerDTO;
+import eurofarma.com.br.eurofarmachat.dtos.QuestionDTO;
 import eurofarma.com.br.eurofarmachat.services.ChatBotService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(value={"/chatbot"})
@@ -16,13 +15,12 @@ public class ChatBotController {
     public ChatBotController(ChatBotService chatBotService) {
         this.chatBotService = chatBotService;
     }
-
-    @GetMapping("/chatBotCompliance")
-    public String chatWithEuroCompliance(@RequestParam(value = "message", defaultValue = "Olá") String question) {
-        return chatBotService.chatWithComplianceBot(question);
+    @PostMapping("/chatBotCompliance")
+    public AnswerDTO chatWithEuroCompliance(@RequestBody QuestionDTO questionDTO) {
+        return chatBotService.chatWithComplianceBot(questionDTO);
     }
-    @GetMapping("/chatBotEuroData")
-    public String chatWithEuroData(@RequestParam(value = "message", defaultValue = "Olá") String question) {
-        return chatBotService.chatWithEuroDataBot(question);
+    @PostMapping("/chatBotEuroData")
+    public AnswerDTO chatWithEuroData(@RequestBody QuestionDTO questionDTO) {
+        return chatBotService.chatWithEuroDataBot(questionDTO);
     }
 }

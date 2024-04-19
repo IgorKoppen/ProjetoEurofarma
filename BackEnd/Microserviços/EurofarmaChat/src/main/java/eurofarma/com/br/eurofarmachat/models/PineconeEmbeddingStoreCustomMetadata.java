@@ -97,7 +97,8 @@ public class PineconeEmbeddingStoreCustomMetadata implements EmbeddingStore<Text
     }
 
     private EmbeddingMatch<TextSegment> toEmbeddingMatch(Vector vector, Embedding referenceEmbedding) {
-        Value textSegmentValue = (Value)vector.getMetadata().getFieldsMap().get(this.metadataTextKey);
+        Value textSegmentValue = vector.getMetadata().getFieldsMap().get(this.metadataTextKey);
+        Value relatedFileValue = vector.getMetadata().getFieldsMap().get("RelatedFile");
         Embedding embedding = Embedding.from(vector.getValuesList());
         double cosineSimilarity = CosineSimilarity.between(embedding, referenceEmbedding);
         return new EmbeddingMatch(RelevanceScore.fromCosineSimilarity(cosineSimilarity), vector.getId(), embedding, textSegmentValue == null ? null : TextSegment.from(textSegmentValue.getStringValue()));

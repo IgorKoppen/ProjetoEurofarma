@@ -1,19 +1,23 @@
 package eurofarma.com.br.eurofarmachat.services;
 
+import eurofarma.com.br.eurofarmachat.dtos.AnswerDTO;
+import eurofarma.com.br.eurofarmachat.dtos.QuestionDTO;
 import eurofarma.com.br.eurofarmachat.models.chatbot.Implements.ChatBotCompliance;
 import eurofarma.com.br.eurofarmachat.models.chatbot.Implements.ChatBotEuroData;
 import org.springframework.stereotype.Service;
 
 @Service
 public class ChatBotService {
-    public String chatWithComplianceBot(String question){
+    public AnswerDTO chatWithComplianceBot(QuestionDTO question){
         ChatBotCompliance chatBotCompliance = new ChatBotCompliance();
-        return  chatBotCompliance.chat(question);
+        String answer = chatBotCompliance.chat(question.question());
+        return new AnswerDTO(question.question(),answer);
     }
 
-    public String chatWithEuroDataBot(String question){
+    public AnswerDTO chatWithEuroDataBot(QuestionDTO question){
         ChatBotEuroData chatBotEuroData = new ChatBotEuroData();
-        return chatBotEuroData.chat(question);
+        String answer = chatBotEuroData.chat(question.question());
+        return new AnswerDTO(question.question(),answer);
     }
 
 }
