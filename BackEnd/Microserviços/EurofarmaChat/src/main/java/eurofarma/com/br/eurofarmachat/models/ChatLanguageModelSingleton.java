@@ -8,10 +8,11 @@ public class ChatLanguageModelSingleton {
     private final ChatLanguageModel model;
 
     private ChatLanguageModelSingleton() {
-        Double temperature = 0.5;
+        Double temperature = 0.7;
         String urlIsRunning = "http://localhost:11434";
-        String modelName = "llama2";
-        model = OllamaChatModel.builder().modelName(modelName).baseUrl(urlIsRunning).temperature(temperature).build();
+        String modelName = "llama3";
+        int maxRetries = 3;
+        model = OllamaChatModel.builder().modelName(modelName).baseUrl(urlIsRunning).temperature(temperature).maxRetries(maxRetries).build();
     }
 
     public static ChatLanguageModelSingleton getInstance() {
