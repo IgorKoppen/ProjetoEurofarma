@@ -12,8 +12,8 @@ public class EmbeddingStoreContentRetrieverCreater {
         this.retriever = EmbeddingStoreContentRetriever.builder()
                 .embeddingModel(new AllMiniLmL6V2EmbeddingModel())
                 .embeddingStore(new EmbeddingStoreCreater(index).getPineconeEmbeddingStoreCustomMetadata())
-                .minScore(0.6)
-                .maxResults(20)
+                .minScore(0.75)
+                .maxResults(40)
                 .build();;
     }
 
