@@ -14,7 +14,7 @@ public class EmbeddingStoreContentRetrieverCreater {
                 .embeddingStore(new EmbeddingStoreCreater(index).getPineconeEmbeddingStoreCustomMetadata())
                 .minScore(0.75)
                 .maxResults(40)
-                .build();;
+                .build();
     }
 
     public EmbeddingStoreContentRetriever getRetriever() {
