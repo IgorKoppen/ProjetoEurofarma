@@ -9,19 +9,13 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public class GetPath {
-
     public static Path toPath(String path, Class<?> classTarget) {
         URL fileUrl = classTarget.getResource(path);
         if (fileUrl == null) {
             try {
-                // Get the absolute path
                 URL rootUrl = classTarget.getResource("/");
                 Path absolutePath = Paths.get(new URI(rootUrl + path));
-
-                // Create directory if it doesn't exist
                 createDirectoryIfNotExists(absolutePath);
-
-                // Now get the resource again
                 fileUrl = classTarget.getResource(path);
             } catch (URISyntaxException e) {
                 throw new RuntimeException(e);
@@ -33,7 +27,6 @@ public class GetPath {
             throw new RuntimeException(e);
         }
     }
-
     private static void createDirectoryIfNotExists(Path path) {
         if (!Files.exists(path)) {
             try {
