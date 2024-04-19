@@ -47,9 +47,9 @@ public class DocumentsToAiService {
         EmbeddingStoreCreater embeddingStore = new EmbeddingStoreCreater(vectorIndex);
         EmbeddingStore<TextSegment> textSegmentEmbeddingStore = embeddingStore.getPineconeEmbeddingStoreCustomMetadata();
         EmbeddingModel embeddingModel = new AllMiniLmL6V2EmbeddingModel();
-        Path path = GetPath.toPath(("/static/documents/" + filename), this.getClass());
+        Path path = GetPath.toPath(("/static/documents/eurodata/" + filename), this.getClass());
         Document document = loadDocument(path, new ApacheTikaDocumentParser());
-        DocumentSplitter splitter = DocumentSplitters.recursive(350, 30);
+        DocumentSplitter splitter = DocumentSplitters.recursive(400, 0);
         List<TextSegment> segments = splitter.split(document);
         List<TextSegment> segmentsWithMetadata = new ArrayList<>();
         for (TextSegment textSegment : segments) {
