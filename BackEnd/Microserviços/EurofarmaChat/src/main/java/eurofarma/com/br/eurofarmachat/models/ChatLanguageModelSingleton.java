@@ -8,7 +8,7 @@ public class ChatLanguageModelSingleton {
     private final ChatLanguageModel model;
 
     private ChatLanguageModelSingleton() {
-        Double temperature = 0.7;
+        Double temperature = 0.3;
         String urlIsRunning = "http://localhost:11434";
         String modelName = "llama3";
         int maxRetries = 3;

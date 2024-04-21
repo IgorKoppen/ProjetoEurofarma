@@ -1,23 +1,27 @@
 package eurofarma.com.br.eurofarmachat.models;
-import dev.langchain4j.model.embedding.AllMiniLmL6V2EmbeddingModel;
+import dev.langchain4j.model.embedding.OnnxEmbeddingModel;
+import dev.langchain4j.model.embedding.PoolingMode;
+import dev.langchain4j.rag.content.retriever.ContentRetriever;
 import dev.langchain4j.rag.content.retriever.EmbeddingStoreContentRetriever;
+import eurofarma.com.br.eurofarmachat.util.GetPath;
 
 
 public class EmbeddingStoreContentRetrieverCreater {
 
 
-   private final EmbeddingStoreContentRetriever retriever;
+   private final ContentRetriever retriever;
 
     public EmbeddingStoreContentRetrieverCreater(String index) {
         this.retriever = EmbeddingStoreContentRetriever.builder()
-                .embeddingModel(new AllMiniLmL6V2EmbeddingModel())
+                .embeddingModel(new OnnxEmbeddingModel(GetPath.toPath("/static/embeddingModel/multilingual-e5-small//onnx//model.onnx",this.getClass()),GetPath.toPath("/static/embeddingModel/multilingual-e5-small//onnx//tokenizer.json",this.getClass()), PoolingMode.MEAN))
                 .embeddingStore(new EmbeddingStoreCreater(index).getPineconeEmbeddingStoreCustomMetadata())
-                .minScore(0.75)
-                .maxResults(40)
+                .maxResults(3)
+                .minScore(0.85)
                 .build();
+
     }
 
-    public EmbeddingStoreContentRetriever getRetriever() {
+    public ContentRetriever getRetriever() {
         return retriever;
     }
 }

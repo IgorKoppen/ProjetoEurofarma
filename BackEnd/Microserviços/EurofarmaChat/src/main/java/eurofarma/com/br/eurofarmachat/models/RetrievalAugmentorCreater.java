@@ -2,14 +2,16 @@ package eurofarma.com.br.eurofarmachat.models;
 
 import dev.langchain4j.rag.DefaultRetrievalAugmentor;
 import dev.langchain4j.rag.RetrievalAugmentor;
-import dev.langchain4j.rag.content.retriever.EmbeddingStoreContentRetriever;
+import dev.langchain4j.rag.content.retriever.ContentRetriever;
 
 
 public class RetrievalAugmentorCreater {
+
    private final RetrievalAugmentor retrievalAugmentor;
-    public RetrievalAugmentorCreater(EmbeddingStoreContentRetriever contentRetriever) {
+
+    public RetrievalAugmentorCreater(ContentRetriever contentRetriever) {
         ContentAggregatorCreater contentAggregator = new ContentAggregatorCreater();
-        this.retrievalAugmentor =DefaultRetrievalAugmentor.builder()
+        this.retrievalAugmentor = DefaultRetrievalAugmentor.builder()
                .contentRetriever(contentRetriever)
                .contentAggregator(contentAggregator.getAggregator())
                .build();
