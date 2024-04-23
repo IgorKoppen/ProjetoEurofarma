@@ -1,19 +1,29 @@
 package eurofarma.com.br.eurofarmachat.services;
 
+import eurofarma.com.br.eurofarmachat.configuration.FileStorageProperties;
 import eurofarma.com.br.eurofarmachat.services.interfaces.FileStorage;
-import eurofarma.com.br.eurofarmachat.util.GetPath;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Objects;
 
 @Service
 public class UploadDocumentsService implements FileStorage {
 
-    private final Path rootToCompliance = GetPath.toPath("/static/documents/compliance/", this.getClass());;
-    private final Path rootToEuroData = GetPath.toPath("/static/documents/eurodata/", this.getClass());
+    private final Path rootToCompliance;
+    private final Path rootToEuroData;
+
+
+    public UploadDocumentsService(FileStorageProperties fileStorageProperties) {
+        this.rootToCompliance = Paths.get(fileStorageProperties.getUploadDir())
+                .toAbsolutePath().normalize().resolve("compliance");
+        this.rootToEuroData = Paths.get(fileStorageProperties.getUploadDir())
+                .toAbsolutePath().normalize().resolve("eurodata");
+    }
 
     @Override
     public void saveToChatCompliance(MultipartFile file) {
@@ -25,9 +35,11 @@ public class UploadDocumentsService implements FileStorage {
         UploadFile(file, rootToEuroData);
     }
 
-    private void UploadFile(MultipartFile file, Path rootToCompliance) {
+    private void UploadFile(MultipartFile file, Path root) {
+        String fileName = StringUtils.cleanPath(Objects.requireNonNull(file.getOriginalFilename()));
         try {
-            file.transferTo(rootToCompliance.resolve(Objects.requireNonNull(file.getOriginalFilename())));
+            Path targetLocation = root.resolve(fileName);
+            file.transferTo(targetLocation);
         } catch (FileAlreadyExistsException e) {
             throw new RuntimeException("A file of that name already exists.");
         } catch (IOException e) {

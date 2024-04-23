@@ -56,7 +56,7 @@ public class DocumentsToAiService {
         textSegmentEmbeddingStore.addAll(embedding, segmentsWithMetadata);
     }
     private Path getPath(String fileName) {
-        return GetPath.toPath(("/static/documents/eurodata/" + fileName), this.getClass());
+        return GetPath.toPath(("/uploadDocumentDir/eurodata/" + fileName), this.getClass());
     }
 
 

@@ -15,8 +15,8 @@ public class EmbeddingStoreContentRetrieverCreater {
         this.retriever = EmbeddingStoreContentRetriever.builder()
                 .embeddingModel(new OnnxEmbeddingModel(GetPath.toPath("/static/embeddingModel/multilingual-e5-small//onnx//model.onnx",this.getClass()),GetPath.toPath("/static/embeddingModel/multilingual-e5-small//onnx//tokenizer.json",this.getClass()), PoolingMode.MEAN))
                 .embeddingStore(new EmbeddingStoreCreater(index).getPineconeEmbeddingStoreCustomMetadata())
-                .maxResults(3)
-                .minScore(0.85)
+                .maxResults(5)
+                .minScore(0.8)
                 .build();
 
     }
