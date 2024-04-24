@@ -1,4 +1,4 @@
-package eurofarma.com.br.eurofarmachat.models;
+package eurofarma.com.br.eurofarmachat.models.langchain4j;
 
 import dev.langchain4j.model.chat.ChatLanguageModel;
 import dev.langchain4j.model.ollama.OllamaChatModel;

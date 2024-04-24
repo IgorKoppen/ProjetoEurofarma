@@ -2,6 +2,7 @@ package eurofarma.com.br.eurofarmachat.services;
 
 import com.google.protobuf.Struct;
 import com.google.protobuf.Value;
+import dev.langchain4j.agent.tool.P;
 import dev.langchain4j.data.document.Document;
 import dev.langchain4j.data.document.DocumentSplitter;
 import dev.langchain4j.data.document.Metadata;
@@ -13,13 +14,15 @@ import dev.langchain4j.model.embedding.EmbeddingModel;
 import dev.langchain4j.model.embedding.OnnxEmbeddingModel;
 import dev.langchain4j.model.embedding.PoolingMode;
 import dev.langchain4j.store.embedding.EmbeddingStore;
-import eurofarma.com.br.eurofarmachat.models.EmbeddingStoreCreater;
+import eurofarma.com.br.eurofarmachat.configuration.FileStorageProperties;
+import eurofarma.com.br.eurofarmachat.models.langchain4j.EmbeddingStoreCreater;
 import eurofarma.com.br.eurofarmachat.util.GetPath;
 import io.pinecone.clients.AsyncIndex;
 import io.pinecone.clients.Pinecone;
 import org.springframework.stereotype.Service;
 
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,50 +31,43 @@ import static dev.langchain4j.data.document.loader.FileSystemDocumentLoader.load
 @Service
 public class DocumentsToAiService {
 
-    public void loadToChatCompliance(String fileName) {
-        vectorSave(fileName, "eurocompliance");
+
+    public void loadToPineconeWithIndex(String fileName,String indexName,Path pathToFolder) {
+        vectorSave(fileName,indexName, pathToFolder);
     }
 
-    public void loadToChatEuroData(String fileName) {
-        vectorSave(fileName, "eurobot");
+    public void deleteAtPinecoWithIndex(String fileName,String indexName) {
+        vectorDeleter(fileName, indexName);
     }
 
-    public void deleteToChatCompliance(String fileName) {
-        vectorDeleter(fileName, "eurocompliance");
-    }
 
-    public void deleteToChatEuroData(String fileName) {
-        vectorDeleter(fileName,"eurobot");
-    }
-
-    private void vectorSave(String filename, String vectorIndex) {
+    private void vectorSave(String filename, String vectorIndex,Path path) {
         EmbeddingStoreCreater embeddingStore = new EmbeddingStoreCreater(vectorIndex);
         EmbeddingStore<TextSegment> textSegmentEmbeddingStore = embeddingStore.getPineconeEmbeddingStoreCustomMetadata();
-
-        EmbeddingModel embeddingModel = new OnnxEmbeddingModel(GetPath.toPath("/static/embeddingModel/multilingual-e5-small//onnx//model.onnx",this.getClass()),GetPath.toPath("/static/embeddingModel/multilingual-e5-small//onnx//tokenizer.json",this.getClass()),PoolingMode.MEAN);
-        Path path = getPath(filename);
-        List<TextSegment> segments =  splitDocumentInSmallerPices(path);
-        List<TextSegment> segmentsWithMetadata = putMetadataFileName(segments,filename);
+        EmbeddingModel embeddingModel = new OnnxEmbeddingModel(GetPath.toPath("/static/embeddingModel/multilingual-e5-small//onnx//model.onnx", this.getClass()), GetPath.toPath("/static/embeddingModel/multilingual-e5-small//onnx//tokenizer.json", this.getClass()), PoolingMode.MEAN);
+        List<TextSegment> segments = splitDocumentInSmallerPices(path);
+        List<TextSegment> segmentsWithMetadata = putMetadataFileName(segments, filename);
         List<Embedding> embedding = embeddingModel.embedAll(segmentsWithMetadata).content();
         textSegmentEmbeddingStore.addAll(embedding, segmentsWithMetadata);
     }
-    private Path getPath(String fileName) {
-        return GetPath.toPath(("/uploadDocumentDir/eurodata/" + fileName), this.getClass());
+
+    private Path getPath(String fileName,Path path) {
+        return path.resolve(fileName);
     }
 
 
-    private List<TextSegment> splitDocumentInSmallerPices(Path path){
+    private List<TextSegment> splitDocumentInSmallerPices(Path path) {
         Document document = loadDocument(path, new ApacheTikaDocumentParser());
         DocumentSplitter splitter = DocumentSplitters.recursive(400, 200);
         return splitter.split(document);
     }
 
-    private List<TextSegment> putMetadataFileName(List<TextSegment> segments,String filename){
+    private List<TextSegment> putMetadataFileName(List<TextSegment> segments, String filename) {
         List<TextSegment> segmentsWithMetadata = new ArrayList<>();
         for (TextSegment textSegment : segments) {
             Metadata metadata = new Metadata();
             metadata.add("filename", filename);
-            String cleanedText = textSegment.text().replace("\n", " ").replace("\t"," " );
+            String cleanedText = textSegment.text().replace("\n", " ").replace("\t", " ");
             TextSegment textSegmentWithMetadata = TextSegment.from(cleanedText, metadata);
             segmentsWithMetadata.add(textSegmentWithMetadata);
         }

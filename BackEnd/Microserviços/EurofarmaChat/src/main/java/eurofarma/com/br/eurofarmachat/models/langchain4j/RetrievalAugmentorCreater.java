@@ -1,4 +1,4 @@
-package eurofarma.com.br.eurofarmachat.models;
+package eurofarma.com.br.eurofarmachat.models.langchain4j;
 
 import dev.langchain4j.rag.DefaultRetrievalAugmentor;
 import dev.langchain4j.rag.RetrievalAugmentor;

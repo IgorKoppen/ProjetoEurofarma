@@ -1,4 +1,4 @@
-package eurofarma.com.br.eurofarmachat.models;
+package eurofarma.com.br.eurofarmachat.models.langchain4j;
 
 public class EmbeddingStoreCreater {
 

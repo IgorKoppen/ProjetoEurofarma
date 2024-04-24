@@ -1,4 +1,4 @@
-package eurofarma.com.br.eurofarmachat.models;
+package eurofarma.com.br.eurofarmachat.models.langchain4j;
 
 import com.google.protobuf.Struct;
 import com.google.protobuf.Value;

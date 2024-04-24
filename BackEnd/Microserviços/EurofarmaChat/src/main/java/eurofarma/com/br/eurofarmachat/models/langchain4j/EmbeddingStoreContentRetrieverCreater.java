@@ -1,4 +1,4 @@
-package eurofarma.com.br.eurofarmachat.models;
+package eurofarma.com.br.eurofarmachat.models.langchain4j;
 import dev.langchain4j.model.embedding.OnnxEmbeddingModel;
 import dev.langchain4j.model.embedding.PoolingMode;
 import dev.langchain4j.rag.content.retriever.ContentRetriever;
