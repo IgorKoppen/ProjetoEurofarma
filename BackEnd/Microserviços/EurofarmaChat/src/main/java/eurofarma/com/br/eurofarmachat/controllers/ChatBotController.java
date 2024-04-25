@@ -1,9 +1,8 @@
 package eurofarma.com.br.eurofarmachat.controllers;
 import eurofarma.com.br.eurofarmachat.dtos.AnswerDTO;
 import eurofarma.com.br.eurofarmachat.dtos.QuestionDTO;
-import eurofarma.com.br.eurofarmachat.services.ChatBotService;
+import eurofarma.com.br.eurofarmachat.services.implement.ChatBotService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController

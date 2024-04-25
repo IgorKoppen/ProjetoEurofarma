@@ -1,13 +1,14 @@
 package eurofarma.com.br.eurofarmachat.controllers;
 
 
-import eurofarma.com.br.eurofarmachat.services.UploadDocToComplianceService;
+import eurofarma.com.br.eurofarmachat.services.implement.UploadDocToComplianceService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
 import java.util.List;
 
 @RestController
@@ -31,8 +32,8 @@ public class UploadDocsToComplianceController {
             return ResponseEntity.ok(documentsService.listAll());
     }
     @GetMapping("/download/{fileName:.+}")
-    public ResponseEntity<Resource> downloadFileEuroData(@PathVariable String fileName, HttpServletRequest request) {
-        return documentsService.getDownload(fileName,request);
+    public ResponseEntity<Resource> downloadFileComliance(@PathVariable String fileName, HttpServletRequest request) {
+        return documentsService.getDownloadLink(fileName,request);
     }
     @DeleteMapping
     public ResponseEntity<String> deleteDocAtCompliance(@RequestParam String fileName) {

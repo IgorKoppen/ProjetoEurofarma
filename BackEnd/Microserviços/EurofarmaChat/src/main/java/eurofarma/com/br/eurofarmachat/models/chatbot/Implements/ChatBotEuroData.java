@@ -1,6 +1,7 @@
 package eurofarma.com.br.eurofarmachat.models.chatbot.Implements;
 import dev.langchain4j.rag.RetrievalAugmentor;
 import dev.langchain4j.service.AiServices;
+import eurofarma.com.br.eurofarmachat.configuration.EmbeddingModelProperties;
 import eurofarma.com.br.eurofarmachat.models.langchain4j.ChatLanguageModelSingleton;
 import eurofarma.com.br.eurofarmachat.models.langchain4j.EmbeddingStoreContentRetrieverCreater;
 import eurofarma.com.br.eurofarmachat.models.langchain4j.RetrievalAugmentorCreater;
@@ -14,7 +15,7 @@ public class ChatBotEuroData implements AiChat {
     private final AiChat aiChatEuro;
 
     public ChatBotEuroData(){
-        EmbeddingStoreContentRetrieverCreater embeddingStoreContentRetriever = new EmbeddingStoreContentRetrieverCreater("eurobot");
+        EmbeddingStoreContentRetrieverCreater embeddingStoreContentRetriever = new EmbeddingStoreContentRetrieverCreater("eurobot",new EmbeddingModelProperties());
         RetrievalAugmentor retrievalAugmentor = new RetrievalAugmentorCreater(embeddingStoreContentRetriever.getRetriever()).getRetrievalAugmentor();
         ChatLanguageModelSingleton chatLanguageModelFactory = ChatLanguageModelSingleton.getInstance();
 
