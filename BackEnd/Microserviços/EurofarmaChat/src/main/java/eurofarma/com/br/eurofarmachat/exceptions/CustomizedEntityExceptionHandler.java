@@ -9,6 +9,7 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import java.io.FileNotFoundException;
+import java.net.ConnectException;
 import java.nio.file.InvalidPathException;
 import java.util.Date;
 
@@ -17,7 +18,7 @@ import java.util.Date;
 public class CustomizedEntityExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler({FileNotFoundException.class})
     public final ResponseEntity<ExceptionResponse> handleNotFoundExceptions(Exception ex, WebRequest request) {
-        ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), "Archive not founded", request.getDescription(false));
+        ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), "Arquivo não encontrado", request.getDescription(false));
         return new ResponseEntity<>(exceptionResponse, HttpStatus.NOT_FOUND);
     }
     @ExceptionHandler({ArchiveTypeExeception.class})
@@ -27,7 +28,13 @@ public class CustomizedEntityExceptionHandler extends ResponseEntityExceptionHan
     }
     @ExceptionHandler({InvalidPathException.class})
     public final ResponseEntity<ExceptionResponse> handleNotAllowedURL(Exception ex, WebRequest request) {
-        ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), "Url without extension!", request.getDescription(false));
+        ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), "UIrl sem extensão!", request.getDescription(false));
         return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
     }
+    @ExceptionHandler({ConnectException.class})
+    public final ResponseEntity<ExceptionResponse> handleOfflineAi(Exception ex, WebRequest request) {
+        ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), "Servidor não pode conectar ao serviço de IA", request.getDescription(false));
+        return new ResponseEntity<>(exceptionResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
 }
