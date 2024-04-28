@@ -2,6 +2,7 @@ package eurofarma.com.br.eurofarmachat.models.langchain4j;
 
 import com.google.protobuf.Struct;
 import com.google.protobuf.Value;
+import dev.langchain4j.data.document.Metadata;
 import dev.langchain4j.data.embedding.Embedding;
 import dev.langchain4j.data.segment.TextSegment;
 import dev.langchain4j.internal.Utils;
@@ -101,10 +102,13 @@ public class PineconeEmbeddingStoreCustomMetadata implements EmbeddingStore<Text
         Value textSegmentValue = vector.getMetadata().getFieldsMap().get(this.metadataTextKey);
         Value relatedFileValue = vector.getMetadata().getFieldsMap().get("RelatedFile");
         Value fileDowloadLinkvValue = vector.getMetadata().getFieldsMap().get("FileDowloadLink");
-        System.out.println(textSegmentValue.getStringValue());
         Embedding embedding = Embedding.from(vector.getValuesList());
         double cosineSimilarity = CosineSimilarity.between(embedding, referenceEmbedding);
-        return new EmbeddingMatch<>(RelevanceScore.fromCosineSimilarity(cosineSimilarity), vector.getId(), embedding, textSegmentValue == null ? null : TextSegment.from(textSegmentValue.getStringValue() + " Documento Relacionado com fragmento: "+ relatedFileValue.getStringValue() + " Link para baixar documento do fragmento: "+ fileDowloadLinkvValue.getStringValue()));
+        Metadata metadaInfo = new Metadata();
+        metadaInfo.add("RelatedFile", relatedFileValue.getStringValue());
+        metadaInfo.add("FileDowloadLink", fileDowloadLinkvValue.getStringValue());
+        return new EmbeddingMatch<>(RelevanceScore.fromCosineSimilarity(cosineSimilarity), vector.getId(), embedding,
+                TextSegment.from("Dados: " + textSegmentValue.getStringValue()+"\t Nome do documento: "+ relatedFileValue.getStringValue() +"\t Link para baixar: " + fileDowloadLinkvValue.getStringValue() ,metadaInfo));
     }
 
     public static Builder builder() {

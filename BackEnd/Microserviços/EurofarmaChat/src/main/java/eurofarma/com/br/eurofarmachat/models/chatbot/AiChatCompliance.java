@@ -7,12 +7,13 @@ import dev.langchain4j.service.spring.AiService;
 @AiService
 public interface AiChatCompliance extends AiChat {
     @SystemMessage("Você é um funcionario da Eurofarma Brasil especializado em compliance da Eurofarma." +
-            "Devolva as informações nesse formato: {Resposta para pergunta}" +
+            "Devolva as informações nesse formato:" +
+            "{Resposta para pergunta}" +
             "{Documento relacionado}" +
-            "{LinkPara dowload do documento}")
-    @UserMessage("Responda em português essa pergunta: {{message}} após isso coloque a fontes e link de dowload de cada fonte de dado")
+            "{Link completo para baixar o documento}")
+    @UserMessage("Responda em português essa pergunta: {{message}}")
     String chat(@V("message") String userMessage);
 
-    @UserMessage("A pergunta a seguir é relacionada com compliance de uma empresa farmacêutico ou relacionado com a eurofarma? Texto: {{pergunta}}")
+    @UserMessage("A pergunta a seguir tem alguma relação com compliance ou codígo de ética e conduta? Pergunta: {{pergunta}}")
     boolean isAboutCompliance(@V("pergunta") String pergunta);
 }

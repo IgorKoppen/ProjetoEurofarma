@@ -12,7 +12,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.io.FileNotFoundException;
+
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.nio.file.Files;
@@ -33,6 +33,7 @@ public class FileStorageDocs implements Storage {
 
     @Override
     public List<String> listAll() throws IOException {
+
         return Files.list(pathToStorage)
                 .map(Path::getFileName)
                 .map(Path::toString)
@@ -78,7 +79,6 @@ public class FileStorageDocs implements Storage {
 
     @Override
     public ResponseEntity<Resource> getDowloadLink(String filename, HttpServletRequest request) throws IOException {
-        try {
             Resource resource = getDownloadUri(filename);
             String contentType = request.getServletContext().getMimeType(resource.getFile().getAbsolutePath());
             if (contentType == null) {
@@ -88,16 +88,11 @@ public class FileStorageDocs implements Storage {
                     .contentType(MediaType.parseMediaType(contentType))
                     .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
                     .body(resource);
-        } catch (MalformedURLException e) {
-            return ResponseEntity.badRequest().build();
-        } catch (FileNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        }
     }
 
-    private Resource getDownloadUri(String filename) throws MalformedURLException {
-        Path filePath = pathToStorage.resolve(filename).normalize();
-        return new UrlResource(filePath.toUri());
+    private Resource getDownloadUri(String filename) throws MalformedURLException  {
+            Path filePath = pathToStorage.resolve(filename).normalize();
+            return new UrlResource(filePath.toUri());
     }
 
     private Boolean allowedFileType(String fileName) {

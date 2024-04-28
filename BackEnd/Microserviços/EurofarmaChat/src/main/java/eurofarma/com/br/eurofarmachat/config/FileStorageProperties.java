@@ -1,4 +1,4 @@
-package eurofarma.com.br.eurofarmachat.configuration;
+package eurofarma.com.br.eurofarmachat.config;
 
 
 import org.springframework.boot.context.properties.ConfigurationProperties;

@@ -13,7 +13,7 @@ import dev.langchain4j.model.embedding.EmbeddingModel;
 import dev.langchain4j.model.embedding.OnnxEmbeddingModel;
 import dev.langchain4j.model.embedding.PoolingMode;
 import dev.langchain4j.store.embedding.EmbeddingStore;
-import eurofarma.com.br.eurofarmachat.configuration.EmbeddingModelProperties;
+import eurofarma.com.br.eurofarmachat.config.EmbeddingModelProperties;
 import eurofarma.com.br.eurofarmachat.models.langchain4j.EmbeddingStoreCreater;
 import io.pinecone.clients.AsyncIndex;
 import io.pinecone.clients.Pinecone;

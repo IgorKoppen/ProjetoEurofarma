@@ -1,7 +1,7 @@
 package eurofarma.com.br.eurofarmachat.models.chatbot.Implements;
 import dev.langchain4j.rag.RetrievalAugmentor;
 import dev.langchain4j.service.AiServices;
-import eurofarma.com.br.eurofarmachat.configuration.EmbeddingModelProperties;
+import eurofarma.com.br.eurofarmachat.config.EmbeddingModelProperties;
 import eurofarma.com.br.eurofarmachat.models.langchain4j.ChatLanguageModelSingleton;
 import eurofarma.com.br.eurofarmachat.models.langchain4j.EmbeddingStoreContentRetrieverCreater;
 import eurofarma.com.br.eurofarmachat.models.langchain4j.RetrievalAugmentorCreater;

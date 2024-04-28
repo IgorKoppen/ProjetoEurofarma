@@ -1,6 +1,6 @@
 package eurofarma.com.br.eurofarmachat.services.implement;
 
-import eurofarma.com.br.eurofarmachat.configuration.FileStorageProperties;
+import eurofarma.com.br.eurofarmachat.config.FileStorageProperties;
 import eurofarma.com.br.eurofarmachat.exceptions.ResourceNotFoundException;
 import eurofarma.com.br.eurofarmachat.models.storage.implement.FileStorageDocs;
 import eurofarma.com.br.eurofarmachat.models.storage.Storage;

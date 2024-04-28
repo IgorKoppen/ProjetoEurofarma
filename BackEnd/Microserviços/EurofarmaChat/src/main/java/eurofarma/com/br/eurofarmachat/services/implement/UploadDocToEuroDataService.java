@@ -1,6 +1,6 @@
 package eurofarma.com.br.eurofarmachat.services.implement;
 
-import eurofarma.com.br.eurofarmachat.configuration.FileStorageProperties;
+import eurofarma.com.br.eurofarmachat.config.FileStorageProperties;
 import eurofarma.com.br.eurofarmachat.exceptions.ResourceNotFoundException;
 import eurofarma.com.br.eurofarmachat.models.storage.implement.FileStorageDocs;
 import eurofarma.com.br.eurofarmachat.services.FilesStorageService;
@@ -9,6 +9,8 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -57,7 +59,7 @@ public class UploadDocToEuroDataService implements FilesStorageService {
             documentsToAiService.deleteAtPinecoWithIndex(filename, indexInPinecone);
             return ResponseEntity.ok("Arquivo deletado com sucesso!");
         } catch (IOException e) {
-            return ResponseEntity.notFound().build();
+            throw new ResourceNotFoundException("Arquivo: " + filename +" não encontrado!");
         }
     }
 
@@ -65,8 +67,9 @@ public class UploadDocToEuroDataService implements FilesStorageService {
     public ResponseEntity<Resource> getDownloadLink(String filename, HttpServletRequest request) {
         try {
            return fileStorage.getDowloadLink(filename,request);
-        } catch (IOException e) {
-            throw new ResourceNotFoundException("Arquivo não encontrado!");
+        }catch (IOException e ){
+            throw new ResourceNotFoundException("Arquivo: " + filename +" não encontrado!");
         }
+
     }
 }

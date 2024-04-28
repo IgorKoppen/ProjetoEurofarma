@@ -1,7 +1,7 @@
 package eurofarma.com.br.eurofarmachat.models.chatbot.Implements;
 import dev.langchain4j.rag.RetrievalAugmentor;
 import dev.langchain4j.service.AiServices;
-import eurofarma.com.br.eurofarmachat.configuration.EmbeddingModelProperties;
+import eurofarma.com.br.eurofarmachat.config.EmbeddingModelProperties;
 import eurofarma.com.br.eurofarmachat.models.langchain4j.ChatLanguageModelSingleton;
 import eurofarma.com.br.eurofarmachat.models.langchain4j.EmbeddingStoreContentRetrieverCreater;
 import eurofarma.com.br.eurofarmachat.models.langchain4j.RetrievalAugmentorCreater;
@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class ChatBotCompliance implements AiChat {
     private final AiChatCompliance aiChatCompliance;
+    private final AiChatCompliance chatComplianceCheckAbout;
     public ChatBotCompliance(EmbeddingModelProperties embeddingModelProperties){
         EmbeddingStoreContentRetrieverCreater embeddingStoreContentRetriever = new EmbeddingStoreContentRetrieverCreater("eurocompliance",embeddingModelProperties.getEmbeddingFolder());
         RetrievalAugmentor retrievalAugmentor = new RetrievalAugmentorCreater(embeddingStoreContentRetriever.getRetriever()).getRetrievalAugmentor();
@@ -20,11 +21,14 @@ public class ChatBotCompliance implements AiChat {
                 .chatLanguageModel(chatLanguageModelFactory.getChatLanguageModel())
                 .retrievalAugmentor(retrievalAugmentor)
                 .build();
+        this.chatComplianceCheckAbout = AiServices.builder(AiChatCompliance.class).
+                chatLanguageModel(chatLanguageModelFactory.getChatLanguageModel())
+                .build();
     }
 
     @Override
     public String chat(String pergunta) {
-        if(aiChatCompliance.isAboutCompliance(pergunta)){
+        if(chatComplianceCheckAbout.isAboutCompliance(pergunta)){
             return aiChatCompliance.chat(pergunta);
         }
         return "Peço desculpas, mas como um assistente de compliance, não tenho permissão para discutir esse tópico.";

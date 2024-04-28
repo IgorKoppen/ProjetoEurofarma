@@ -7,7 +7,7 @@ public class ChatLanguageModelSingleton {
     private static ChatLanguageModelSingleton instance;
     private final ChatLanguageModel model;
 
-    private ChatLanguageModelSingleton() {
+    private ChatLanguageModelSingleton(){
         Double temperature = 0.3;
         String urlIsRunning = "http://localhost:11434";
         String modelName = "llama3";
