@@ -38,8 +38,8 @@ public class VectorStorePineconeService {
         this.onnxTokenizerPath = embeddingPath.resolve("tokenizer.json");
     }
 
-    public void loadToPineconeWithIndex(String fileName, String indexName, Path pathToFolder) {
-        vectorSave(fileName,indexName, getPath(fileName,pathToFolder));
+    public void loadToPineconeWithIndex(String fileName,String dowloadLink, String indexName, Path pathToFolder) {
+        vectorSave(fileName,dowloadLink,indexName, getPath(fileName,pathToFolder));
     }
 
     public void deleteAtPinecoWithIndex(String fileName,String indexName) {
@@ -47,13 +47,13 @@ public class VectorStorePineconeService {
     }
 
 
-    private void vectorSave(String filename, String vectorIndex,Path path) {
+    private void vectorSave(String filename,String dowloadLink, String vectorIndex,Path path) {
 
         EmbeddingStoreCreater embeddingStore = new EmbeddingStoreCreater(vectorIndex);
         EmbeddingStore<TextSegment> textSegmentEmbeddingStore = embeddingStore.getPineconeEmbeddingStoreCustomMetadata();
         EmbeddingModel embeddingModel = new OnnxEmbeddingModel(onnxEmbeddingModelPath,onnxTokenizerPath, PoolingMode.MEAN);
         List<TextSegment> segments = splitDocumentInSmallerPices(path);
-        List<TextSegment> segmentsWithMetadata = putMetadataFileName(segments, filename);
+        List<TextSegment> segmentsWithMetadata = putMetadataFileName(segments, filename,dowloadLink);
         List<Embedding> embedding = embeddingModel.embedAll(segmentsWithMetadata).content();
         textSegmentEmbeddingStore.addAll(embedding, segmentsWithMetadata);
     }
@@ -64,15 +64,16 @@ public class VectorStorePineconeService {
 
     private List<TextSegment> splitDocumentInSmallerPices(Path path) {
         Document document = loadDocument(path, new ApacheTikaDocumentParser());
-        DocumentSplitter splitter = DocumentSplitters.recursive(400, 200);
+        DocumentSplitter splitter = DocumentSplitters.recursive(150, 0);
         return splitter.split(document);
     }
 
-    private List<TextSegment> putMetadataFileName(List<TextSegment> segments, String filename) {
+    private List<TextSegment> putMetadataFileName(List<TextSegment> segments, String filename,String dowloadLink) {
         List<TextSegment> segmentsWithMetadata = new ArrayList<>();
         for (TextSegment textSegment : segments) {
             Metadata metadata = new Metadata();
             metadata.add("filename", filename);
+            metadata.add("dowloadLink", dowloadLink);
             String cleanedText = textSegment.text().replace("\n", " ").replace("\t", " ");
             TextSegment textSegmentWithMetadata = TextSegment.from(cleanedText, metadata);
             segmentsWithMetadata.add(textSegmentWithMetadata);

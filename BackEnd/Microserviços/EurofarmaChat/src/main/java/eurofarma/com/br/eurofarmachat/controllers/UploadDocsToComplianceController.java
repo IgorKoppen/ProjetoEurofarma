@@ -12,7 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 @RestController
-@RequestMapping(value={"/uploadDocsToCompliance"})
+@RequestMapping(value={"/complianceDocs"})
 public class UploadDocsToComplianceController {
 
     private final UploadDocToComplianceService documentsService;

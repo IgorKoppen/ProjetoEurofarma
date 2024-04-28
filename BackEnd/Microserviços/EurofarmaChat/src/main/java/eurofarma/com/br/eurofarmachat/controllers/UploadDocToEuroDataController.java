@@ -11,7 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 @RestController
-@RequestMapping(value={"/uploadDocumentToEuroData"})
+@RequestMapping(value={"/euroDataDocs"})
 public class UploadDocToEuroDataController {
 
     private final UploadDocToEuroDataService documentsService;

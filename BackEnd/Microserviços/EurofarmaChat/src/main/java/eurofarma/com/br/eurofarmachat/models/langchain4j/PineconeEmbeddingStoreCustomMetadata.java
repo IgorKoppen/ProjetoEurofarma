@@ -74,6 +74,7 @@ public class PineconeEmbeddingStoreCustomMetadata implements EmbeddingStore<Text
             Embedding embedding = embeddings.get(i);
             Struct struct = Struct.newBuilder().putFields(this.metadataTextKey, Value.newBuilder().setStringValue((textSegments.get(i)).text()).build())
                     .putFields("RelatedFile", Value.newBuilder().setStringValue(textSegments.get(i).metadata("filename")).build())
+                    .putFields("FileDowloadLink",Value.newBuilder().setStringValue(textSegments.get(i).metadata("dowloadLink")).build())
                     .build();
           this.connection.upsert(id,embedding.vectorAsList(),null,null,struct,this.nameSpace);
         }
@@ -99,9 +100,11 @@ public class PineconeEmbeddingStoreCustomMetadata implements EmbeddingStore<Text
     private EmbeddingMatch<TextSegment> toEmbeddingMatch(Vector vector, Embedding referenceEmbedding) {
         Value textSegmentValue = vector.getMetadata().getFieldsMap().get(this.metadataTextKey);
         Value relatedFileValue = vector.getMetadata().getFieldsMap().get("RelatedFile");
+        Value fileDowloadLinkvValue = vector.getMetadata().getFieldsMap().get("FileDowloadLink");
+        System.out.println(textSegmentValue.getStringValue());
         Embedding embedding = Embedding.from(vector.getValuesList());
         double cosineSimilarity = CosineSimilarity.between(embedding, referenceEmbedding);
-        return new EmbeddingMatch<>(RelevanceScore.fromCosineSimilarity(cosineSimilarity), vector.getId(), embedding, textSegmentValue == null ? null : TextSegment.from(textSegmentValue.getStringValue() + " Documento Relacionado: "+ relatedFileValue.getStringValue()));
+        return new EmbeddingMatch<>(RelevanceScore.fromCosineSimilarity(cosineSimilarity), vector.getId(), embedding, textSegmentValue == null ? null : TextSegment.from(textSegmentValue.getStringValue() + " Documento Relacionado com fragmento: "+ relatedFileValue.getStringValue() + " Link para baixar documento do fragmento: "+ fileDowloadLinkvValue.getStringValue()));
     }
 
     public static Builder builder() {

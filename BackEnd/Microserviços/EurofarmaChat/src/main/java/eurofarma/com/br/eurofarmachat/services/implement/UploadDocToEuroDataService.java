@@ -21,7 +21,6 @@ public class UploadDocToEuroDataService implements FilesStorageService {
     private final VectorStorePineconeService documentsToAiService;
     private final String indexInPinecone = "eurodata";
 
-
     public UploadDocToEuroDataService(FileStorageProperties fileStorageProperties, VectorStorePineconeService documentsToAiService) {
         this.fileStorage = new FileStorageDocs(Paths.get(fileStorageProperties.getUploadDir()).toAbsolutePath().normalize().resolve("eurodata"));
         this.documentsToAiService = documentsToAiService;
@@ -42,8 +41,9 @@ public class UploadDocToEuroDataService implements FilesStorageService {
     public ResponseEntity<String> save(MultipartFile file) {
         try {
             String fileNameWithUUID = fileStorage.save(file);
-
-            documentsToAiService.loadToPineconeWithIndex(fileNameWithUUID, indexInPinecone, fileStorage.getPathOfStorage());
+            String endPointDowload = "euroDataDocs/download/";
+            String fileDownloadUri = fileStorage.getDownloadUrl(fileNameWithUUID, endPointDowload);
+            documentsToAiService.loadToPineconeWithIndex(fileNameWithUUID,fileDownloadUri, indexInPinecone, fileStorage.getPathOfStorage());
             return ResponseEntity.ok("Arquivo salvo com sucesso!");
         } catch (IOException e) {
             return ResponseEntity.badRequest().body("Arquivo falhou no upload!");

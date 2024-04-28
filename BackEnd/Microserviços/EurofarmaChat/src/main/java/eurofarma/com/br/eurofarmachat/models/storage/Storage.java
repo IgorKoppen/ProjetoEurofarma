@@ -19,5 +19,7 @@ public interface Storage {
 
      Path getPathOfStorage() ;
 
+     String getDownloadUrl(String filename,String endPointOfDowload);
+
      ResponseEntity<Resource> getDowloadLink(String filename,HttpServletRequest request) throws IOException;
 }

@@ -10,6 +10,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -53,7 +54,7 @@ public class FileStorageDocs implements Storage {
     }
 
     private String fileNameConcatenateUUID(String fileName) {
-        return UUID.randomUUID().toString().replace("-", "") + "-" + fileName;
+        return UUID.randomUUID().toString().replace("-", "").substring(0, 10) + "-" + fileName;
     }
 
     @Override
@@ -65,6 +66,14 @@ public class FileStorageDocs implements Storage {
     @Override
     public Path getPathOfStorage() {
         return pathToStorage;
+    }
+
+    @Override
+    public String getDownloadUrl(String filename, String endPointOfDowload) {
+        return ServletUriComponentsBuilder.fromCurrentContextPath()
+                .path(endPointOfDowload)
+                .path(filename)
+                .toUriString();
     }
 
     @Override

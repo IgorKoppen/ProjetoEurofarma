@@ -47,7 +47,9 @@ public class UploadDocToComplianceService implements FilesStorageService {
         String fileName = StringUtils.cleanPath(Objects.requireNonNull(file.getOriginalFilename()));
         try {
             String fileNameWithUUID = fileStorage.save(file);
-            documentsToAiService.loadToPineconeWithIndex(fileNameWithUUID, indexInPinecone, fileStorage.getPathOfStorage());
+            String endPointDowload = "complianceDocs/download/";
+            String fileDownloadUri = fileStorage.getDownloadUrl(fileNameWithUUID, endPointDowload);
+            documentsToAiService.loadToPineconeWithIndex(fileNameWithUUID,fileDownloadUri, indexInPinecone, fileStorage.getPathOfStorage());
             return ResponseEntity.ok("Arquivo salvo com sucesso!");
         } catch (IOException e) {
             return ResponseEntity.badRequest().body("Arquivo falhou no upload!");

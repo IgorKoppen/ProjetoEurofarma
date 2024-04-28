@@ -9,6 +9,7 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import java.io.FileNotFoundException;
+import java.nio.file.InvalidPathException;
 import java.util.Date;
 
 @ControllerAdvice
@@ -22,6 +23,11 @@ public class CustomizedEntityExceptionHandler extends ResponseEntityExceptionHan
     @ExceptionHandler({ArchiveTypeExeception.class})
     public final ResponseEntity<ExceptionResponse> handleNotAllowedExtension(Exception ex, WebRequest request) {
         ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), ex.getMessage(), request.getDescription(false));
-        return new ResponseEntity<>(exceptionResponse, HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
+    }
+    @ExceptionHandler({InvalidPathException.class})
+    public final ResponseEntity<ExceptionResponse> handleNotAllowedURL(Exception ex, WebRequest request) {
+        ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), "Url without extension!", request.getDescription(false));
+        return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
     }
 }
