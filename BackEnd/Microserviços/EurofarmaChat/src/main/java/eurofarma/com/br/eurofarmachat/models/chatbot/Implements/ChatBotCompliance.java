@@ -1,10 +1,11 @@
 package eurofarma.com.br.eurofarmachat.models.chatbot.Implements;
 import dev.langchain4j.rag.RetrievalAugmentor;
+import dev.langchain4j.rag.content.retriever.ContentRetriever;
 import dev.langchain4j.service.AiServices;
 import eurofarma.com.br.eurofarmachat.config.EmbeddingModelProperties;
 import eurofarma.com.br.eurofarmachat.models.langchain4j.ChatLanguageModelSingleton;
-import eurofarma.com.br.eurofarmachat.models.langchain4j.EmbeddingStoreContentRetrieverCreater;
-import eurofarma.com.br.eurofarmachat.models.langchain4j.RetrievalAugmentorCreater;
+import eurofarma.com.br.eurofarmachat.models.langchain4j.EmbeddingStoreContentRetrieverFactory;
+import eurofarma.com.br.eurofarmachat.models.langchain4j.RetrievalAugmentorFactory;
 import eurofarma.com.br.eurofarmachat.models.chatbot.AiChat;
 import eurofarma.com.br.eurofarmachat.models.chatbot.AiChatCompliance;
 import org.springframework.stereotype.Component;
@@ -14,8 +15,8 @@ public class ChatBotCompliance implements AiChat {
     private final AiChatCompliance aiChatCompliance;
     private final AiChatCompliance chatComplianceCheckAbout;
     public ChatBotCompliance(EmbeddingModelProperties embeddingModelProperties){
-        EmbeddingStoreContentRetrieverCreater embeddingStoreContentRetriever = new EmbeddingStoreContentRetrieverCreater("eurocompliance",embeddingModelProperties.getEmbeddingFolder());
-        RetrievalAugmentor retrievalAugmentor = new RetrievalAugmentorCreater(embeddingStoreContentRetriever.getRetriever()).getRetrievalAugmentor();
+        ContentRetriever contentRetriever = EmbeddingStoreContentRetrieverFactory.EmbeddingStoreContentRetrieverCreater("eurocompliance",embeddingModelProperties.getEmbeddingFolder());
+        RetrievalAugmentor retrievalAugmentor = RetrievalAugmentorFactory.createRetrievalAugmentor(contentRetriever);
         ChatLanguageModelSingleton chatLanguageModelFactory = ChatLanguageModelSingleton.getInstance();
         this.aiChatCompliance = AiServices.builder(AiChatCompliance.class)
                 .chatLanguageModel(chatLanguageModelFactory.getChatLanguageModel())

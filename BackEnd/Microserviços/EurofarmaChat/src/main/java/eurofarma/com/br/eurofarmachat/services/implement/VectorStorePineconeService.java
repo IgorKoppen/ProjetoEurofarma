@@ -14,7 +14,7 @@ import dev.langchain4j.model.embedding.OnnxEmbeddingModel;
 import dev.langchain4j.model.embedding.PoolingMode;
 import dev.langchain4j.store.embedding.EmbeddingStore;
 import eurofarma.com.br.eurofarmachat.config.EmbeddingModelProperties;
-import eurofarma.com.br.eurofarmachat.models.langchain4j.EmbeddingStoreCreater;
+import eurofarma.com.br.eurofarmachat.models.langchain4j.EmbeddingStoreFactory;
 import io.pinecone.clients.AsyncIndex;
 import io.pinecone.clients.Pinecone;
 import org.springframework.stereotype.Service;
@@ -48,9 +48,7 @@ public class VectorStorePineconeService {
 
 
     private void vectorSave(String filename,String dowloadLink, String vectorIndex,Path path) {
-
-        EmbeddingStoreCreater embeddingStore = new EmbeddingStoreCreater(vectorIndex);
-        EmbeddingStore<TextSegment> textSegmentEmbeddingStore = embeddingStore.getPineconeEmbeddingStoreCustomMetadata();
+        EmbeddingStore<TextSegment> textSegmentEmbeddingStore = EmbeddingStoreFactory.createPineconeEmbeddingStoreCustomMetadata(vectorIndex);
         EmbeddingModel embeddingModel = new OnnxEmbeddingModel(onnxEmbeddingModelPath,onnxTokenizerPath, PoolingMode.MEAN);
         List<TextSegment> segments = splitDocumentInSmallerPices(path);
         List<TextSegment> segmentsWithMetadata = putMetadataFileName(segments, filename,dowloadLink);
