@@ -1,6 +1,7 @@
 package eurofarma.com.br.eurofarmachat.models.storage.implement;
 
 import eurofarma.com.br.eurofarmachat.exceptions.ArchiveTypeExeception;
+import eurofarma.com.br.eurofarmachat.exceptions.MyFileNotFoundException;
 import eurofarma.com.br.eurofarmachat.models.storage.Storage;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.core.io.Resource;
@@ -79,7 +80,7 @@ public class FileStorageDocs implements Storage {
 
     @Override
     public ResponseEntity<Resource> getDowloadLink(String filename, HttpServletRequest request) throws IOException {
-            Resource resource = getDownloadUri(filename);
+            Resource resource = loadFileAsResource(filename);
             String contentType = request.getServletContext().getMimeType(resource.getFile().getAbsolutePath());
             if (contentType == null) {
                 contentType = "application/octet-stream";
@@ -90,9 +91,18 @@ public class FileStorageDocs implements Storage {
                     .body(resource);
     }
 
-    private Resource getDownloadUri(String filename) throws MalformedURLException  {
-            Path filePath = pathToStorage.resolve(filename).normalize();
-            return new UrlResource(filePath.toUri());
+    private Resource loadFileAsResource(String fileName) {
+        try {
+            Path filePath = this.pathToStorage.resolve(fileName).normalize();
+            Resource resource = new UrlResource(filePath.toUri());
+            if (resource.exists() || resource.isReadable()) {
+                return resource;
+            } else {
+                throw new MyFileNotFoundException("File not found " + fileName);
+            }
+        } catch (Exception e) {
+            throw new MyFileNotFoundException("Could not find file " + fileName, e);
+        }
     }
 
     private Boolean allowedFileType(String fileName) {
