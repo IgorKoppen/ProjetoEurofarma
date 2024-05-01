@@ -24,7 +24,7 @@ public class UploadDocToEuroDataService implements FilesStorageService {
     private final String indexInPinecone = "eurodata";
 
     public UploadDocToEuroDataService(FileStorageProperties fileStorageProperties, VectorStorePineconeService documentsToAiService) {
-        this.fileStorage = new FileStorageDocs(Paths.get(fileStorageProperties.getUploadDir()).toAbsolutePath().normalize().resolve("eurodata"));
+        this.fileStorage = new FileStorageDocs(Paths.get(fileStorageProperties.getUploadDir()).toAbsolutePath().normalize().resolve("eurodata"),List.of(".pdf", ".txt", ".xlsx", ".doc", ".docx"));
         this.documentsToAiService = documentsToAiService;
     }
 

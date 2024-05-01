@@ -27,7 +27,7 @@ public class UploadDocToComplianceService implements FilesStorageService {
     private final String indexInPinecone = "eurocompliance";
 
     public UploadDocToComplianceService(VectorStorePineconeService documentsToAiService, FileStorageProperties fileStorageProperties) {
-        this.fileStorage = new FileStorageDocs(Paths.get(fileStorageProperties.getUploadDir()).toAbsolutePath().normalize().resolve("compliance"));
+        this.fileStorage = new FileStorageDocs(Paths.get(fileStorageProperties.getUploadDir()).toAbsolutePath().normalize().resolve("compliance"),List.of(".pdf", ".txt", ".xlsx", ".doc", ".docx"));
         this.documentsToAiService = documentsToAiService;
     }
 

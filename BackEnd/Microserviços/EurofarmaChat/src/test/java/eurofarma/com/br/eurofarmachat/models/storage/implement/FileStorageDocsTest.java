@@ -25,7 +25,7 @@ class FileStorageDocsTest {
     @BeforeEach
     void setUp() {
         Path pathTofolder = Paths.get(fileStorageProperties.getUploadDir()).toAbsolutePath().normalize();
-        fileStorageDocs = new FileStorageDocs(pathTofolder);
+        fileStorageDocs = new FileStorageDocs(pathTofolder,List.of(".pdf", ".txt", ".xlsx", ".doc", ".docx"));
     }
     @Test
     void save() {

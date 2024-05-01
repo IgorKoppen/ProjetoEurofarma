@@ -15,7 +15,6 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
@@ -26,15 +25,17 @@ import java.util.stream.Collectors;
 public class FileStorageDocs implements Storage {
 
     private final Path pathToStorage;
-    private final List<String> filesExtensionsAllowed = List.of(".pdf", ".txt", ".xlsx", ".doc", ".docx");
+    private final List<String> filesExtensionsAllowed;
 
-    public FileStorageDocs(Path pathToStorage) {
+
+
+    public FileStorageDocs(Path pathToStorage, List<String> filesExtensionsAllowed) {
         this.pathToStorage = pathToStorage.normalize();
+        this.filesExtensionsAllowed = filesExtensionsAllowed;
     }
 
     @Override
     public List<String> listAll() throws IOException {
-
         return Files.list(pathToStorage)
                 .map(Path::getFileName)
                 .map(Path::toString)

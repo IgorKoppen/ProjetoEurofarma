@@ -1,6 +1,5 @@
 package eurofarma.com.br.eurofarmachat.services.implement;
 
-import dev.langchain4j.data.message.AiMessage;
 import eurofarma.com.br.eurofarmachat.dtos.AnswerDTO;
 import eurofarma.com.br.eurofarmachat.dtos.QuestionDTO;
 import eurofarma.com.br.eurofarmachat.models.chatbot.Implements.ChatBotCompliance;
