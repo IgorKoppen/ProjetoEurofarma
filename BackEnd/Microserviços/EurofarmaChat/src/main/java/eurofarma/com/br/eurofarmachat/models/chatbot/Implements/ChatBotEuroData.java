@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 public class ChatBotEuroData implements AiChat {
 
     private final AichatEuroFarma aiChatEuro;
+    private final AichatEuroFarma aiChatEuroAnalizer;
 
     public ChatBotEuroData(EmbeddingModelProperties embeddingModelProperties){
         ContentRetriever embeddingStoreContentRetriever = EmbeddingStoreContentRetrieverFactory.EmbeddingStoreContentRetrieverCreater("eurodata", embeddingModelProperties.getEmbeddingFolder());
@@ -25,10 +26,20 @@ public class ChatBotEuroData implements AiChat {
                 .chatLanguageModel(chatLanguageModelFactory.getChatLanguageModel())
                 .retrievalAugmentor(retrievalAugmentor)
                 .build();
+        this.aiChatEuroAnalizer = AiServices.builder(AichatEuroFarma.class)
+                .chatLanguageModel(chatLanguageModelFactory.getChatLanguageModel())
+                .build();
+
     }
 
     @Override
     public String chat(String pergunta) {
+        if(aiChatEuroAnalizer.isComprimento(pergunta)){
+            return "Olá! Sou o assistente de busca de dados da Eurofarma. Como posso auxiliá-lo hoje";
+        }
+        if(aiChatEuroAnalizer.isDespedida(pergunta)){
+            return aiChatEuro.goodBye();
+        }
         return aiChatEuro.chat(pergunta);
     }
 }

@@ -13,6 +13,17 @@ public interface AichatEuroFarma extends AiChat {
             "{Resposta para pergunta}" +
             "{Documento relacionado}" +
             "{Link completo para baixar o documento}")
+
+    @UserMessage("A texto a seguir é um comprimento ou saudação? texto: {{texto}}")
+    boolean isComprimento(@V("texto") String texto);
+
+    @UserMessage("A texto a seguir é um despedida? texto: {{texto}}")
+    boolean isDespedida(@V("texto") String texto);
+
+    @UserMessage("Você é um funcionario da Eurofarma Brasil especializado em buscar informação da Eurofarma em documentos." +
+            "Faça uma mensagem de despedida amigavel")
+    String goodBye();
+
     @UserMessage("Responda em português essa pergunta: {{message}}")
     String chat(@V("message") String userMessage);
 }

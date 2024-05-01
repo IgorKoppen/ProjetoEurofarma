@@ -14,6 +14,16 @@ public interface AiChatCompliance extends AiChat {
     @UserMessage("Responda em português essa pergunta: {{message}}")
     String chat(@V("message") String userMessage);
 
+    @UserMessage("O texto a seguir é uma saudação? Texto: {{texto}}")
+    boolean isComprimento(@V("texto") String texto);
+
+    @UserMessage("A texto a seguir é um despedida? texto: {{texto}}")
+    boolean isDespedida(@V("texto") String texto);
+
+    @UserMessage("Você é um funcionario da Eurofarma Brasil especializado em compliance da Eurofarma." +
+            "Faça uma mensagem de despedida amigavel")
+    String goodBye();
+
     @UserMessage("A pergunta a seguir tem alguma relação com compliance ou codígo de ética e conduta? Pergunta: {{pergunta}}")
     boolean isAboutCompliance(@V("pergunta") String pergunta);
 }
