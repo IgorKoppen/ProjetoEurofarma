@@ -2,6 +2,7 @@ package eurofarma.com.br.eurofarmachat.controllers;
 import eurofarma.com.br.eurofarmachat.dtos.AnswerDTO;
 import eurofarma.com.br.eurofarmachat.dtos.QuestionDTO;
 import eurofarma.com.br.eurofarmachat.services.implement.ChatBotService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,11 +17,11 @@ public class ChatBotController {
         this.chatBotService = chatBotService;
     }
     @PostMapping("/chatBotCompliance")
-    public AnswerDTO chatWithEuroCompliance(@RequestBody QuestionDTO questionDTO) {
+    public AnswerDTO chatWithEuroCompliance(@Valid  @RequestBody QuestionDTO questionDTO) {
         return chatBotService.chatWithComplianceBot(questionDTO);
     }
     @PostMapping("/chatBotEuroData")
-    public AnswerDTO chatWithEuroData(@RequestBody QuestionDTO questionDTO) {
+    public AnswerDTO chatWithEuroData(@Valid @RequestBody QuestionDTO questionDTO) {
         return chatBotService.chatWithEuroDataBot(questionDTO);
     }
 }

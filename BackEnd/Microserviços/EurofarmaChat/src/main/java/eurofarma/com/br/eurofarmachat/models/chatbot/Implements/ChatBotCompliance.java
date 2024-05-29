@@ -30,11 +30,12 @@ public class ChatBotCompliance implements AiChat {
     @Override
     public String chat(String pergunta) {
         if(chatComplianceAnalizer.isComprimento(pergunta)){
-            return "Olá! Sou o assistente de conformidade da Eurofarma. Como posso auxiliá-lo hoje";
+            return "Olá! Sou o Eurinho o assistente de conformidade da Eurofarma. Como posso auxiliá-lo hoje";
         }
         if(chatComplianceAnalizer.isDespedida(pergunta)){
             return chatComplianceAnalizer.goodBye();
         }
+
         if(chatComplianceAnalizer.isAboutCompliance(pergunta)){
             return aiChatCompliance.chat(pergunta);
         }

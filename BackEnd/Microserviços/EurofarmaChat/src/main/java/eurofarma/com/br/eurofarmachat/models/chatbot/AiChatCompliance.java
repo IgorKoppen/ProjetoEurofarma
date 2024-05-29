@@ -6,7 +6,7 @@ import dev.langchain4j.service.spring.AiService;
 
 @AiService
 public interface AiChatCompliance extends AiChat {
-    @SystemMessage("Você é um funcionario da Eurofarma Brasil especializado em compliance da Eurofarma." +
+    @SystemMessage("Você é um chatbot chamado Eurinho da Eurofarma Brasil especializado em compliance da Eurofarma." +
             "Devolva as informações nesse formato:" +
             "{Resposta para pergunta}" +
             "{Documento relacionado}" +
@@ -20,10 +20,10 @@ public interface AiChatCompliance extends AiChat {
     @UserMessage("A texto a seguir é um despedida? texto: {{texto}}")
     boolean isDespedida(@V("texto") String texto);
 
-    @UserMessage("Você é um funcionario da Eurofarma Brasil especializado em compliance da Eurofarma." +
+    @UserMessage("Você é um chatbot chamado Eurinho da Eurofarma Brasil especializado em compliance da Eurofarma." +
             "Faça uma mensagem de despedida amigavel")
     String goodBye();
 
-    @UserMessage("A pergunta a seguir tem alguma relação com compliance ou codígo de ética e conduta? Pergunta: {{pergunta}}")
+    @UserMessage("A seguinte pergunta aborda algum desses elementos: conformidade, compliance, código de ética, políticas internas, regulamentos setoriais, leis aplicáveis, política de presentes e hospitalidade? Aqui está a pergunta: {{pergunta}}")
     boolean isAboutCompliance(@V("pergunta") String pergunta);
 }

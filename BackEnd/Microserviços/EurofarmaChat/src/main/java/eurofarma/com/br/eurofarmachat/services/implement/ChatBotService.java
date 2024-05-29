@@ -16,6 +16,11 @@ public class ChatBotService {
     @Autowired
     private  ChatBotEuroData chatBotEuroData;
 
+    public ChatBotService(ChatBotCompliance chatBotCompliance, ChatBotEuroData chatBotEuroData) {
+        this.chatBotCompliance = chatBotCompliance;
+        this.chatBotEuroData = chatBotEuroData;
+    }
+
     public AnswerDTO chatWithComplianceBot(QuestionDTO question){
         String answer = chatBotCompliance.chat(question.question());
         return new AnswerDTO(question.question(),answer);
