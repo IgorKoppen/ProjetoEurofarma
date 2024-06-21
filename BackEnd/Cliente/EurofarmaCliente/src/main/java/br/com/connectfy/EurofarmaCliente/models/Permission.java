@@ -19,7 +19,7 @@ public class Permission implements GrantedAuthority, Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column
+    @Column(nullable = false)
     private String description;
 
     @ManyToMany(mappedBy = "permissions")

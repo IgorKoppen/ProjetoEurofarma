@@ -2,6 +2,7 @@ package br.com.connectfy.EurofarmaCliente.services;
 
 import br.com.connectfy.EurofarmaCliente.dtos.security.AccountCredentialsVO;
 import br.com.connectfy.EurofarmaCliente.dtos.security.TokenVO;
+import br.com.connectfy.EurofarmaCliente.models.Employee;
 import br.com.connectfy.EurofarmaCliente.repositories.EmployeeRepository;
 import br.com.connectfy.EurofarmaCliente.security.jwt.JwtTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,10 +30,10 @@ public class AuthService {
     @SuppressWarnings("rawtypes")
     public ResponseEntity signIn(AccountCredentialsVO data) {
         try {
-            var username = data.getUserName();
-            var password = data.getPassword();
+            String username = data.getUserName();
+            String password = data.getPassword();
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
-            var user = userRepository.findByUsername(username);
+            Employee user = userRepository.findByUsername(username);
             var tokenResponse = new TokenVO();
             if (user != null) {
                 tokenResponse = tokenProvider.createToken(username, user.getRoles());

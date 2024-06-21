@@ -15,17 +15,20 @@ public class AuthController {
     @Autowired
     AuthService authService;
 
+    @SuppressWarnings("rawtypes")
     @PostMapping(value = "/signin")
     public ResponseEntity signIn(@RequestBody AccountCredentialsVO data) {
-        if (checkIfParamIsNotNull(data))
+        if (checkIfParamIsNotNull(data)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Invalid client request!");
+        }
         var token = authService.signIn(data);
-        if (token == null)
+        if (token == null) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Invalid client request!");
+        }
         return token;
     }
 
-
+    @SuppressWarnings("rawtypes")
     @PutMapping(value = "/refresh/{userName}")
     public ResponseEntity refreshToken(@PathVariable ("userName") String userName, @RequestHeader("Authorization") String refreshToken) {
         if (checkIfParamIsNotNull(userName, refreshToken))

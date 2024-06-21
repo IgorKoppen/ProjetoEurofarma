@@ -62,11 +62,9 @@ public class SecurityConfig {
                         authorizeHttpRequests -> authorizeHttpRequests
                                 .requestMatchers(
                                         "/auth/signin",
-                                        "/auth/refresh/**",
-                                        "/swagger-ui/**",
-                                        "/v3/api-docs/**"
+                                        "/auth/refresh/**"
                                 ).permitAll()
-                                .requestMatchers("/api/**").authenticated()
+                                .requestMatchers("/eurofarma/**").authenticated()
                                 .requestMatchers("/users").denyAll()
                 )
                 .cors(cors -> {})

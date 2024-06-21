@@ -13,10 +13,15 @@ public class Instructor {
     private Long id;
     @OneToOne(mappedBy = "instructor")
     private Employee employee;
-    @ManyToMany(mappedBy = "instructor")
-    private List<Trainning> transactions;
+    @ManyToMany(mappedBy = "instructors")
+    private List<Trainning> trainnings;
 
     public Instructor() {
+    }
+
+    public Instructor(Employee employee, List<Trainning> trainnings) {
+        this.employee = employee;
+        this.trainnings = trainnings;
     }
 
     public Long getId() {
@@ -35,12 +40,12 @@ public class Instructor {
         this.employee = employee;
     }
 
-    public List<Trainning> getTransactions() {
-        return transactions;
+    public List<Trainning> getTrainnings() {
+        return trainnings;
     }
 
-    public void setTransactions(List<Trainning> transactions) {
-        this.transactions = transactions;
+    public void setTrainnings(List<Trainning> transactions) {
+        this.trainnings = transactions;
     }
 
     @Override
@@ -48,11 +53,11 @@ public class Instructor {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Instructor that = (Instructor) o;
-        return Objects.equals(id, that.id) && Objects.equals(employee, that.employee) && Objects.equals(transactions, that.transactions);
+        return Objects.equals(id, that.id) && Objects.equals(employee, that.employee) && Objects.equals(trainnings, that.trainnings);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, employee, transactions);
+        return Objects.hash(id, employee, trainnings);
     }
 }

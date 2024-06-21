@@ -2,7 +2,7 @@ package br.com.connectfy.EurofarmaCliente.models;
 
 import jakarta.persistence.*;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 
@@ -15,19 +15,43 @@ public class Trainning {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     private String name;
+
+    @Column(nullable = false, unique = true)
     private String code;
-    private Date creationDate;
-    private Date closingDate;
-    private boolean  status;
-    private int password;
+
+    @Column(name = "creation_date", nullable = false)
+    private LocalDateTime  creationDate;
+
+    @Column(nullable = false)
+    private LocalDateTime closingDate;
+
+    @Column(nullable = false)
+    private Boolean  status;
+
+    @Column(nullable = false)
+    private String password;
+
+    @Column(nullable = false)
     private String description;
+
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "training_instructors",
             joinColumns = {@JoinColumn(name = "id_training")},
-            inverseJoinColumns = {@JoinColumn(name = "id_intructor")}
+            inverseJoinColumns = {@JoinColumn(name = "id_instructor")}
     )
-    private List<Trainning> instructor;
+    private List<Instructor> instructors;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "training_tags",
+            joinColumns = {@JoinColumn(name = "id_training")},
+            inverseJoinColumns = {@JoinColumn(name = "id_tag")}
+    )
+    private List<Tag> tags;
+
+    @ManyToMany(mappedBy = "trainnings")
+    private List<Employee> employees;
 
     public Trainning(){}
 
@@ -55,35 +79,35 @@ public class Trainning {
         this.code = code;
     }
 
-    public Date getCreationDate() {
+    public LocalDateTime  getCreationDate() {
         return creationDate;
     }
 
-    public void setCreationDate(Date creationDate) {
+    public void setCreationDate(LocalDateTime  creationDate) {
         this.creationDate = creationDate;
     }
 
-    public Date getClosingDate() {
+    public LocalDateTime  getClosingDate() {
         return closingDate;
     }
 
-    public void setClosingDate(Date closingDate) {
+    public void setClosingDate(LocalDateTime  closingDate) {
         this.closingDate = closingDate;
     }
 
-    public boolean isStatus() {
+    public Boolean isStatus() {
         return status;
     }
 
-    public void setStatus(boolean status) {
+    public void setStatus(Boolean status) {
         this.status = status;
     }
 
-    public int getPassword() {
+    public String getPassword() {
         return password;
     }
 
-    public void setPassword(int password) {
+    public void setPassword(String password) {
         this.password = password;
     }
 
@@ -95,12 +119,32 @@ public class Trainning {
         this.description = description;
     }
 
-    public List<Trainning> getInstructor() {
-        return instructor;
+    public Boolean getStatus() {
+        return status;
     }
 
-    public void setInstructor(List<Trainning> instructor) {
-        this.instructor = instructor;
+    public List<Instructor> getInstructors() {
+        return instructors;
+    }
+
+    public void setInstructors(List<Instructor> instructors) {
+        this.instructors = instructors;
+    }
+
+    public List<Tag> getTags() {
+        return tags;
+    }
+
+    public void setTags(List<Tag> tags) {
+        this.tags = tags;
+    }
+
+    public List<Employee> getEmployees() {
+        return employees;
+    }
+
+    public void setEmployees(List<Employee> employees) {
+        this.employees = employees;
     }
 
     @Override
@@ -108,11 +152,11 @@ public class Trainning {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Trainning trainning = (Trainning) o;
-        return status == trainning.status && password == trainning.password && Objects.equals(id, trainning.id) && Objects.equals(name, trainning.name) && Objects.equals(code, trainning.code) && Objects.equals(creationDate, trainning.creationDate) && Objects.equals(closingDate, trainning.closingDate) && Objects.equals(description, trainning.description) && Objects.equals(instructor, trainning.instructor);
+        return Objects.equals(id, trainning.id) && Objects.equals(name, trainning.name) && Objects.equals(code, trainning.code) && Objects.equals(creationDate, trainning.creationDate) && Objects.equals(closingDate, trainning.closingDate) && Objects.equals(status, trainning.status) && Objects.equals(password, trainning.password) && Objects.equals(description, trainning.description) && Objects.equals(instructors, trainning.instructors) && Objects.equals(tags, trainning.tags);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, code, creationDate, closingDate, status, password, description, instructor);
+        return Objects.hash(id, name, code, creationDate, closingDate, status, password, description, instructors, tags);
     }
 }
