@@ -11,6 +11,7 @@ public class TokenVO implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private String username;
+    private String name;
     private Boolean authenticated;
     private Date created;
     private Date expiration;
@@ -20,8 +21,9 @@ public class TokenVO implements Serializable {
     public TokenVO() {
     }
 
-    public TokenVO(String userName, Boolean authenticated, Date created, Date expiration, String accessToken, String refreshToken) {
-        this.username = userName;
+    public TokenVO(String username, String name, Boolean authenticated, Date created, Date expiration, String accessToken, String refreshToken) {
+        this.username = username;
+        this.name = name;
         this.authenticated = authenticated;
         this.created = created;
         this.expiration = expiration;
@@ -75,6 +77,14 @@ public class TokenVO implements Serializable {
 
     public void setRefreshToken(String refreshToken) {
         this.refreshToken = refreshToken;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     @Override
