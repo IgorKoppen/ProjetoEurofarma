@@ -65,7 +65,6 @@ public class SecurityConfig {
                                         "/auth/refresh/**"
                                 ).permitAll()
                                 .requestMatchers("/eurofarma/**").authenticated()
-                                .requestMatchers("/users").denyAll()
                 )
                 .cors(cors -> {})
                 .build();
