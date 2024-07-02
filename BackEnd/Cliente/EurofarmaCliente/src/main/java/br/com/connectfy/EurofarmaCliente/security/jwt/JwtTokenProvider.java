@@ -43,12 +43,12 @@ public class JwtTokenProvider {
         algorithm = Algorithm.HMAC256(secretKey.getBytes());
     }
 
-    public TokenVO createToken(String username, String name, List<String> roles) {
+    public TokenVO createToken(Long id, String username, String name, List<String> roles) {
         Date now = new Date();
         Date expiration = new Date(now.getTime() + validityInMilliseconds);
         String accessToken = getAccessToken(username, roles, now, expiration);
         String refreshToken = getRefreshToken(username, roles, now);
-        return new TokenVO(username, name, true, now, expiration, accessToken, refreshToken);
+        return new TokenVO(id,username, name, true, now, expiration, accessToken, refreshToken);
     }
 
     public TokenVO refreshToken(String refreshToken) {
@@ -59,8 +59,9 @@ public class JwtTokenProvider {
         DecodedJWT decodedJWT = verifier.verify(refreshToken);
         String username = decodedJWT.getSubject();
         String name = decodedJWT.getClaim("name").asString();
+        Long id = decodedJWT.getClaim("id").asLong();
         List<String> roles = decodedJWT.getClaim("roles").asList(String.class);
-        return createToken(username, name, roles);
+        return createToken(id,username, name, roles);
     }
 
     private String getAccessToken(String username, List<String> roles, Date now, Date expiration) {
