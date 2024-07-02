@@ -1,6 +1,7 @@
 package br.com.connectfy.EurofarmaCliente.controllers;
 
 import br.com.connectfy.EurofarmaCliente.dtos.TagDTO;
+import br.com.connectfy.EurofarmaCliente.dtos.TagInsertDTO;
 import br.com.connectfy.EurofarmaCliente.services.TagsService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,7 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
+@CrossOrigin
 @RestController
 @RequestMapping("/eurofarma/tags")
 public class TagsController {
@@ -17,7 +18,7 @@ public class TagsController {
     private TagsService tagsService;
 
     @PostMapping
-    public ResponseEntity<String> insertTag(@RequestBody @Valid  TagDTO tagDTO) {
+    public ResponseEntity<String> insertTag(@RequestBody @Valid TagInsertDTO tagDTO) {
         return tagsService.insert(tagDTO);
     }
 

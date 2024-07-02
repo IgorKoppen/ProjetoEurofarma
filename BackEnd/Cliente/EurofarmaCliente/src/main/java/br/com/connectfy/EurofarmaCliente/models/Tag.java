@@ -1,6 +1,7 @@
 package br.com.connectfy.EurofarmaCliente.models;
 
 import br.com.connectfy.EurofarmaCliente.dtos.TagDTO;
+import br.com.connectfy.EurofarmaCliente.dtos.TagInsertDTO;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
@@ -37,7 +38,13 @@ public class Tag {
         this.id = tagDTO.id();
         this.name = tagDTO.name();
         this.color = tagDTO.color();
-        this.trainnings = new ArrayList<>();
+        this.trainnings = tagDTO.trainings();
+    }
+
+    public Tag(TagInsertDTO tagDTO) {
+        this.id = tagDTO.id();
+        this.name = tagDTO.name();
+        this.color = tagDTO.color();
     }
 
     public Long getId() {

@@ -1,6 +1,7 @@
 package br.com.connectfy.EurofarmaCliente.services;
 
 import br.com.connectfy.EurofarmaCliente.dtos.TagDTO;
+import br.com.connectfy.EurofarmaCliente.dtos.TagInsertDTO;
 import br.com.connectfy.EurofarmaCliente.exceptions.ResourceNotFoundException;
 import br.com.connectfy.EurofarmaCliente.models.Tag;
 import br.com.connectfy.EurofarmaCliente.repositories.TagsRepository;
@@ -19,7 +20,7 @@ public class TagsService {
     private TagsRepository tagsRepository;
 
     @Transactional
-    public ResponseEntity<String> insert(TagDTO tagDTO) {
+    public ResponseEntity<String> insert(TagInsertDTO tagDTO) {
         Tag tag = new Tag(tagDTO);
         tagsRepository.save(tag);
         return ResponseEntity.ok("Tag inserido com sucesso!");

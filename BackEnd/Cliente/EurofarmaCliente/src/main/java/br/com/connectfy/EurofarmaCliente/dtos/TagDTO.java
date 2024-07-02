@@ -9,10 +9,11 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
 
-public record TagDTO(Long id,
-                     @NotBlank @Size(min = 3, message = "O nome da Tag deve ter 3 dígitos") String name,
-                     @NotBlank @Size(min = 6,max = 6,message = "A cor deve ter 6 dígitos") String color,
-                     @JsonBackReference List<Trainning> trainings) implements Serializable {
+public record TagDTO(
+        Long id,
+        @NotBlank @Size(min = 3, message = "O nome da Tag deve ter 3 dígitos") String name,
+        @NotBlank @Size(min = 7, max = 7, message = "A cor deve ter 7 dígitos") String color,
+        @JsonBackReference List<Trainning> trainings) implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 }
