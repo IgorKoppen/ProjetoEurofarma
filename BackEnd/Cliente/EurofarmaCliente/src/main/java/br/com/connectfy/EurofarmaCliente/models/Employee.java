@@ -159,6 +159,15 @@ public class Employee implements UserDetails, Serializable {
         this.trainnings = trainnings;
     }
 
+    @Override
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
     public List<String> getRoles() {
         List<String> roles = new ArrayList<>();
         for (Permission permission : permissions) {

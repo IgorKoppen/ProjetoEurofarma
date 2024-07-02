@@ -13,8 +13,8 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
     Employee findByUsername(@Param("userName") String userName);
 
     @Modifying
-    @Query("UPDATE Employee p SET p.enabled = false WHERE p.id =:id")
-    void disablePerson(@Param("id") Long id);
+    @Query("UPDATE Employee p SET p.enabled =:status WHERE p.id = :id")
+    void toggleEmployeeStatus(@Param("id") Long id, @Param("status") boolean status);
 
     @Modifying
     @Query("UPDATE Employee p SET p.password =:password WHERE p.id =:id")

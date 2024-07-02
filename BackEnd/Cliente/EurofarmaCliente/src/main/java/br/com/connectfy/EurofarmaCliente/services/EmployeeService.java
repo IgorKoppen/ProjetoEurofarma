@@ -8,6 +8,7 @@ import br.com.connectfy.EurofarmaCliente.models.Employee;
 import br.com.connectfy.EurofarmaCliente.models.Trainning;
 import br.com.connectfy.EurofarmaCliente.repositories.EmployeeRepository;
 import br.com.connectfy.EurofarmaCliente.repositories.TrainningRepository;
+import br.com.connectfy.EurofarmaCliente.util.GenerateEncryptedPassword;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -34,11 +35,14 @@ public class EmployeeService implements UserDetailsService {
     }
 
     @Transactional
-    public EmployeeDTO disablePerson(Long id) {
-        repository.disablePerson(id);
+    public EmployeeDTO toggleEmployeeStatus(Long id) {
         Employee entity = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("No records found with id: " + id));
+        boolean newStatus = !entity.isEnabled();
+        repository.toggleEmployeeStatus(id,newStatus);
+        entity.setEnabled(newStatus);
         return objToDTO(entity);
     }
+
     @Transactional(readOnly = true)
     public Page<EmployeeDTO> findAll(Integer pageNo, Integer pageSize, String sortDirection) {
         Sort.Direction sort = sortDirection.equalsIgnoreCase("asc") ? Sort.Direction.ASC : Sort.Direction.DESC;
@@ -86,20 +90,20 @@ public class EmployeeService implements UserDetailsService {
     }
 
     @Transactional
-    public void updatePassword(EmployeeDTO employeeDTO, String newPassword) {
+    public void updatePassword(String username, String newPassword) {
         try {
-            var entity = findById(employeeDTO.id());
-            repository.changePassword(entity.id(), newPassword);
+            var entity = repository.findByUsername(username);
+            repository.changePassword(entity.getId(), GenerateEncryptedPassword.encryptPassword(newPassword));
         } catch (ResourceNotFoundException e) {
-            throw new ResourceNotFoundException("No records found with id: " + employeeDTO.id());
+            throw new ResourceNotFoundException("No records found with username: " + username);
         }
     }
 
     @Transactional(readOnly = true)
-    public List<TrainningHistoricDTO> findLastTrainnings(EmployeeDTO employeeDTO) {
+    public List<TrainningHistoricDTO> findLastTrainnings(String username) {
         try {
-            EmployeeDTO entity = findById(employeeDTO.id());
-            return entity.trainings().stream().sorted(Comparator.comparing(Trainning::getClosingDate).reversed()
+            Employee entity = repository.findByUsername(username);
+            return entity.getTrainnings().stream().sorted(Comparator.comparing(Trainning::getClosingDate).reversed()
                     ).map(trainning
                             ->  new TrainningHistoricDTO(
                             trainning.getId(),
@@ -115,7 +119,7 @@ public class EmployeeService implements UserDetailsService {
                             trainning.getEmployees()))
                     .collect(Collectors.toList());
         } catch (ResourceNotFoundException e) {
-            throw new ResourceNotFoundException("No records found with id: " + employeeDTO.id());
+            throw new ResourceNotFoundException("No records found with username: " + username);
         }
     }
 

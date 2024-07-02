@@ -10,7 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
 @RestController
 @RequestMapping("/eurofarma/employee")
 public class EmployeeController {
@@ -18,9 +17,9 @@ public class EmployeeController {
     @Autowired
     private EmployeeService employeeService;
 
-    @PatchMapping(value = "/{id}")
+    @PatchMapping(value = "/disable/{id}")
     public EmployeeDTO disableEmployee(@PathVariable Long id) {
-        return employeeService.disablePerson(id);
+        return employeeService.toggleEmployeeStatus(id);
     }
 
     @GetMapping
@@ -52,16 +51,16 @@ public class EmployeeController {
         return ResponseEntity.noContent().build();
     }
 
-    @PatchMapping
-    public ResponseEntity<?> updatePassword(@RequestBody @Valid EmployeeDTO employeeDTO,
-                                            @RequestBody @Valid String password) {
-        employeeService.updatePassword(employeeDTO, password);
+    @PatchMapping("/{username}")
+    public ResponseEntity<?> updatePassword(@PathVariable String username,
+                                            @RequestParam String password) {
+        employeeService.updatePassword(username, password);
         return ResponseEntity.ok("Atualizado com sucesso");
     }
 
-    @GetMapping(value = "/findLastTrainings")
-    public List<TrainningHistoricDTO> findLastTrainings(@RequestBody @Valid EmployeeDTO employeeDTO) {
-        return employeeService.findLastTrainnings(employeeDTO);
+    @GetMapping(value = "/findLastTrainings/{username}")
+    public List<TrainningHistoricDTO> findLastTrainings(@PathVariable String username) {
+        return employeeService.findLastTrainnings(username);
     }
 
 }
