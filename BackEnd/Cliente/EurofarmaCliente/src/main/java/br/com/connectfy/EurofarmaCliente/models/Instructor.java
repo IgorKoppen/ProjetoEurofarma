@@ -1,5 +1,7 @@
 package br.com.connectfy.EurofarmaCliente.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.util.List;
@@ -11,8 +13,11 @@ public class Instructor {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @JsonBackReference
     @OneToOne(mappedBy = "instructor")
     private Employee employee;
+
+    @JsonBackReference
     @ManyToMany(mappedBy = "instructors")
     private List<Trainning> trainnings;
 

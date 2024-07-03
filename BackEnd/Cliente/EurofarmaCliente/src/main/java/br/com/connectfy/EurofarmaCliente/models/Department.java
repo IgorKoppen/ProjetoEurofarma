@@ -1,6 +1,8 @@
 package br.com.connectfy.EurofarmaCliente.models;
 
 import br.com.connectfy.EurofarmaCliente.dtos.DepartmentDTO;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
@@ -17,6 +19,7 @@ public class Department {
     @Column(name = "depart_name", nullable = false)
     private String departName;
 
+    @JsonBackReference
     @OneToMany(fetch = FetchType.EAGER,mappedBy = "department")
     private List<Employee> employees = new ArrayList<>();
 

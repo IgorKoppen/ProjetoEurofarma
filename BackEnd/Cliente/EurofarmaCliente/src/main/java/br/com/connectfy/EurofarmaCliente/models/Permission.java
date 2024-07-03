@@ -1,5 +1,6 @@
 package br.com.connectfy.EurofarmaCliente.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
 
@@ -22,6 +23,7 @@ public class Permission implements GrantedAuthority, Serializable {
     @Column(nullable = false)
     private String description;
 
+    @JsonBackReference
     @ManyToMany(mappedBy = "permissions")
     private List<Employee> employees;
 

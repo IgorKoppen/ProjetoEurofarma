@@ -1,6 +1,8 @@
 package br.com.connectfy.EurofarmaCliente.models;
 
 import br.com.connectfy.EurofarmaCliente.dtos.EmployeeDTO;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -46,22 +48,27 @@ public class Employee implements UserDetails, Serializable {
     @Column(nullable = false)
     private boolean enabled;
 
+    @JsonBackReference
     @OneToMany(fetch = FetchType.EAGER,mappedBy = "employee")
     private List<Role> roles;
 
+    @JsonManagedReference
     @ManyToOne(fetch = FetchType.EAGER)
     private Department department;
 
+    @JsonManagedReference
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "employee_permission", joinColumns = {@JoinColumn(name = "id_employee")},
             inverseJoinColumns = {@JoinColumn(name = "id_permission")}
     )
     private List<Permission> permissions;
 
+    @JsonManagedReference
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "instructor_id", referencedColumnName = "id")
     private Instructor instructor;
 
+    @JsonManagedReference
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "employee_training", joinColumns = {@JoinColumn(name = "id_employee")},
             inverseJoinColumns = {@JoinColumn(name = "id_training")}

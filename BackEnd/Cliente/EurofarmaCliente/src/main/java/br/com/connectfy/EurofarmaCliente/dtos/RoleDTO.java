@@ -8,7 +8,8 @@ import jakarta.validation.constraints.NotBlank;
 import java.io.Serial;
 import java.io.Serializable;
 
-public record RoleDTO(Long id, @JsonProperty("role_name") @NotBlank(message = "O campo não pode ser nulo") String roleName,
+public record RoleDTO(Long id,
+                      @JsonProperty("role_name") @NotBlank(message = "O campo não pode ser nulo") String roleName,
                       @NotBlank(message = "O campo não pode ser nulo") @JsonBackReference Employee employee) implements Serializable {
 
     @Serial

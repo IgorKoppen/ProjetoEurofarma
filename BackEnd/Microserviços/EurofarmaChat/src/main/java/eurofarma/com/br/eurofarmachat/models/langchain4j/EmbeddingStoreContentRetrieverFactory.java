@@ -18,8 +18,7 @@ public class EmbeddingStoreContentRetrieverFactory {
        return EmbeddingStoreContentRetriever.builder()
                 .embeddingModel(new OnnxEmbeddingModel(onnxEmbeddingModelPath,onnxTokenizerPath, PoolingMode.MEAN))
                 .embeddingStore(EmbeddingStoreFactory.createPineconeEmbeddingStoreCustomMetadata(index))
-                .maxResults(12)
-                .minScore(0.75)
+                .maxResults(3)
                 .build();
     }
 

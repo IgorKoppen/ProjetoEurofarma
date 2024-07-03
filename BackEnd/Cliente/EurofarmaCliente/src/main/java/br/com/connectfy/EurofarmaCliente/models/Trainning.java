@@ -1,5 +1,7 @@
 package br.com.connectfy.EurofarmaCliente.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
@@ -36,6 +38,7 @@ public class Trainning {
     @Column(nullable = false)
     private String description;
 
+    @JsonManagedReference
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "training_instructors",
             joinColumns = {@JoinColumn(name = "id_training")},
@@ -43,6 +46,7 @@ public class Trainning {
     )
     private List<Instructor> instructors;
 
+    @JsonManagedReference
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "training_tags",
             joinColumns = {@JoinColumn(name = "id_training")},
@@ -50,6 +54,7 @@ public class Trainning {
     )
     private List<Tag> tags;
 
+    @JsonBackReference
     @ManyToMany(mappedBy = "trainnings")
     private List<Employee> employees;
 

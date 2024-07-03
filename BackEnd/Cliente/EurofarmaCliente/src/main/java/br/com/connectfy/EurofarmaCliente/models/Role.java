@@ -1,5 +1,6 @@
 package br.com.connectfy.EurofarmaCliente.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 import java.util.Objects;
@@ -14,6 +15,7 @@ public class Role {
     @Column(name = "role_name", nullable = false)
     private String roleName;
 
+    @JsonBackReference
     @ManyToOne(fetch = FetchType.EAGER)
     private Employee employee;
 

@@ -58,9 +58,9 @@ public class EmployeeController {
         return ResponseEntity.ok("Atualizado com sucesso");
     }
 
-    @GetMapping(value = "/findLastTrainings/{username}")
-    public List<TrainningHistoricDTO> findLastTrainings(@PathVariable String username) {
-        return employeeService.findLastTrainnings(username);
+    @GetMapping(value = "/findLastTrainings/{id}")
+    public List<TrainningHistoricDTO> findLastTrainings(@PathVariable Long id) {
+        return employeeService.findLastTrainnings(id);
     }
 
 }

@@ -1,6 +1,8 @@
 package br.com.connectfy.EurofarmaCliente.services;
 
 import br.com.connectfy.EurofarmaCliente.dtos.EmployeeDTO;
+import br.com.connectfy.EurofarmaCliente.dtos.RoleDTO;
+import br.com.connectfy.EurofarmaCliente.dtos.TagDTO;
 import br.com.connectfy.EurofarmaCliente.dtos.TrainningHistoricDTO;
 import br.com.connectfy.EurofarmaCliente.exceptions.RequiredObjectIsNullException;
 import br.com.connectfy.EurofarmaCliente.exceptions.ResourceNotFoundException;
@@ -100,9 +102,8 @@ public class EmployeeService implements UserDetailsService {
     }
 
     @Transactional(readOnly = true)
-    public List<TrainningHistoricDTO> findLastTrainnings(String username) {
-        try {
-            Employee entity = repository.findByUsername(username);
+    public List<TrainningHistoricDTO> findLastTrainnings(Long id) {
+            Employee entity = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("No records found with id: " + id));
             return entity.getTrainnings().stream().sorted(Comparator.comparing(Trainning::getClosingDate).reversed()
                     ).map(trainning
                             ->  new TrainningHistoricDTO(
@@ -114,13 +115,10 @@ public class EmployeeService implements UserDetailsService {
                             trainning.getStatus(),
                             trainning.getPassword(),
                             trainning.getDescription(),
-                            trainning.getInstructors(),
+                            trainning.getInstructors().stream().map(instructor -> instructor.getEmployee().getName()).collect(Collectors.toList()),
                             trainning.getTags(),
-                            trainning.getEmployees()))
+                            null))
                     .collect(Collectors.toList());
-        } catch (ResourceNotFoundException e) {
-            throw new ResourceNotFoundException("No records found with username: " + username);
-        }
     }
 
     @Override
@@ -134,8 +132,16 @@ public class EmployeeService implements UserDetailsService {
     }
 
     private EmployeeDTO objToDTO(Employee employee){
-        return new EmployeeDTO(employee.getId(), employee.getUsername(),employee.getName(), employee.getSurname(),
-                employee.getPassword(),employee.getCellphoneNumber(),employee.getList(),employee.getDepartments(), employee.getDepartments().getDepartName(), employee.getTrainnings());
+        return new EmployeeDTO(
+                employee.getId(),
+                employee.getUsername(),
+                employee.getName(),
+                employee.getSurname(),
+                employee.getPassword(),
+                employee.getCellphoneNumber(),
+                employee.getList(),
+                employee.getDepartments(),
+                employee.getTrainnings());
     }
 
    private String generateUserName(String name,String surname,String telefone) {
