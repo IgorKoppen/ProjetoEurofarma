@@ -73,7 +73,7 @@ public class Employee implements UserDetails, Serializable {
     @JoinTable(name = "employee_training", joinColumns = {@JoinColumn(name = "id_employee")},
             inverseJoinColumns = {@JoinColumn(name = "id_training")}
     )
-    private List<Trainning> trainnings;
+    private List<Training> trainnings;
 
     public Employee() {
 
@@ -158,11 +158,11 @@ public class Employee implements UserDetails, Serializable {
         this.department = department;
     }
 
-    public List<Trainning> getTrainnings() {
+    public List<Training> getTrainnings() {
         return trainnings;
     }
 
-    public void setTrainnings(List<Trainning> trainnings) {
+    public void setTrainnings(List<Training> trainnings) {
         this.trainnings = trainnings;
     }
 

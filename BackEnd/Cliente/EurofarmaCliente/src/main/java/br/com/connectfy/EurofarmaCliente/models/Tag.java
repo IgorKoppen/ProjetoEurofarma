@@ -5,7 +5,6 @@ import br.com.connectfy.EurofarmaCliente.dtos.TagInsertDTO;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -24,12 +23,12 @@ public class Tag {
 
     @JsonBackReference
     @ManyToMany(mappedBy = "tags")
-    private List<Trainning> trainnings;
+    private List<Training> trainnings;
 
     public Tag() {
     }
 
-    public Tag(Long id, String name, String color, List<Trainning> trainnings) {
+    public Tag(Long id, String name, String color, List<Training> trainnings) {
         this.id = id;
         this.name = name;
         this.color = color;
@@ -73,11 +72,11 @@ public class Tag {
         this.name = name;
     }
 
-    public List<Trainning> getTrainnings() {
+    public List<Training> getTrainnings() {
         return trainnings;
     }
 
-    public void setTrainnings(List<Trainning> trainnings) {
+    public void setTrainnings(List<Training> trainnings) {
         this.trainnings = trainnings;
     }
 

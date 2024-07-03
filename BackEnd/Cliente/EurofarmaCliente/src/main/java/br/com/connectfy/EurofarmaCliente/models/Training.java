@@ -11,7 +11,7 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "tb_trainning")
-public class Trainning {
+public class Training {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -58,7 +58,7 @@ public class Trainning {
     @ManyToMany(mappedBy = "trainnings")
     private List<Employee> employees;
 
-    public Trainning(){}
+    public Training(){}
 
     public Long getId() {
         return id;
@@ -153,10 +153,27 @@ public class Trainning {
     }
 
     @Override
+    public String toString() {
+        return "Training{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", code='" + code + '\'' +
+                ", creationDate=" + creationDate +
+                ", closingDate=" + closingDate +
+                ", status=" + status +
+                ", password='" + password + '\'' +
+                ", description='" + description + '\'' +
+                ", instructors=" + instructors +
+                ", tags=" + tags +
+                ", employees=" + employees +
+                '}';
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Trainning trainning = (Trainning) o;
+        Training trainning = (Training) o;
         return Objects.equals(id, trainning.id) && Objects.equals(name, trainning.name) && Objects.equals(code, trainning.code) && Objects.equals(creationDate, trainning.creationDate) && Objects.equals(closingDate, trainning.closingDate) && Objects.equals(status, trainning.status) && Objects.equals(password, trainning.password) && Objects.equals(description, trainning.description) && Objects.equals(instructors, trainning.instructors) && Objects.equals(tags, trainning.tags);
     }
 

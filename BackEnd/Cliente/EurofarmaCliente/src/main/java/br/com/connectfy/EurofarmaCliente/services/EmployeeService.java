@@ -1,13 +1,11 @@
 package br.com.connectfy.EurofarmaCliente.services;
 
 import br.com.connectfy.EurofarmaCliente.dtos.EmployeeDTO;
-import br.com.connectfy.EurofarmaCliente.dtos.RoleDTO;
-import br.com.connectfy.EurofarmaCliente.dtos.TagDTO;
-import br.com.connectfy.EurofarmaCliente.dtos.TrainningHistoricDTO;
+import br.com.connectfy.EurofarmaCliente.dtos.TrainingHistoricDTO;
 import br.com.connectfy.EurofarmaCliente.exceptions.RequiredObjectIsNullException;
 import br.com.connectfy.EurofarmaCliente.exceptions.ResourceNotFoundException;
 import br.com.connectfy.EurofarmaCliente.models.Employee;
-import br.com.connectfy.EurofarmaCliente.models.Trainning;
+import br.com.connectfy.EurofarmaCliente.models.Training;
 import br.com.connectfy.EurofarmaCliente.repositories.EmployeeRepository;
 import br.com.connectfy.EurofarmaCliente.repositories.TrainningRepository;
 import br.com.connectfy.EurofarmaCliente.util.GenerateEncryptedPassword;
@@ -102,11 +100,11 @@ public class EmployeeService implements UserDetailsService {
     }
 
     @Transactional(readOnly = true)
-    public List<TrainningHistoricDTO> findLastTrainnings(Long id) {
+    public List<TrainingHistoricDTO> findLastTrainnings(Long id) {
             Employee entity = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("No records found with id: " + id));
-            return entity.getTrainnings().stream().sorted(Comparator.comparing(Trainning::getClosingDate).reversed()
+            return entity.getTrainnings().stream().sorted(Comparator.comparing(Training::getClosingDate).reversed()
                     ).map(trainning
-                            ->  new TrainningHistoricDTO(
+                            ->  new TrainingHistoricDTO(
                             trainning.getId(),
                             trainning.getName(),
                             trainning.getCode(),

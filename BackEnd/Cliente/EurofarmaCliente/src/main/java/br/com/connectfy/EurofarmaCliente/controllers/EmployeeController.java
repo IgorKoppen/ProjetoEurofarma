@@ -1,7 +1,7 @@
 package br.com.connectfy.EurofarmaCliente.controllers;
 
 import br.com.connectfy.EurofarmaCliente.dtos.EmployeeDTO;
-import br.com.connectfy.EurofarmaCliente.dtos.TrainningHistoricDTO;
+import br.com.connectfy.EurofarmaCliente.dtos.TrainingHistoricDTO;
 import br.com.connectfy.EurofarmaCliente.services.EmployeeService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,7 +59,7 @@ public class EmployeeController {
     }
 
     @GetMapping(value = "/findLastTrainings/{id}")
-    public List<TrainningHistoricDTO> findLastTrainings(@PathVariable Long id) {
+    public List<TrainingHistoricDTO> findLastTrainings(@PathVariable Long id) {
         return employeeService.findLastTrainnings(id);
     }
 

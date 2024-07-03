@@ -1,13 +1,13 @@
 package br.com.connectfy.EurofarmaCliente.services;
 
-import br.com.connectfy.EurofarmaCliente.dtos.EmployeeDTO;
-import br.com.connectfy.EurofarmaCliente.dtos.TrainningDTO;
-import br.com.connectfy.EurofarmaCliente.dtos.TrainningHistoricDTO;
+import br.com.connectfy.EurofarmaCliente.dtos.*;
 import br.com.connectfy.EurofarmaCliente.exceptions.EmployeeAlreadyInTrainning;
 import br.com.connectfy.EurofarmaCliente.exceptions.PasswordDontMatch;
 import br.com.connectfy.EurofarmaCliente.exceptions.ResourceNotFoundException;
 import br.com.connectfy.EurofarmaCliente.models.Employee;
-import br.com.connectfy.EurofarmaCliente.models.Trainning;
+import br.com.connectfy.EurofarmaCliente.models.Instructor;
+import br.com.connectfy.EurofarmaCliente.models.Tag;
+import br.com.connectfy.EurofarmaCliente.models.Training;
 import br.com.connectfy.EurofarmaCliente.repositories.TrainningRepository;
 import org.passay.CharacterData;
 import org.passay.CharacterRule;
@@ -25,47 +25,66 @@ import java.util.stream.Collectors;
 import static org.passay.DigestDictionaryRule.ERROR_CODE;
 
 @Service
-public class TrainningService {
+public class TrainingService {
 
     @Autowired
     private TrainningRepository trainningRepository;
+    @Autowired
+    private InstructorService instructorService;
+    @Autowired
+    private TagsService tagsService;
+
 
     @Transactional
-    public ResponseEntity<String> create(TrainningDTO trainningDTO) {
+    public ResponseEntity<String> create(TrainingCreationDTO trainingDTO) {
+        List<Tag> tags = trainingDTO.tags().stream()
+                .map(id -> {
+                    TagDTO tagDTO = tagsService.getById(id);
+                    return new Tag(tagDTO.id(), tagDTO.name(),tagDTO.color(),tagDTO.trainings());
+                })
+                .collect(Collectors.toList());
+
+        List<Instructor> instructors = trainingDTO.instructor().stream()
+                .map(id -> {InstructorDTO instructorDTO = instructorService.getById(id);
+                   return new Instructor(instructorDTO.id(),instructorDTO.employee(),instructorDTO.trainnings());
+                }
+                )
+                .collect(Collectors.toList());
+
         LocalDateTime now = LocalDateTime.now();
-        Trainning trainning = new Trainning();
-        trainning.setName(trainningDTO.name());
+        Training trainning = new Training();
+        trainning.setName(trainingDTO.name());
         trainning.setCode(generatePassword(2));
-        trainning.setDescription(trainningDTO.description());
+        trainning.setDescription(trainingDTO.description());
         trainning.setCreationDate(now);
-        trainning.setClosingDate(trainningDTO.closingDate());
+        trainning.setClosingDate(LocalDateTime.parse(trainingDTO.closingDate()));
         trainning.setPassword(generatePassword(1));
         trainning.setStatus(true);
-        trainning.setInstructors(trainningDTO.instructor());
-        trainning.setTags(trainningDTO.tags());
+        trainning.setInstructors(instructors);
+        trainning.setTags(tags);
         trainningRepository.save(trainning);
         return ResponseEntity.ok("Treinamento inserido com sucesso!");
     }
 
     @Transactional(readOnly = true)
-    public TrainningHistoricDTO getById(Long id) {
-        Trainning trainning = trainningRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("No records found with id: " + id));
-        return new TrainningHistoricDTO(trainning.getId(), trainning.getName(), trainning.getCode(),
+    public TrainingHistoricDTO getById(Long id) {
+        Training trainning = trainningRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("No records found with id: " + id));
+        return new TrainingHistoricDTO(trainning.getId(), trainning.getName(), trainning.getCode(),
                 trainning.getCreationDate(),trainning.getClosingDate(),trainning.getStatus(),
                 trainning.getPassword(),trainning.getDescription(),trainning.getInstructors().stream().map(instructor -> instructor.getEmployee().getName()).collect(Collectors.toList()), trainning.getTags(), trainning.getEmployees());
     }
     @Transactional(readOnly = true)
-    public List<TrainningHistoricDTO> findAll() {
-        List<Trainning> trainnings = trainningRepository.findAll();
+    public List<TrainingHistoricDTO> findAll() {
+        List<Training> trainnings = trainningRepository.findAll();
         return trainnings.stream().map(trainning
-                        ->  new TrainningHistoricDTO(trainning.getId(), trainning.getName(), trainning.getCode(),
+                        ->  new TrainingHistoricDTO(trainning.getId(), trainning.getName(), trainning.getCode(),
                 trainning.getCreationDate(),trainning.getClosingDate(),trainning.getStatus(),
                 trainning.getPassword(),trainning.getDescription(),trainning.getInstructors().stream().map(instructor -> instructor.getEmployee().getName()).collect(Collectors.toList()), trainning.getTags(), trainning.getEmployees()))
                 .collect(Collectors.toList());
     }
     @Transactional
-    public ResponseEntity<String> update(Long id, TrainningDTO trainningDTO) {
-        Trainning updateTrainning= trainningRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("No records found with id: " + id));
+    public ResponseEntity<String> update(Long id, TrainingDTO trainningDTO) {
+        Training updateTrainning= trainningRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("No records found with id: " + id));
         updateTrainning.setName(trainningDTO.name());
         updateTrainning.setCode(trainningDTO.code());
         updateTrainning.setDescription(trainningDTO.description());
@@ -82,7 +101,7 @@ public class TrainningService {
     @Transactional
     public ResponseEntity<?> addEmployee(String code,String password, EmployeeDTO employeeDTO) {
         try {
-            Trainning trainning = trainningRepository.findTrainingByCode(code);
+            Training trainning = trainningRepository.findTrainingByCode(code);
             if(!trainning.getPassword().equals(password)) {
                 throw new PasswordDontMatch("Senha Incorreta!");
             }

@@ -2,7 +2,7 @@ package br.com.connectfy.EurofarmaCliente.dtos;
 
 import br.com.connectfy.EurofarmaCliente.models.Department;
 import br.com.connectfy.EurofarmaCliente.models.Role;
-import br.com.connectfy.EurofarmaCliente.models.Trainning;
+import br.com.connectfy.EurofarmaCliente.models.Training;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -19,7 +19,7 @@ public record EmployeeDTO(Long id,
                           @JsonProperty("cellphone_number") @NotBlank String cellphoneNumber,
                           List<Role> roles,
                           Department department,
-                          List<Trainning> trainings) implements Serializable {
+                          List<Training> trainings) implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 }

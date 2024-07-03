@@ -1,7 +1,6 @@
 package br.com.connectfy.EurofarmaCliente.models;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.util.List;
@@ -19,12 +18,18 @@ public class Instructor {
 
     @JsonBackReference
     @ManyToMany(mappedBy = "instructors")
-    private List<Trainning> trainnings;
+    private List<Training> trainnings;
 
     public Instructor() {
     }
 
-    public Instructor(Employee employee, List<Trainning> trainnings) {
+    public Instructor(Employee employee, List<Training> trainnings) {
+        this.employee = employee;
+        this.trainnings = trainnings;
+    }
+
+    public Instructor(Long id, Employee employee, List<Training> trainnings) {
+        this.id = id;
         this.employee = employee;
         this.trainnings = trainnings;
     }
@@ -45,11 +50,11 @@ public class Instructor {
         this.employee = employee;
     }
 
-    public List<Trainning> getTrainnings() {
+    public List<Training> getTrainnings() {
         return trainnings;
     }
 
-    public void setTrainnings(List<Trainning> transactions) {
+    public void setTrainnings(List<Training> transactions) {
         this.trainnings = transactions;
     }
 
