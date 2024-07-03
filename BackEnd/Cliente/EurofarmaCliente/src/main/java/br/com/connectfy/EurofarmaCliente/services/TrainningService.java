@@ -35,11 +35,11 @@ public class TrainningService {
         LocalDateTime now = LocalDateTime.now();
         Trainning trainning = new Trainning();
         trainning.setName(trainningDTO.name());
-        trainning.setCode(generatePassayPassword(2));
+        trainning.setCode(generatePassword(2));
         trainning.setDescription(trainningDTO.description());
         trainning.setCreationDate(now);
         trainning.setClosingDate(trainningDTO.closingDate());
-        trainning.setPassword(generatePassayPassword(1));
+        trainning.setPassword(generatePassword(1));
         trainning.setStatus(true);
         trainning.setInstructors(trainningDTO.instructor());
         trainning.setTags(trainningDTO.tags());
@@ -52,7 +52,7 @@ public class TrainningService {
         Trainning trainning = trainningRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("No records found with id: " + id));
         return new TrainningHistoricDTO(trainning.getId(), trainning.getName(), trainning.getCode(),
                 trainning.getCreationDate(),trainning.getClosingDate(),trainning.getStatus(),
-                trainning.getPassword(),trainning.getDescription(),trainning.getInstructors(), trainning.getTags(), trainning.getEmployees());
+                trainning.getPassword(),trainning.getDescription(),trainning.getInstructors().stream().map(instructor -> instructor.getEmployee().getName()).collect(Collectors.toList()), trainning.getTags(), trainning.getEmployees());
     }
     @Transactional(readOnly = true)
     public List<TrainningHistoricDTO> findAll() {
@@ -60,7 +60,7 @@ public class TrainningService {
         return trainnings.stream().map(trainning
                         ->  new TrainningHistoricDTO(trainning.getId(), trainning.getName(), trainning.getCode(),
                 trainning.getCreationDate(),trainning.getClosingDate(),trainning.getStatus(),
-                trainning.getPassword(),trainning.getDescription(),trainning.getInstructors(), trainning.getTags(), trainning.getEmployees()))
+                trainning.getPassword(),trainning.getDescription(),trainning.getInstructors().stream().map(instructor -> instructor.getEmployee().getName()).collect(Collectors.toList()), trainning.getTags(), trainning.getEmployees()))
                 .collect(Collectors.toList());
     }
     @Transactional
@@ -98,6 +98,7 @@ public class TrainningService {
             throw new ResourceNotFoundException("No records found with code: " + code);
         }
     }
+
     @Transactional
     public void delete(Long id) {
         if (!trainningRepository.existsById(id)) {
@@ -111,7 +112,7 @@ public class TrainningService {
     }
 
 
-    private String generatePassayPassword(int NumberOfCharacters) {
+    private String generatePassword(int NumberOfCharacters) {
         PasswordGenerator gen = new PasswordGenerator();
         CharacterData lowerCaseChars = EnglishCharacterData.LowerCase;
         CharacterRule lowerCaseRule = new CharacterRule(lowerCaseChars);
