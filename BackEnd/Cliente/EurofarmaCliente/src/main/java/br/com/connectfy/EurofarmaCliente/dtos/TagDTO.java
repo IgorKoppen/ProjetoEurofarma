@@ -1,8 +1,6 @@
 package br.com.connectfy.EurofarmaCliente.dtos;
 
 import br.com.connectfy.EurofarmaCliente.models.Trainning;
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
