@@ -3,8 +3,6 @@ package br.com.connectfy.EurofarmaCliente.dtos;
 import br.com.connectfy.EurofarmaCliente.models.Employee;
 import br.com.connectfy.EurofarmaCliente.models.Instructor;
 import br.com.connectfy.EurofarmaCliente.models.Tag;
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.*;
 
@@ -21,9 +19,9 @@ public record TrainningDTO(Long id,
                            boolean status,
                            @NotBlank(message = "Password não pode ser vazio!") String password,
                            @NotBlank(message = "Descrição não pode ser vazia!") String description,
-                           @JsonManagedReference List<Instructor>  instructor,
-                           @JsonManagedReference @NotBlank List<Tag> tags,
-                           @JsonBackReference List<Employee> employees) implements Serializable {
+                           List<Instructor>  instructor,
+                           List<Tag> tags,
+                           List<Employee> employees) implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 }
