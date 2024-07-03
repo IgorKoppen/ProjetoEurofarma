@@ -1,8 +1,11 @@
 package br.com.connectfy.EurofarmaCliente.dtos.security;
 
+import br.com.connectfy.EurofarmaCliente.models.Role;
+
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 
 public class TokenVO implements Serializable {
@@ -13,6 +16,7 @@ public class TokenVO implements Serializable {
     private Long id;
     private String username;
     private String name;
+    private List<String> roles;
     private Boolean authenticated;
     private Date created;
     private Date expiration;
@@ -22,16 +26,18 @@ public class TokenVO implements Serializable {
     public TokenVO() {
     }
 
-    public TokenVO(Long id,String username, String name, Boolean authenticated, Date created, Date expiration, String accessToken, String refreshToken) {
+    public TokenVO(Long id, String username, String name, List<String> roles, Boolean authenticated, Date created, Date expiration, String accessToken, String refreshToken) {
         this.id = id;
         this.username = username;
         this.name = name;
+        this.roles = roles;
         this.authenticated = authenticated;
         this.created = created;
         this.expiration = expiration;
         this.accessToken = accessToken;
         this.refreshToken = refreshToken;
     }
+
     public Long getId() {
         return id;
     }
@@ -92,6 +98,14 @@ public class TokenVO implements Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public List<String> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(List<String> roles) {
+        this.roles = roles;
     }
 
     @Override

@@ -18,6 +18,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Date;
 import java.util.List;
@@ -48,7 +49,7 @@ public class JwtTokenProvider {
         Date expiration = new Date(now.getTime() + validityInMilliseconds);
         String accessToken = getAccessToken(username, roles, now, expiration);
         String refreshToken = getRefreshToken(username, roles, now);
-        return new TokenVO(id,username, name, true, now, expiration, accessToken, refreshToken);
+        return new TokenVO(id,username, name,roles, true, now, expiration, accessToken, refreshToken);
     }
 
     public TokenVO refreshToken(String refreshToken) {
