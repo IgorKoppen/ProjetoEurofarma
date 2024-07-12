@@ -1,6 +1,8 @@
 package br.com.connectfy.EurofarmaCliente.controllers;
 
 import br.com.connectfy.EurofarmaCliente.dtos.InstructorDTO;
+import br.com.connectfy.EurofarmaCliente.dtos.InstructorTrainingsDTO;
+import br.com.connectfy.EurofarmaCliente.dtos.TrainingHistoricDTO;
 import br.com.connectfy.EurofarmaCliente.services.InstructorService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,4 +41,7 @@ public class InstructorController {
     public void deleteInstructor(@PathVariable Long id) {
         instructorService.delete(id);
     }
+
+    @GetMapping("/findTrainingByInstructor/{id}")
+    public List<TrainingHistoricDTO> fetchInstructorTrainings(@PathVariable Long id) { return instructorService.findTrainingById(id); }
 }

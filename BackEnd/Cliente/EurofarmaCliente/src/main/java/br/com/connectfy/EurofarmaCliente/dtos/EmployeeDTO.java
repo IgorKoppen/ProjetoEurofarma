@@ -19,7 +19,8 @@ public record EmployeeDTO(Long id,
                           @JsonProperty("cellphone_number") @NotBlank String cellphoneNumber,
                           List<Role> roles,
                           Department department,
-                          List<Training> trainings) implements Serializable {
+                          List<Training> trainings,
+                          Long instructorId) implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 }

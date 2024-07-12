@@ -130,6 +130,10 @@ public class EmployeeService implements UserDetailsService {
     }
 
     private EmployeeDTO objToDTO(Employee employee){
+        Long instructorId = null;
+        if (employee.getInstructor() != null) {
+            instructorId = employee.getInstructor().getId();
+        }
         return new EmployeeDTO(
                 employee.getId(),
                 employee.getUsername(),
@@ -139,7 +143,8 @@ public class EmployeeService implements UserDetailsService {
                 employee.getCellphoneNumber(),
                 employee.getList(),
                 employee.getDepartments(),
-                employee.getTrainnings());
+                employee.getTrainnings(),
+                instructorId);
     }
 
    private String generateUserName(String name,String surname,String telefone) {

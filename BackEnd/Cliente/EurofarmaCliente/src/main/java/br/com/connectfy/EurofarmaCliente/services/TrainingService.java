@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -45,11 +46,12 @@ public class TrainingService {
                 .collect(Collectors.toList());
 
         List<Instructor> instructors = trainingDTO.instructor().stream()
-                .map(id -> {InstructorDTO instructorDTO = instructorService.getById(id);
-                   return new Instructor(instructorDTO.id(),instructorDTO.employee(),instructorDTO.trainnings());
-                }
-                )
+                .map(id -> {
+                    InstructorDTO instructorDTO = instructorService.getById(id);
+                    return new Instructor(instructorDTO.id(), instructorDTO.employee(), instructorDTO.trainnings());
+                })
                 .collect(Collectors.toList());
+
 
         LocalDateTime now = LocalDateTime.now();
         Training trainning = new Training();
@@ -57,7 +59,9 @@ public class TrainingService {
         trainning.setCode(generatePassword(2));
         trainning.setDescription(trainingDTO.description());
         trainning.setCreationDate(now);
-        trainning.setClosingDate(LocalDateTime.parse(trainingDTO.closingDate()));
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yy HH:mm:ss,SSS");
+        LocalDateTime parsedDate = LocalDateTime.parse(trainingDTO.closingDate(), formatter);
+        trainning.setClosingDate(parsedDate);
         trainning.setPassword(generatePassword(1));
         trainning.setStatus(true);
         trainning.setInstructors(instructors);

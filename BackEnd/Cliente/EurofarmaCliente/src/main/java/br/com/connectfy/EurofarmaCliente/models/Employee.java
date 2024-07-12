@@ -166,6 +166,14 @@ public class Employee implements UserDetails, Serializable {
         this.trainnings = trainnings;
     }
 
+    public Instructor getInstructor() {
+        return instructor;
+    }
+
+    public void setInstructor(Instructor instructor) {
+        this.instructor = instructor;
+    }
+
     @Override
     public boolean isEnabled() {
         return enabled;

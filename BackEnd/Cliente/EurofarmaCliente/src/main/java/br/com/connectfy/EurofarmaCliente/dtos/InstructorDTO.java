@@ -10,7 +10,8 @@ import java.util.List;
 
 public record InstructorDTO(Long id,
                             @NotBlank Employee employee,
-                             List<Training> trainnings) implements Serializable {
+                             List<Training> trainnings,
+                            List<String> instructorName) implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 }

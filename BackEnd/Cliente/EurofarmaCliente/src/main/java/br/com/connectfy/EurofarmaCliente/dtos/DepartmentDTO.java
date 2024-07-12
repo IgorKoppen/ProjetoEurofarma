@@ -11,7 +11,7 @@ import java.io.Serializable;
 import java.util.List;
 
 public record DepartmentDTO(Long id,
-                            @JsonProperty("depart_name") @Size(min = 3, message = "Um departamento deve ter no mínimo 3 dígitos")
+                            @JsonProperty("departName") @Size(min = 3, message = "Um departamento deve ter no mínimo 3 dígitos")
                             @NotBlank String departName,
                             List<Employee> employees) implements Serializable {
     @Serial

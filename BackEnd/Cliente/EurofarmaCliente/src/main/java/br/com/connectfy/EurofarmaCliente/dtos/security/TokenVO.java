@@ -22,11 +22,12 @@ public class TokenVO implements Serializable {
     private Date expiration;
     private String accessToken;
     private String refreshToken;
+    private Long instructorId;
 
     public TokenVO() {
     }
 
-    public TokenVO(Long id, String username, String name, List<String> roles, Boolean authenticated, Date created, Date expiration, String accessToken, String refreshToken) {
+    public TokenVO(Long id, String username, String name, List<String> roles, Boolean authenticated, Date created, Date expiration, String accessToken, String refreshToken, Long instructorId) {
         this.id = id;
         this.username = username;
         this.name = name;
@@ -36,6 +37,7 @@ public class TokenVO implements Serializable {
         this.expiration = expiration;
         this.accessToken = accessToken;
         this.refreshToken = refreshToken;
+        this.instructorId = instructorId;
     }
 
     public Long getId() {
@@ -106,6 +108,14 @@ public class TokenVO implements Serializable {
 
     public void setRoles(List<String> roles) {
         this.roles = roles;
+    }
+
+    public Long getInstructorId() {
+        return instructorId;
+    }
+
+    public void setInstructorId(Long instructorId) {
+        this.instructorId = instructorId;
     }
 
     @Override

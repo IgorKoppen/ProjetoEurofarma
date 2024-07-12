@@ -21,6 +21,12 @@ public class TrainingController {
 
     @PostMapping
     public ResponseEntity<String> insertTrainning(@RequestBody @Valid TrainingCreationDTO trainningCreationDTO) {
+        System.out.println(trainningCreationDTO);
+        System.out.println(trainningCreationDTO);System.out.println(trainningCreationDTO);System.out.println(trainningCreationDTO);System.out.println(trainningCreationDTO);System.out.println(trainningCreationDTO);
+
+
+
+
         return trainningService.create(trainningCreationDTO);
     }
 

@@ -36,7 +36,11 @@ public class AuthService {
             Employee user = userRepository.findByUsername(username);
             var tokenResponse = new TokenVO();
             if (user != null) {
-                tokenResponse = tokenProvider.createToken(user.getId(), username, user.getName(), user.getRoles());
+                Long instructorId = null;
+                if (user.getInstructor() != null) {
+                    instructorId = user.getInstructor().getId();
+                }
+                tokenResponse = tokenProvider.createToken(user.getId(), username, user.getName(), user.getRoles(), instructorId);
             } else {
                 throw new UsernameNotFoundException("Username " + username + " not found");
             }
