@@ -10,6 +10,7 @@ import jakarta.validation.constraints.Size;
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
+import java.util.Set;
 
 public record EmployeeDTO(Long id,
                           @JsonProperty("user_name") @NotBlank(message = "O campo nao pode ser nulo") @Size(min = 4, message = "O username deve ter pelo menos 4 letras") String userName,

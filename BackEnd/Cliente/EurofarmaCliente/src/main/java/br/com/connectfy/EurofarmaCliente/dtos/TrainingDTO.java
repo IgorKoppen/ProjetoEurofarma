@@ -10,6 +10,7 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 public record TrainingDTO(Long id,
                           @NotBlank(message = "Nome não pode ser vazio!")String name,

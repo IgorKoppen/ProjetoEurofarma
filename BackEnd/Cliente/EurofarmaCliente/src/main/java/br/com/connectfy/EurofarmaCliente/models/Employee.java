@@ -69,7 +69,7 @@ public class Employee implements UserDetails, Serializable {
     private Instructor instructor;
 
     @JsonManagedReference
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(name = "employee_training", joinColumns = {@JoinColumn(name = "id_employee")},
             inverseJoinColumns = {@JoinColumn(name = "id_training")}
     )
@@ -234,11 +234,31 @@ public class Employee implements UserDetails, Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Employee employee = (Employee) o;
-        return accountNonExpired == employee.accountNonExpired && credentialsNonExpired == employee.credentialsNonExpired && accountNonLocked == employee.accountNonLocked && enabled == employee.enabled && Objects.equals(id, employee.id) && Objects.equals(userName, employee.userName) && Objects.equals(name, employee.name) && Objects.equals(surname, employee.surname) && Objects.equals(password, employee.password) && Objects.equals(cellphoneNumber, employee.cellphoneNumber) && Objects.equals(roles, employee.roles) && Objects.equals(department, employee.department) && Objects.equals(permissions, employee.permissions) && Objects.equals(instructor, employee.instructor);
+        return Objects.equals(id, employee.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, userName, name, surname, password, cellphoneNumber, accountNonExpired, credentialsNonExpired, accountNonLocked, enabled, roles, department, permissions, instructor);
+        return Objects.hashCode(id);
+    }
+
+    @Override
+    public String toString() {
+        return "Employee{" +
+                "id=" + id +
+                ", userName='" + userName + '\'' +
+                ", name='" + name + '\'' +
+                ", surname='" + surname + '\'' +
+                ", password='" + password + '\'' +
+                ", cellphoneNumber='" + cellphoneNumber + '\'' +
+                ", accountNonExpired=" + accountNonExpired +
+                ", credentialsNonExpired=" + credentialsNonExpired +
+                ", accountNonLocked=" + accountNonLocked +
+                ", enabled=" + enabled +
+                ", roles=" + roles +
+                ", department=" + department +
+                ", permissions=" + permissions +
+                ", instructor=" + instructor +
+                '}';
     }
 }

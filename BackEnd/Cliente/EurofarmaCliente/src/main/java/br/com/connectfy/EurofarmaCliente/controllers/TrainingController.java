@@ -45,9 +45,9 @@ public class TrainingController {
         return trainningService.update(id, trainningDTO);
     }
 
-    @PutMapping("/addEmployee/{code}/{password}")
-    public ResponseEntity<?> addEmployee(@PathVariable String code,@PathVariable String password, @RequestBody @Valid EmployeeDTO employeeDTO) {
-        return trainningService.addEmployee(code,password, employeeDTO);
+    @PutMapping("/addEmployee/{code}/{password}/{id}")
+    public ResponseEntity<?> addEmployee(@PathVariable String code,@PathVariable String password, @PathVariable @Valid Long id) {
+        return trainningService.addEmployee(code,password, id);
     }
 
     @DeleteMapping(value = "/{id}")

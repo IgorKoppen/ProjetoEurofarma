@@ -66,8 +66,4 @@ public class Instructor {
         return Objects.equals(id, that.id) && Objects.equals(employee, that.employee) && Objects.equals(trainnings, that.trainnings);
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, employee, trainnings);
-    }
 }

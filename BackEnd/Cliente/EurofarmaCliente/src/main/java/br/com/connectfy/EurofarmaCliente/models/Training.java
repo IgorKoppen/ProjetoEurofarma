@@ -54,7 +54,6 @@ public class Training {
     )
     private List<Tag> tags;
 
-    @JsonBackReference
     @ManyToMany(mappedBy = "trainnings")
     private List<Employee> employees;
 
@@ -173,12 +172,12 @@ public class Training {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Training trainning = (Training) o;
-        return Objects.equals(id, trainning.id) && Objects.equals(name, trainning.name) && Objects.equals(code, trainning.code) && Objects.equals(creationDate, trainning.creationDate) && Objects.equals(closingDate, trainning.closingDate) && Objects.equals(status, trainning.status) && Objects.equals(password, trainning.password) && Objects.equals(description, trainning.description) && Objects.equals(instructors, trainning.instructors) && Objects.equals(tags, trainning.tags);
+        Training training = (Training) o;
+        return Objects.equals(id, training.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, code, creationDate, closingDate, status, password, description, instructors, tags);
+        return Objects.hashCode(id);
     }
 }
