@@ -113,28 +113,14 @@ public class TrainingService {
     public ResponseEntity<?> addEmployee(String code,String password, Long id) {
         try {
             Training trainning = trainningRepository.findTrainingByCode(code);
-            System.out.println("Banana");
             if(!trainning.getPassword().equals(password)) {
                 throw new PasswordDontMatch("Senha Incorreta!");
             }
             EmployeeDTO employeeDTO = employeeService.findById(id);
             Employee employee = new Employee(employeeDTO);
-            System.out.println("nabo");
             if(!trainning.getEmployees().contains(employee)) {
-                System.out.println("Morango");
                 trainning.getEmployees().add(employee);
                 trainningRepository.save(trainning);
-                try{
-                    System.out.println("Training before update: " + trainning);
-                    System.out.println("Employees: " + trainning.getEmployees());
-                    trainningRepository.addEmployee(trainning.getEmployees(), trainning.getId());
-                    System.out.println("Training after update: " + trainningRepository.findById(trainning.getId()));
-                }
-                catch(Exception e){
-                    System.out.println(e.getMessage());
-                }
-                System.out.println(trainning.getEmployees());
-                System.out.println("Jesus");
                 return ResponseEntity.ok("Empregado adicionado com sucesso no treinamento!");
             } else {
                 throw new EmployeeAlreadyInTrainning("Empregado já está nesse treinamento");
