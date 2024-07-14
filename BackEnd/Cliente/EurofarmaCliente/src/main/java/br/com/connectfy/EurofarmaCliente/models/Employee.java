@@ -68,11 +68,7 @@ public class Employee implements UserDetails, Serializable {
     @JoinColumn(name = "instructor_id", referencedColumnName = "id")
     private Instructor instructor;
 
-    @JsonManagedReference
-    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    @JoinTable(name = "employee_training", joinColumns = {@JoinColumn(name = "id_employee")},
-            inverseJoinColumns = {@JoinColumn(name = "id_training")}
-    )
+    @ManyToMany(mappedBy = "employees")
     private List<Training> trainnings;
 
     public Employee() {

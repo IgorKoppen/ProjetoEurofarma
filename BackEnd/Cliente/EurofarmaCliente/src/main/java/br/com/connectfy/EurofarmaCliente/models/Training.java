@@ -54,7 +54,11 @@ public class Training {
     )
     private List<Tag> tags;
 
-    @ManyToMany(mappedBy = "trainnings")
+    @JsonManagedReference
+    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinTable(name = "employee_training", joinColumns = {@JoinColumn(name = "id_training")},
+            inverseJoinColumns = {@JoinColumn(name = "id_employee")}
+    )
     private List<Employee> employees;
 
     public Training(){}
