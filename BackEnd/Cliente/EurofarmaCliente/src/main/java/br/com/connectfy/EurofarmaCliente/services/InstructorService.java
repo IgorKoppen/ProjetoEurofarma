@@ -4,6 +4,7 @@ import br.com.connectfy.EurofarmaCliente.dtos.InstructorDTO;
 import br.com.connectfy.EurofarmaCliente.dtos.InstructorTrainingsDTO;
 import br.com.connectfy.EurofarmaCliente.dtos.TrainingHistoricDTO;
 import br.com.connectfy.EurofarmaCliente.exceptions.ResourceNotFoundException;
+import br.com.connectfy.EurofarmaCliente.models.Employee;
 import br.com.connectfy.EurofarmaCliente.models.Instructor;
 import br.com.connectfy.EurofarmaCliente.repositories.InstructorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -51,11 +53,18 @@ public class InstructorService {
                 .map(instructor -> {
                     List<String> instructorNames = instructor.getTrainnings().stream()
                             .flatMap(training -> training.getInstructors().stream())
-                            .map(trainingInstructor -> trainingInstructor.getEmployee().getName()).distinct().collect(Collectors.toList());
+                            .map(trainingInstructor -> {
+                                Employee employee = trainingInstructor.getEmployee();
+                                return employee != null ? employee.getName() : null;
+                            })
+                            .filter(Objects::nonNull)
+                            .distinct()
+                            .collect(Collectors.toList());
 
+                    Employee instructorEmployee = instructor.getEmployee();
                     return new InstructorDTO(
                             instructor.getId(),
-                            instructor.getEmployee(),
+                            instructorEmployee,
                             instructor.getTrainnings(),
                             instructorNames
                     );
@@ -90,10 +99,19 @@ public class InstructorService {
         Instructor instructor = instructorRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("No records found with id: " + id));
 
+
+        if(instructor.getTrainnings().isEmpty()){
+            return new ArrayList<>();
+        }
+
         return instructor.getTrainnings().stream()
                 .map(training -> {
                     List<String> instructorNames = training.getInstructors().stream()
-                            .map(trainingInstructor -> trainingInstructor.getEmployee().getName()).distinct().collect(Collectors.toList());
+                            .map(trainingInstructor -> {
+                                Employee employee = trainingInstructor.getEmployee();
+                                return employee != null ? employee.getName() : "Unknown";
+                            })
+                            .distinct().collect(Collectors.toList());
 
                     return new TrainingHistoricDTO(
                             training.getId(),

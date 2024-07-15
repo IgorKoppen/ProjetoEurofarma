@@ -8,7 +8,6 @@ import br.com.connectfy.EurofarmaCliente.models.Employee;
 import br.com.connectfy.EurofarmaCliente.models.Instructor;
 import br.com.connectfy.EurofarmaCliente.models.Tag;
 import br.com.connectfy.EurofarmaCliente.models.Training;
-import br.com.connectfy.EurofarmaCliente.repositories.EmployeeRepository;
 import br.com.connectfy.EurofarmaCliente.repositories.TrainningRepository;
 import jakarta.persistence.EntityManager;
 import org.passay.CharacterData;
@@ -19,7 +18,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.PathVariable;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -116,7 +114,7 @@ public class TrainingService {
             if(!trainning.getPassword().equals(password)) {
                 throw new PasswordDontMatch("Senha Incorreta!");
             }
-            EmployeeDTO employeeDTO = employeeService.findById(id);
+            EmployeeInfoDTO employeeDTO = employeeService.findById(id);
             Employee employee = new Employee(employeeDTO);
             if(!trainning.getEmployees().contains(employee)) {
                 trainning.getEmployees().add(employee);

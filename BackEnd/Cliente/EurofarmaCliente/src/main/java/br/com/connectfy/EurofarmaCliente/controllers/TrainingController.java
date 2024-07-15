@@ -1,6 +1,5 @@
 package br.com.connectfy.EurofarmaCliente.controllers;
 
-import br.com.connectfy.EurofarmaCliente.dtos.EmployeeDTO;
 import br.com.connectfy.EurofarmaCliente.dtos.TrainingCreationDTO;
 import br.com.connectfy.EurofarmaCliente.dtos.TrainingDTO;
 import br.com.connectfy.EurofarmaCliente.dtos.TrainingHistoricDTO;
