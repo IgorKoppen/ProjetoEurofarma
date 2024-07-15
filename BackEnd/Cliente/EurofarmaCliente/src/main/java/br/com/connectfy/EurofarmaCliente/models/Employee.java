@@ -1,7 +1,9 @@
 package br.com.connectfy.EurofarmaCliente.models;
 
-import br.com.connectfy.EurofarmaCliente.dtos.EmployeeDTO;
+import br.com.connectfy.EurofarmaCliente.dtos.EmployeeCreateDTO;
+import br.com.connectfy.EurofarmaCliente.dtos.EmployeeInfoDTO;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -30,18 +32,22 @@ public class Employee implements UserDetails, Serializable {
     @Column(nullable = false)
     private String surname;
 
+    @JsonIgnore
     @Column(nullable = false)
     private String password;
 
     @Column(name = "cellphone_number",nullable = false)
     private String cellphoneNumber;
 
+    @JsonIgnore
     @Column(name = "account_non_expired", nullable = false)
     private boolean accountNonExpired;
 
+    @JsonIgnore
     @Column(name = "credentials_non_expired", nullable = false)
     private boolean credentialsNonExpired;
 
+    @JsonIgnore
     @Column(name = "account_non_locked", nullable = false)
     private boolean accountNonLocked;
 
@@ -68,6 +74,7 @@ public class Employee implements UserDetails, Serializable {
     @JoinColumn(name = "instructor_id", referencedColumnName = "id")
     private Instructor instructor;
 
+    @JsonBackReference
     @ManyToMany(mappedBy = "employees")
     private List<Training> trainnings;
 
@@ -95,12 +102,22 @@ public class Employee implements UserDetails, Serializable {
         this.instructor = instructor;
     }
 
-    public Employee(EmployeeDTO employeeDTO) {
+    public Employee(EmployeeCreateDTO employeeDTO) {
         this.id = employeeDTO.id();
         this.userName = employeeDTO.userName();
         this.name = employeeDTO.name();
         this.surname = employeeDTO.surname();
         this.password = employeeDTO.password();
+        this.cellphoneNumber = employeeDTO.cellphoneNumber();
+        this.roles = employeeDTO.roles();
+        this.department = employeeDTO.department();
+    }
+
+    public Employee(EmployeeInfoDTO employeeDTO) {
+        this.id = employeeDTO.id();
+        this.userName = employeeDTO.userName();
+        this.name = employeeDTO.name();
+        this.surname = employeeDTO.surname();
         this.cellphoneNumber = employeeDTO.cellphoneNumber();
         this.roles = employeeDTO.roles();
         this.department = employeeDTO.department();
