@@ -1,6 +1,7 @@
 package br.com.connectfy.EurofarmaCliente.services;
 
-import br.com.connectfy.EurofarmaCliente.dtos.EmployeeDTO;
+import br.com.connectfy.EurofarmaCliente.dtos.EmployeeCreateDTO;
+import br.com.connectfy.EurofarmaCliente.dtos.EmployeeInfoDTO;
 import br.com.connectfy.EurofarmaCliente.dtos.TrainingHistoricDTO;
 import br.com.connectfy.EurofarmaCliente.exceptions.RequiredObjectIsNullException;
 import br.com.connectfy.EurofarmaCliente.exceptions.ResourceNotFoundException;
@@ -35,7 +36,7 @@ public class EmployeeService implements UserDetailsService {
     }
 
     @Transactional
-    public EmployeeDTO toggleEmployeeStatus(Long id) {
+    public EmployeeInfoDTO toggleEmployeeStatus(Long id) {
         Employee entity = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("No records found with id: " + id));
         boolean newStatus = !entity.isEnabled();
         repository.toggleEmployeeStatus(id,newStatus);
@@ -44,28 +45,28 @@ public class EmployeeService implements UserDetailsService {
     }
 
     @Transactional(readOnly = true)
-    public Page<EmployeeDTO> findAll(Integer pageNo, Integer pageSize, String sortDirection) {
+    public Page<EmployeeInfoDTO> findAll(Integer pageNo, Integer pageSize, String sortDirection) {
         Sort.Direction sort = sortDirection.equalsIgnoreCase("asc") ? Sort.Direction.ASC : Sort.Direction.DESC;
         Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by(sort, "name"));
         Page<Employee> list = repository.findAll(pageable);
-        List<EmployeeDTO> dtoList = list.stream()
+        List<EmployeeInfoDTO> dtoList = list.stream()
                 .map(this::objToDTO)
                 .collect(Collectors.toList());
         return new PageImpl<>(dtoList, pageable, list.getTotalElements());
     }
     @Transactional(readOnly = true)
-    public EmployeeDTO findById(Long id) {
+    public EmployeeInfoDTO findById(Long id) {
         Employee employee = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("No records found with id: " + id));
         return objToDTO(employee);
     }
     @Transactional
-    public EmployeeDTO create(EmployeeDTO dto) {
+    public EmployeeInfoDTO create(EmployeeCreateDTO dto) {
         Employee employee = new Employee(dto);
         employee.setUserName(generateUserName(employee.getName(),employee.getSurname(),employee.getCellphoneNumber()));
         return objToDTO(repository.save(employee));
     }
     @Transactional
-    public EmployeeDTO update(EmployeeDTO dto) {
+    public EmployeeInfoDTO update(EmployeeCreateDTO dto) {
         if (dto == null) throw new RequiredObjectIsNullException();
         try {
             var entity = findById(dto.id());
@@ -129,17 +130,16 @@ public class EmployeeService implements UserDetailsService {
         }
     }
 
-    private EmployeeDTO objToDTO(Employee employee){
+    private EmployeeInfoDTO objToDTO(Employee employee){
         Long instructorId = null;
         if (employee.getInstructor() != null) {
             instructorId = employee.getInstructor().getId();
         }
-        return new EmployeeDTO(
+        return new EmployeeInfoDTO(
                 employee.getId(),
                 employee.getUsername(),
                 employee.getName(),
                 employee.getSurname(),
-                employee.getPassword(),
                 employee.getCellphoneNumber(),
                 employee.getList(),
                 employee.getDepartments(),

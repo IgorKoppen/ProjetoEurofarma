@@ -1,6 +1,7 @@
 package br.com.connectfy.EurofarmaCliente.controllers;
 
-import br.com.connectfy.EurofarmaCliente.dtos.EmployeeDTO;
+import br.com.connectfy.EurofarmaCliente.dtos.EmployeeCreateDTO;
+import br.com.connectfy.EurofarmaCliente.dtos.EmployeeInfoDTO;
 import br.com.connectfy.EurofarmaCliente.dtos.TrainingHistoricDTO;
 import br.com.connectfy.EurofarmaCliente.services.EmployeeService;
 import jakarta.validation.Valid;
@@ -18,30 +19,30 @@ public class EmployeeController {
     private EmployeeService employeeService;
 
     @PatchMapping(value = "/disable/{id}")
-    public EmployeeDTO disableEmployee(@PathVariable Long id) {
+    public EmployeeInfoDTO disableEmployee(@PathVariable Long id) {
         return employeeService.toggleEmployeeStatus(id);
     }
 
     @GetMapping
-    public List<EmployeeDTO> getAllEmployees(@RequestParam(name="page", defaultValue = "0") Integer page,
-                                             @RequestParam(name="size", defaultValue = "10") Integer size,
-                                             @RequestParam(name="direction", defaultValue = "ASC") String direction) {
-        Page<EmployeeDTO> result = employeeService.findAll(page, size, direction);
+    public List<EmployeeInfoDTO> getAllEmployees(@RequestParam(name="page", defaultValue = "0") Integer page,
+                                                   @RequestParam(name="size", defaultValue = "10") Integer size,
+                                                   @RequestParam(name="direction", defaultValue = "ASC") String direction) {
+        Page<EmployeeInfoDTO> result = employeeService.findAll(page, size, direction);
         return result.getContent();
     }
 
     @GetMapping(value = "/{id}")
-    public EmployeeDTO findById(@PathVariable Long id) {
+    public EmployeeInfoDTO findById(@PathVariable Long id) {
         return employeeService.findById(id);
     }
 
     @PostMapping
-    public EmployeeDTO createEmployee(@RequestBody @Valid EmployeeDTO employeeDTO) {
+    public EmployeeInfoDTO createEmployee(@RequestBody @Valid EmployeeCreateDTO employeeDTO) {
         return employeeService.create(employeeDTO);
     }
 
     @PutMapping
-    public EmployeeDTO updateEmployee(@RequestBody @Valid EmployeeDTO employeeDTO) {
+    public EmployeeInfoDTO updateEmployee(@RequestBody @Valid EmployeeCreateDTO employeeDTO) {
         return employeeService.update(employeeDTO);
     }
 
