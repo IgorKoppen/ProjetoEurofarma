@@ -92,18 +92,28 @@ public class TrainingService {
                 .collect(Collectors.toList());
     }
     @Transactional
-    public ResponseEntity<String> update(Long id, TrainingDTO trainningDTO) {
-        Training updateTrainning= trainningRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("No records found with id: " + id));
+    public ResponseEntity<String> update(Long idd, TrainingCreationDTO trainningDTO) {
+        Training updateTrainning= trainningRepository.findById(idd).orElseThrow(() -> new ResourceNotFoundException("No records found with id: " + idd));
+        List<Tag> tags = trainningDTO.tags().stream()
+                .map(id -> {
+                    TagDTO tagDTO = tagsService.getById(id);
+                    return new Tag(tagDTO.id(), tagDTO.name(),tagDTO.color(),tagDTO.trainings());
+                }).collect(Collectors.toList());
+
+        List<Instructor> instructors = trainningDTO.instructor().stream()
+                .map(idInstructor -> {
+                    InstructorDTO instructorDTO = instructorService.getById(idInstructor);
+                    return new Instructor(instructorDTO.id(), instructorDTO.employee(), instructorDTO.trainnings());
+                }).collect(Collectors.toList());
+
         updateTrainning.setName(trainningDTO.name());
-        updateTrainning.setCode(trainningDTO.code());
         updateTrainning.setDescription(trainningDTO.description());
-        updateTrainning.setCreationDate(trainningDTO.creationDate());
-        updateTrainning.setClosingDate(trainningDTO.closingDate());
-        updateTrainning.setPassword(trainningDTO.password());
-        updateTrainning.setStatus(trainningDTO.status());
-        updateTrainning.setInstructors(trainningDTO.instructor());
-        updateTrainning.setTags(trainningDTO.tags());
-        updateTrainning.setEmployees(trainningDTO.employees());
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yy HH:mm:ss,SSS");
+        LocalDateTime parsedDate = LocalDateTime.parse(trainningDTO.closingDate(), formatter);
+        updateTrainning.setClosingDate(parsedDate);
+        updateTrainning.setInstructors(instructors);
+        updateTrainning.setTags(tags);
+        trainningRepository.save(updateTrainning);
         return ResponseEntity.ok("Treinamento atualizado com sucesso!");
     }
 

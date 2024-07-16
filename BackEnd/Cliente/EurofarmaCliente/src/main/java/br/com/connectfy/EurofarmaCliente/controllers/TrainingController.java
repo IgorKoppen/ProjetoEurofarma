@@ -40,8 +40,8 @@ public class TrainingController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<String> updateTrainning(@PathVariable Long id, @RequestBody @Valid TrainingDTO trainningDTO) {
-        return trainningService.update(id, trainningDTO);
+    public ResponseEntity<String> updateTrainning(@PathVariable Long id, @RequestBody @Valid TrainingCreationDTO trainningCreationDTO) {
+        return trainningService.update(id, trainningCreationDTO);
     }
 
     @PutMapping("/addEmployee/{code}/{password}/{id}")
