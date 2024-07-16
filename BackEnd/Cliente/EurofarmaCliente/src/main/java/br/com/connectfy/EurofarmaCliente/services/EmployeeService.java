@@ -1,12 +1,10 @@
 package br.com.connectfy.EurofarmaCliente.services;
 
-import br.com.connectfy.EurofarmaCliente.dtos.EmployeeCreateDTO;
-import br.com.connectfy.EurofarmaCliente.dtos.EmployeeInfoDTO;
-import br.com.connectfy.EurofarmaCliente.dtos.TrainingHistoricDTO;
+import br.com.connectfy.EurofarmaCliente.dtos.*;
 import br.com.connectfy.EurofarmaCliente.exceptions.RequiredObjectIsNullException;
 import br.com.connectfy.EurofarmaCliente.exceptions.ResourceNotFoundException;
 import br.com.connectfy.EurofarmaCliente.models.Employee;
-import br.com.connectfy.EurofarmaCliente.models.Training;
+import br.com.connectfy.EurofarmaCliente.models.EmployeeTraining;
 import br.com.connectfy.EurofarmaCliente.repositories.EmployeeRepository;
 import br.com.connectfy.EurofarmaCliente.repositories.TrainningRepository;
 import br.com.connectfy.EurofarmaCliente.util.GenerateEncryptedPassword;
@@ -102,22 +100,29 @@ public class EmployeeService implements UserDetailsService {
 
     @Transactional(readOnly = true)
     public List<TrainingHistoricDTO> findLastTrainnings(Long id) {
-            Employee entity = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("No records found with id: " + id));
-            return entity.getTrainnings().stream().sorted(Comparator.comparing(Training::getClosingDate).reversed()
-                    ).map(trainning
-                            ->  new TrainingHistoricDTO(
-                            trainning.getId(),
-                            trainning.getName(),
-                            trainning.getCode(),
-                            trainning.getCreationDate(),
-                            trainning.getClosingDate(),
-                            trainning.getStatus(),
-                            trainning.getPassword(),
-                            trainning.getDescription(),
-                            trainning.getInstructors().stream().map(instructor -> instructor.getEmployee().getName()).collect(Collectors.toList()),
-                            trainning.getTags(),
-                            null))
-                    .collect(Collectors.toList());
+        Employee entity = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("No records found with id: " + id));
+        Comparator<EmployeeTraining> comparator = Comparator.comparing(training -> training.getTraining().getCreationDate());
+        return entity.getEmployeeTrainings().stream()
+                .sorted(comparator)
+                .map(trainning -> new TrainingHistoricDTO(
+                        trainning.getTraining().getId(),
+                        trainning.getTraining().getName(),
+                        trainning.getTraining().getCode(),
+                        trainning.getTraining().getCreationDate(),
+                        trainning.getTraining().getClosingDate(),
+                        trainning.getTraining().getStatus(),
+                        trainning.getTraining().getPassword(),
+                        trainning.getTraining().getDescription(),
+                        trainning.getTraining().getInstructors().stream()
+                                .map(instructor -> new InstructorNameAndIdDTO(
+                                        instructor.getId(),
+                                        instructor.getEmployee().getName(),
+                                        instructor.getEmployee().getSurname(),
+                                        instructor.getEmployee().getName() + " " + instructor.getEmployee().getSurname()))
+                                .collect(Collectors.toList()),
+                        trainning.getTraining().getTags(),
+                        trainning.getTraining().getEmployees()))
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -143,7 +148,7 @@ public class EmployeeService implements UserDetailsService {
                 employee.getCellphoneNumber(),
                 employee.getList(),
                 employee.getDepartments(),
-                employee.getTrainnings(),
+                employee.getEmployeeTrainings(),
                 instructorId);
     }
 

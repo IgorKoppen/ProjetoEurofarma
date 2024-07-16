@@ -1,6 +1,7 @@
 package br.com.connectfy.EurofarmaCliente.controllers;
 
 import br.com.connectfy.EurofarmaCliente.dtos.InstructorDTO;
+import br.com.connectfy.EurofarmaCliente.dtos.InstructorNameAndIdDTO;
 import br.com.connectfy.EurofarmaCliente.dtos.InstructorTrainingsDTO;
 import br.com.connectfy.EurofarmaCliente.dtos.TrainingHistoricDTO;
 import br.com.connectfy.EurofarmaCliente.services.InstructorService;
@@ -23,7 +24,7 @@ public class InstructorController {
         return instructorService.insert(instructorDTO);
     }
     @GetMapping
-    public List<InstructorDTO> findAllInstructors(){
+    public List<InstructorNameAndIdDTO> findAllInstructors(){
         return instructorService.findAll();
     }
 

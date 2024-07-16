@@ -1,6 +1,7 @@
 package br.com.connectfy.EurofarmaCliente.dtos;
 
-import br.com.connectfy.EurofarmaCliente.models.Employee;
+
+import br.com.connectfy.EurofarmaCliente.models.EmployeeTraining;
 import br.com.connectfy.EurofarmaCliente.models.Instructor;
 import br.com.connectfy.EurofarmaCliente.models.Tag;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -22,7 +23,7 @@ public record TrainingDTO(Long id,
                           @NotBlank(message = "Descrição não pode ser vazia!") String description,
                           List<Instructor>  instructor,
                           List<Tag> tags,
-                          List<Employee> employees) implements Serializable {
+                          Set<EmployeeTraining> employees) implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 }

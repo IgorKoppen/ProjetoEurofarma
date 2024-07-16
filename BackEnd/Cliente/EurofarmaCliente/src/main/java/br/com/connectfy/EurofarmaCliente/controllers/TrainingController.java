@@ -3,6 +3,7 @@ package br.com.connectfy.EurofarmaCliente.controllers;
 import br.com.connectfy.EurofarmaCliente.dtos.TrainingCreationDTO;
 import br.com.connectfy.EurofarmaCliente.dtos.TrainingDTO;
 import br.com.connectfy.EurofarmaCliente.dtos.TrainingHistoricDTO;
+import br.com.connectfy.EurofarmaCliente.dtos.UserConfirmAssinatureDTO;
 import br.com.connectfy.EurofarmaCliente.services.TrainingService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,9 +45,9 @@ public class TrainingController {
         return trainningService.update(id, trainningCreationDTO);
     }
 
-    @PutMapping("/addEmployee/{code}/{password}/{id}")
-    public ResponseEntity<?> addEmployee(@PathVariable String code,@PathVariable String password, @PathVariable @Valid Long id) {
-        return trainningService.addEmployee(code,password, id);
+    @PutMapping("/addEmployee")
+    public ResponseEntity<?> addEmployee(@RequestBody UserConfirmAssinatureDTO userConfirmAssinatureDTO) {
+        return trainningService.addEmployee(userConfirmAssinatureDTO);
     }
 
     @DeleteMapping(value = "/{id}")

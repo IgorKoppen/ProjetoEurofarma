@@ -7,6 +7,7 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 
 @Entity
@@ -54,12 +55,9 @@ public class Training {
     )
     private List<Tag> tags;
 
-    @JsonManagedReference
-    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    @JoinTable(name = "employee_training", joinColumns = {@JoinColumn(name = "id_training")},
-            inverseJoinColumns = {@JoinColumn(name = "id_employee")}
-    )
-    private List<Employee> employees;
+    @JsonBackReference
+    @OneToMany(mappedBy = "training", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    private Set<EmployeeTraining> employeeTrainings;
 
     public Training(){}
 
@@ -147,12 +145,12 @@ public class Training {
         this.tags = tags;
     }
 
-    public List<Employee> getEmployees() {
-        return employees;
+    public Set<EmployeeTraining> getEmployees() {
+        return employeeTrainings;
     }
 
-    public void setEmployees(List<Employee> employees) {
-        this.employees = employees;
+    public void setEmployees(Set<EmployeeTraining> employeeTrainings) {
+        this.employeeTrainings = employeeTrainings;
     }
 
     @Override
@@ -168,7 +166,7 @@ public class Training {
                 ", description='" + description + '\'' +
                 ", instructors=" + instructors +
                 ", tags=" + tags +
-                ", employees=" + employees +
+                ", employees=" + employeeTrainings +
                 '}';
     }
 

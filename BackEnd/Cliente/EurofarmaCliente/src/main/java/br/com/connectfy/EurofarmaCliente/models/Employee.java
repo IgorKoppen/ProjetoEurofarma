@@ -10,10 +10,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @Entity
 @Table(name = "tb_employees")
@@ -75,8 +72,8 @@ public class Employee implements UserDetails, Serializable {
     private Instructor instructor;
 
     @JsonBackReference
-    @ManyToMany(mappedBy = "employees")
-    private List<Training> trainnings;
+    @OneToMany(mappedBy = "employee")
+    private Set<EmployeeTraining> employeeTrainings;
 
     public Employee() {
 
@@ -121,6 +118,7 @@ public class Employee implements UserDetails, Serializable {
         this.cellphoneNumber = employeeDTO.cellphoneNumber();
         this.roles = employeeDTO.roles();
         this.department = employeeDTO.department();
+        this.employeeTrainings = employeeDTO.trainings();
     }
 
     public Long getId() {
@@ -171,12 +169,12 @@ public class Employee implements UserDetails, Serializable {
         this.department = department;
     }
 
-    public List<Training> getTrainnings() {
-        return trainnings;
+    public Set<EmployeeTraining> getEmployeeTrainings() {
+        return employeeTrainings;
     }
 
-    public void setTrainnings(List<Training> trainnings) {
-        this.trainnings = trainnings;
+    public void setEmployeeTrainings(Set<EmployeeTraining> trainnings) {
+        this.employeeTrainings = trainnings;
     }
 
     public Instructor getInstructor() {

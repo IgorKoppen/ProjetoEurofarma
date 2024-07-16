@@ -4,12 +4,8 @@ import br.com.connectfy.EurofarmaCliente.dtos.*;
 import br.com.connectfy.EurofarmaCliente.exceptions.EmployeeAlreadyInTrainning;
 import br.com.connectfy.EurofarmaCliente.exceptions.PasswordDontMatch;
 import br.com.connectfy.EurofarmaCliente.exceptions.ResourceNotFoundException;
-import br.com.connectfy.EurofarmaCliente.models.Employee;
-import br.com.connectfy.EurofarmaCliente.models.Instructor;
-import br.com.connectfy.EurofarmaCliente.models.Tag;
-import br.com.connectfy.EurofarmaCliente.models.Training;
+import br.com.connectfy.EurofarmaCliente.models.*;
 import br.com.connectfy.EurofarmaCliente.repositories.TrainningRepository;
-import jakarta.persistence.EntityManager;
 import org.passay.CharacterData;
 import org.passay.CharacterRule;
 import org.passay.EnglishCharacterData;
@@ -37,6 +33,7 @@ public class TrainingService {
     private TagsService tagsService;
     @Autowired
     private EmployeeService employeeService;
+
 
 
     @Transactional
@@ -78,15 +75,18 @@ public class TrainingService {
         Training trainning = trainningRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("No records found with id: " + id));
         return new TrainingHistoricDTO(trainning.getId(), trainning.getName(), trainning.getCode(),
                 trainning.getCreationDate(),trainning.getClosingDate(),trainning.getStatus(),
-                trainning.getPassword(),trainning.getDescription(),trainning.getInstructors().stream().map(instructor -> instructor.getEmployee().getName()).collect(Collectors.toList()), trainning.getTags(), trainning.getEmployees());
+                trainning.getPassword(),trainning.getDescription(),trainning.getInstructors().stream().map(instructor -> new InstructorNameAndIdDTO(instructor.getId(),instructor.getEmployee().getName(),instructor.getEmployee().getSurname(),instructor.getEmployee().getName()+" "+ instructor.getEmployee().getSurname())).collect(Collectors.toList()), trainning.getTags(), trainning.getEmployees());
     }
     @Transactional(readOnly = true)
     public List<TrainingHistoricDTO> findAll() {
         List<Training> trainnings = trainningRepository.findAll();
         return trainnings.stream().map(trainning
                         ->  new TrainingHistoricDTO(trainning.getId(), trainning.getName(), trainning.getCode(),
-                trainning.getCreationDate(),trainning.getClosingDate(),trainning.getStatus(),
-                trainning.getPassword(),trainning.getDescription(),trainning.getInstructors().stream().map(instructor -> instructor.getEmployee().getName()).collect(Collectors.toList()), trainning.getTags(), trainning.getEmployees()))
+                        trainning.getCreationDate(),trainning.getClosingDate(),trainning.getStatus(),
+                        trainning.getPassword(),trainning.getDescription(),
+                        trainning.getInstructors().stream().map(instructor -> new InstructorNameAndIdDTO(instructor.getId(),instructor.getEmployee().getName(),instructor.getEmployee().getSurname(),instructor.getEmployee().getName()+" "+ instructor.getEmployee().getSurname())).collect(Collectors.toList()),
+                        trainning.getTags(),
+                        trainning.getEmployees()))
                 .collect(Collectors.toList());
     }
     @Transactional
@@ -116,23 +116,33 @@ public class TrainingService {
     }
 
     @Transactional
-    public ResponseEntity<?> addEmployee(String code,String password, Long id) {
+    public ResponseEntity<?> addEmployee(UserConfirmAssinatureDTO userConfirmAssinatureDTO) {
         try {
-            Training trainning = trainningRepository.findTrainingByCode(code);
-            if(!trainning.getPassword().equals(password)) {
-                throw new PasswordDontMatch("Senha Incorreta!");
+            Training training = trainningRepository.findTrainingByCode(userConfirmAssinatureDTO.code());
+
+            if (training == null) {
+                throw new ResourceNotFoundException("No records found with code: " + userConfirmAssinatureDTO.code());
             }
-            EmployeeInfoDTO employeeDTO = employeeService.findById(id);
+
+            if (!training.getPassword().equals(userConfirmAssinatureDTO.password())) {
+                throw new PasswordDontMatch("Incorrect password!");
+            }
+            EmployeeInfoDTO employeeDTO = employeeService.findById(userConfirmAssinatureDTO.userId());
             Employee employee = new Employee(employeeDTO);
-            if(!trainning.getEmployees().contains(employee)) {
-                trainning.getEmployees().add(employee);
-                trainningRepository.save(trainning);
-                return ResponseEntity.ok("Empregado adicionado com sucesso no treinamento!");
+            boolean alreadyInTraining = training.getEmployees().stream()
+                    .anyMatch(et -> et.getEmployee().equals(employee));
+            if (!alreadyInTraining) {
+                EmployeeTrainingKey key = new EmployeeTrainingKey(employee.getId(), training.getId());
+                EmployeeTraining employeeTraining = new EmployeeTraining(key, employee, training, userConfirmAssinatureDTO.assinatura());
+                training.getEmployees().add(employeeTraining);
+                employee.getEmployeeTrainings().add(employeeTraining);
+                trainningRepository.save(training);
+                return ResponseEntity.ok("Employee successfully added to the training!");
             } else {
-                throw new EmployeeAlreadyInTrainning("Empregado já está nesse treinamento");
+                throw new EmployeeAlreadyInTrainning("Employee is already in this training");
             }
-        }catch (Exception e){
-            throw new ResourceNotFoundException("No records found with code: " + code);
+        } catch (Exception e) {
+           throw new ResourceNotFoundException(e.getMessage());
         }
     }
 
