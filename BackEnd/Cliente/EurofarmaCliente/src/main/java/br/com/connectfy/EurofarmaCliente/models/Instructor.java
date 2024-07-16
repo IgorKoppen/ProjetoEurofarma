@@ -20,6 +20,8 @@ public class Instructor {
     @ManyToMany(mappedBy = "instructors")
     private List<Training> trainnings;
 
+
+
     public Instructor() {
     }
 

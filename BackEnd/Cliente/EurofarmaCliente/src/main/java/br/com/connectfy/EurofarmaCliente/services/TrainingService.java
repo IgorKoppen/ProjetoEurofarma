@@ -37,8 +37,6 @@ public class TrainingService {
     private TagsService tagsService;
     @Autowired
     private EmployeeService employeeService;
-    @Autowired
-    private EntityManager entityManager;
 
 
     @Transactional

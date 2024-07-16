@@ -30,19 +30,20 @@ public class InstructorService {
     instructorRepository.save(instructor);
         return ResponseEntity.ok("Instrutor inserido com sucesso!");
     }
+    @Transactional(readOnly = true)
     public InstructorDTO getById(Long id) {
         Instructor instructor = instructorRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("No records found with id: " + id));
-
-        List<String> instructorNames = instructor.getTrainnings().stream()
-                .flatMap(training -> training.getInstructors().stream())
-                .map(trainingInstructor -> trainingInstructor.getEmployee().getName()).distinct().collect(Collectors.toList());
+//
+//        List<String> instructorNames = instructor.getTrainnings().stream()
+//                .flatMap(training -> training.getInstructors().stream())
+//                .map(trainingInstructor -> trainingInstructor.getEmployee().getName()).distinct().collect(Collectors.toList());
 
         return new InstructorDTO(
                 instructor.getId(),
                 instructor.getEmployee(),
                 instructor.getTrainnings(),
-                instructorNames
+                null
         );
     }
     @Transactional(readOnly = true)
@@ -109,7 +110,7 @@ public class InstructorService {
                     List<String> instructorNames = training.getInstructors().stream()
                             .map(trainingInstructor -> {
                                 Employee employee = trainingInstructor.getEmployee();
-                                return employee != null ? employee.getName() : "Unknown";
+                                return employee != null ? employee.getName() : "Desconhecido";
                             })
                             .distinct().collect(Collectors.toList());
 
