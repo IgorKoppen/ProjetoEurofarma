@@ -1,8 +1,6 @@
 package br.com.connectfy.EurofarmaCliente.exceptions.handler;
 
-import br.com.connectfy.EurofarmaCliente.exceptions.ExceptionResponse;
-import br.com.connectfy.EurofarmaCliente.exceptions.InvalidJwtAuthenticationException;
-import br.com.connectfy.EurofarmaCliente.exceptions.ResourceNotFoundException;
+import br.com.connectfy.EurofarmaCliente.exceptions.*;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -41,5 +39,15 @@ public class CustomizedEntityExceptionHandler extends ResponseEntityExceptionHan
     public final ResponseEntity<ExceptionResponse> handleTokenExpiredException(TokenExpiredException ex, WebRequest request) {
         ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), ex.getMessage() + ex.getExpiredOn().toString(), request.getDescription(false));
         return new ResponseEntity<>(exceptionResponse, HttpStatus.UNAUTHORIZED);
+    }
+    @ExceptionHandler({PasswordDontMatch.class})
+    public final ResponseEntity<ExceptionResponse> handlePasswordDontMatchException(PasswordDontMatch ex, WebRequest request) {
+        ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), ex.getMessage() , request.getDescription(false));
+        return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
+    }
+    @ExceptionHandler({EmployeeAlreadyInTrainning.class})
+    public final ResponseEntity<ExceptionResponse> handleEmployeeAlreadyInTrainningException(EmployeeAlreadyInTrainning ex, WebRequest request) {
+        ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), ex.getMessage() , request.getDescription(false));
+        return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
     }
 }

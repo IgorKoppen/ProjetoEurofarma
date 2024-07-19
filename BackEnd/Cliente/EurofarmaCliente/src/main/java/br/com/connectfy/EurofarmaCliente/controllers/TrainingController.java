@@ -55,4 +55,12 @@ public class TrainingController {
         trainningService.delete(id);
     }
 
+    @GetMapping("/getRoomByCode/{code}")
+    public TrainingHistoricDTO getRoomByCode(@PathVariable  String code) {
+        return trainningService.findByCode(code);
+    }
+    @GetMapping("/confirmPassword")
+    public ResponseEntity<String> confirmPassword(@RequestParam Long userId,@RequestParam String code, @RequestParam String password) {
+        return trainningService.confirmPassword(userId,code, password);
+    }
 }

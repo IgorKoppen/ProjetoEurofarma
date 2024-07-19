@@ -5,12 +5,8 @@ import br.com.connectfy.EurofarmaCliente.exceptions.EmployeeAlreadyInTrainning;
 import br.com.connectfy.EurofarmaCliente.exceptions.PasswordDontMatch;
 import br.com.connectfy.EurofarmaCliente.exceptions.ResourceNotFoundException;
 import br.com.connectfy.EurofarmaCliente.models.*;
-import br.com.connectfy.EurofarmaCliente.repositories.TrainningRepository;
-import org.passay.CharacterData;
-import org.passay.CharacterRule;
-import org.passay.EnglishCharacterData;
-import org.passay.PasswordGenerator;
-import org.springframework.beans.factory.annotation.Autowired;
+import br.com.connectfy.EurofarmaCliente.repositories.TrainingRepository;
+import br.com.connectfy.EurofarmaCliente.util.RandomStringGenerator;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,174 +16,205 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static org.passay.DigestDictionaryRule.ERROR_CODE;
-
 @Service
 public class TrainingService {
 
-    @Autowired
-    private TrainningRepository trainningRepository;
-    @Autowired
-    private InstructorService instructorService;
-    @Autowired
-    private TagsService tagsService;
-    @Autowired
-    private EmployeeService employeeService;
+
+        private final TrainingRepository trainingRepository;
+        private final TagsService tagsService;
+        private final InstructorService instructorService;
+        private final EmployeeService employeeService;
+
+        public TrainingService(TrainingRepository trainingRepository, TagsService tagsService, InstructorService instructorService, EmployeeService employeeService) {
+            this.trainingRepository = trainingRepository;
+            this.tagsService = tagsService;
+            this.instructorService = instructorService;
+            this.employeeService = employeeService;
+        }
+
+        @Transactional
+        public ResponseEntity<String> create(TrainingCreationDTO trainingDTO) {
+            List<Tag> tags = trainingDTO.tags().stream()
+                    .map(this::getTagById)
+                    .collect(Collectors.toList());
+
+            List<Instructor> instructors = trainingDTO.instructor().stream()
+                    .map(this::getInstructorById)
+                    .collect(Collectors.toList());
+
+            LocalDateTime now = LocalDateTime.now();
+            LocalDateTime parsedDate = parseDate(trainingDTO.closingDate());
+            String code;
+            do {
+                code = RandomStringGenerator.generateRoomCode(10);
+            } while (trainingRepository.existsByCode(code));
 
 
+            Training training = new Training();
+            training.setName(trainingDTO.name());
+            training.setCode(code);
+            training.setDescription(trainingDTO.description());
+            training.setCreationDate(now);
+            training.setClosingDate(parsedDate);
+            training.setPassword(RandomStringGenerator.generatePassword(10));
+            training.setStatus(true);
+            training.setInstructors(instructors);
+            training.setTags(tags);
 
-    @Transactional
-    public ResponseEntity<String> create(TrainingCreationDTO trainingDTO) {
-        List<Tag> tags = trainingDTO.tags().stream()
-                .map(id -> {
-                    TagDTO tagDTO = tagsService.getById(id);
-                    return new Tag(tagDTO.id(), tagDTO.name(),tagDTO.color(),tagDTO.trainings());
-                })
-                .collect(Collectors.toList());
+            trainingRepository.save(training);
+            return ResponseEntity.ok("Treinamento inserido com sucesso!");
+        }
 
-        List<Instructor> instructors = trainingDTO.instructor().stream()
-                .map(id -> {
-                    InstructorDTO instructorDTO = instructorService.getById(id);
-                    return new Instructor(instructorDTO.id(), instructorDTO.employee(), instructorDTO.trainnings());
-                })
-                .collect(Collectors.toList());
+        @Transactional(readOnly = true)
+        public TrainingHistoricDTO getById(Long id) {
+            Training training = trainingRepository.findById(id)
+                    .orElseThrow(() -> new ResourceNotFoundException("No records found with id: " + id));
+            return convertToTrainingHistoricDTO(training);
+        }
 
+        @Transactional(readOnly = true)
+        public List<TrainingHistoricDTO> findAll() {
+            List<Training> trainings = trainingRepository.findAll();
+            return trainings.stream()
+                    .map(this::convertToTrainingHistoricDTO)
+                    .collect(Collectors.toList());
+        }
 
-        LocalDateTime now = LocalDateTime.now();
-        Training trainning = new Training();
-        trainning.setName(trainingDTO.name());
-        trainning.setCode(generatePassword(2));
-        trainning.setDescription(trainingDTO.description());
-        trainning.setCreationDate(now);
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yy HH:mm:ss,SSS");
-        LocalDateTime parsedDate = LocalDateTime.parse(trainingDTO.closingDate(), formatter);
-        trainning.setClosingDate(parsedDate);
-        trainning.setPassword(generatePassword(1));
-        trainning.setStatus(true);
-        trainning.setInstructors(instructors);
-        trainning.setTags(tags);
-        trainningRepository.save(trainning);
-        return ResponseEntity.ok("Treinamento inserido com sucesso!");
-    }
+        @Transactional
+        public ResponseEntity<String> update(Long id, TrainingCreationDTO trainingDTO) {
+            Training training = trainingRepository.findById(id)
+                    .orElseThrow(() -> new ResourceNotFoundException("No records found with id: " + id));
 
-    @Transactional(readOnly = true)
-    public TrainingHistoricDTO getById(Long id) {
-        Training trainning = trainningRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("No records found with id: " + id));
-        return new TrainingHistoricDTO(trainning.getId(), trainning.getName(), trainning.getCode(),
-                trainning.getCreationDate(),trainning.getClosingDate(),trainning.getStatus(),
-                trainning.getPassword(),trainning.getDescription(),trainning.getInstructors().stream().map(instructor -> new InstructorNameAndIdDTO(instructor.getId(),instructor.getEmployee().getName(),instructor.getEmployee().getSurname(),instructor.getEmployee().getName()+" "+ instructor.getEmployee().getSurname())).collect(Collectors.toList()), trainning.getTags(), trainning.getEmployees());
-    }
-    @Transactional(readOnly = true)
-    public List<TrainingHistoricDTO> findAll() {
-        List<Training> trainnings = trainningRepository.findAll();
-        return trainnings.stream().map(trainning
-                        ->  new TrainingHistoricDTO(trainning.getId(), trainning.getName(), trainning.getCode(),
-                        trainning.getCreationDate(),trainning.getClosingDate(),trainning.getStatus(),
-                        trainning.getPassword(),trainning.getDescription(),
-                        trainning.getInstructors().stream().map(instructor -> new InstructorNameAndIdDTO(instructor.getId(),instructor.getEmployee().getName(),instructor.getEmployee().getSurname(),instructor.getEmployee().getName()+" "+ instructor.getEmployee().getSurname())).collect(Collectors.toList()),
-                        trainning.getTags(),
-                        trainning.getEmployees()))
-                .collect(Collectors.toList());
-    }
-    @Transactional
-    public ResponseEntity<String> update(Long idd, TrainingCreationDTO trainningDTO) {
-        Training updateTrainning= trainningRepository.findById(idd).orElseThrow(() -> new ResourceNotFoundException("No records found with id: " + idd));
-        List<Tag> tags = trainningDTO.tags().stream()
-                .map(id -> {
-                    TagDTO tagDTO = tagsService.getById(id);
-                    return new Tag(tagDTO.id(), tagDTO.name(),tagDTO.color(),tagDTO.trainings());
-                }).collect(Collectors.toList());
+            List<Tag> tags = trainingDTO.tags().stream()
+                    .map(this::getTagById)
+                    .collect(Collectors.toList());
 
-        List<Instructor> instructors = trainningDTO.instructor().stream()
-                .map(idInstructor -> {
-                    InstructorDTO instructorDTO = instructorService.getById(idInstructor);
-                    return new Instructor(instructorDTO.id(), instructorDTO.employee(), instructorDTO.trainnings());
-                }).collect(Collectors.toList());
+            List<Instructor> instructors = trainingDTO.instructor().stream()
+                    .map(this::getInstructorById)
+                    .collect(Collectors.toList());
 
-        updateTrainning.setName(trainningDTO.name());
-        updateTrainning.setDescription(trainningDTO.description());
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yy HH:mm:ss,SSS");
-        LocalDateTime parsedDate = LocalDateTime.parse(trainningDTO.closingDate(), formatter);
-        updateTrainning.setClosingDate(parsedDate);
-        updateTrainning.setInstructors(instructors);
-        updateTrainning.setTags(tags);
-        trainningRepository.save(updateTrainning);
-        return ResponseEntity.ok("Treinamento atualizado com sucesso!");
-    }
+            LocalDateTime parsedDate = parseDate(trainingDTO.closingDate());
 
-    @Transactional
-    public ResponseEntity<?> addEmployee(UserConfirmAssinatureDTO userConfirmAssinatureDTO) {
-        try {
-            Training training = trainningRepository.findTrainingByCode(userConfirmAssinatureDTO.code());
+            training.setName(trainingDTO.name());
+            training.setDescription(trainingDTO.description());
+            training.setClosingDate(parsedDate);
+            training.setInstructors(instructors);
+            training.setTags(tags);
 
-            if (training == null) {
-                throw new ResourceNotFoundException("No records found with code: " + userConfirmAssinatureDTO.code());
-            }
+            trainingRepository.save(training);
+            return ResponseEntity.ok("Treinamento atualizado com sucesso!");
+        }
 
-            if (!training.getPassword().equals(userConfirmAssinatureDTO.password())) {
-                throw new PasswordDontMatch("Incorrect password!");
-            }
-            EmployeeInfoDTO employeeDTO = employeeService.findById(userConfirmAssinatureDTO.userId());
-            Employee employee = new Employee(employeeDTO);
-            boolean alreadyInTraining = training.getEmployees().stream()
-                    .anyMatch(et -> et.getEmployee().equals(employee));
-            if (!alreadyInTraining) {
-                EmployeeTrainingKey key = new EmployeeTrainingKey(employee.getId(), training.getId());
-                EmployeeTraining employeeTraining = new EmployeeTraining(key, employee, training, userConfirmAssinatureDTO.assinatura());
-                training.getEmployees().add(employeeTraining);
-                employee.getEmployeeTrainings().add(employeeTraining);
-                trainningRepository.save(training);
+        @Transactional
+        public ResponseEntity<String> addEmployee(UserConfirmAssinatureDTO userConfirmAssinatureDTO) {
+            try {
+                Training training = getTrainingByCode(userConfirmAssinatureDTO.code());
+                validatePassword(training, userConfirmAssinatureDTO.password());
+
+                EmployeeInfoDTO employeeDTO = employeeService.findById(userConfirmAssinatureDTO.userId());
+                Employee employee = new Employee(employeeDTO);
+
+                addEmployeeToTraining(training, employee, userConfirmAssinatureDTO.assinatura());
+
                 return ResponseEntity.ok("Employee successfully added to the training!");
-            } else {
-                throw new EmployeeAlreadyInTrainning("Employee is already in this training");
+            } catch (Exception e) {
+                throw new ResourceNotFoundException(e.getMessage());
             }
-        } catch (Exception e) {
-           throw new ResourceNotFoundException(e.getMessage());
+        }
+
+        @Transactional(readOnly = true)
+        public TrainingHistoricDTO findByCode(String code) {
+            Training training = getTrainingByCode(code);
+            return convertToTrainingHistoricDTO(training);
+        }
+
+        @Transactional(readOnly = true)
+        public ResponseEntity<String> confirmPassword(Long idUser, String code, String password) {
+            Training training = getTrainingByCode(code);
+            validatePassword(training, password);
+            EmployeeInfoDTO employeeDTO = employeeService.findById(idUser);
+            Employee employee = new Employee(employeeDTO);
+            if (isEmployeeInTraining(employee,training)) {
+                throw new EmployeeAlreadyInTrainning("Você já está no treinamento!");
+            }
+            return ResponseEntity.ok("Senha correta!");
+        }
+
+        @Transactional
+        public void delete(Long id) {
+            if (!trainingRepository.existsById(id)) {
+                throw new ResourceNotFoundException("No records found with id: " + id);
+            }
+            try {
+                trainingRepository.deleteById(id);
+            } catch (ResourceNotFoundException e) {
+                throw new ResourceNotFoundException("No records found with id: " + id);
+            }
+        }
+
+        private Training getTrainingByCode(String code) {
+            return trainingRepository.findTrainingByCode(code)
+                    .orElseThrow(() -> new ResourceNotFoundException("Sala não encontrada: " + code));
+        }
+
+        private void validatePassword(Training training, String password) {
+            if (!training.getPassword().equals(password)) {
+                throw new PasswordDontMatch("Senha incorreta!");
+            }
+        }
+
+        private void addEmployeeToTraining(Training training, Employee employee, String assinatura) {
+            if (isEmployeeInTraining(employee,training)) {
+                throw new EmployeeAlreadyInTrainning("Você já está no treinamento!");
+            }
+            EmployeeTrainingKey key = new EmployeeTrainingKey(employee.getId(), training.getId());
+            EmployeeTraining employeeTraining = new EmployeeTraining(key, employee, training, assinatura);
+
+            training.getEmployees().add(employeeTraining);
+            employee.getEmployeeTrainings().add(employeeTraining);
+
+            trainingRepository.save(training);
+        }
+
+        private boolean isEmployeeInTraining(Employee employee, Training training) {
+            return training.getEmployees().stream()
+                    .anyMatch(et -> et.getEmployee().equals(employee));
+        }
+
+        private TrainingHistoricDTO convertToTrainingHistoricDTO(Training training) {
+            return new TrainingHistoricDTO(
+                    training.getId(),
+                    training.getName(),
+                    training.getCode(),
+                    training.getCreationDate(),
+                    training.getClosingDate(),
+                    training.getStatus(),
+                    training.getPassword(),
+                    training.getDescription(),
+                    training.getInstructors().stream()
+                            .map(instructor -> new InstructorNameAndIdDTO(
+                                    instructor.getId(),
+                                    instructor.getEmployee().getName(),
+                                    instructor.getEmployee().getSurname(),
+                                    instructor.getEmployee().getName() + " " + instructor.getEmployee().getSurname()))
+                            .collect(Collectors.toList()),
+                    training.getTags(),
+                    training.getEmployees()
+            );
+        }
+
+        private LocalDateTime parseDate(String date) {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yy HH:mm:ss,SSS");
+            return LocalDateTime.parse(date, formatter);
+        }
+
+        private Tag getTagById(Long id) {
+            TagDTO tagDTO = tagsService.getById(id);
+            return new Tag(tagDTO.id(), tagDTO.name(), tagDTO.color(), tagDTO.trainings());
+        }
+
+        private Instructor getInstructorById(Long id) {
+            InstructorDTO instructorDTO = instructorService.getById(id);
+            return new Instructor(instructorDTO.id(), instructorDTO.employee(), instructorDTO.trainnings());
         }
     }
-
-
-    @Transactional
-    public void delete(Long id) {
-        if (!trainningRepository.existsById(id)) {
-            throw new ResourceNotFoundException("No records found with id: " + id);
-        }
-        try {
-            trainningRepository.deleteById(id);
-        } catch (ResourceNotFoundException e) {
-            throw new ResourceNotFoundException("No records found with id: " + id);
-        }
-    }
-
-
-    private String generatePassword(int NumberOfCharacters) {
-        PasswordGenerator gen = new PasswordGenerator();
-        CharacterData lowerCaseChars = EnglishCharacterData.LowerCase;
-        CharacterRule lowerCaseRule = new CharacterRule(lowerCaseChars);
-        lowerCaseRule.setNumberOfCharacters(NumberOfCharacters);
-
-        CharacterData upperCaseChars = EnglishCharacterData.UpperCase;
-        CharacterRule upperCaseRule = new CharacterRule(upperCaseChars);
-        upperCaseRule.setNumberOfCharacters(NumberOfCharacters);
-
-        CharacterData digitChars = EnglishCharacterData.Digit;
-        CharacterRule digitRule = new CharacterRule(digitChars);
-        digitRule.setNumberOfCharacters(NumberOfCharacters);
-
-        CharacterData specialChars = new CharacterData() {
-            public String getErrorCode() {
-                return ERROR_CODE;
-            }
-
-            public String getCharacters() {
-                return "!@#$%^&*()_+";
-            }
-        };
-        CharacterRule splCharRule = new CharacterRule(specialChars);
-        splCharRule.setNumberOfCharacters(2);
-
-        return gen.generatePassword(10, splCharRule, lowerCaseRule,
-                upperCaseRule, digitRule);
-    }
-
-}

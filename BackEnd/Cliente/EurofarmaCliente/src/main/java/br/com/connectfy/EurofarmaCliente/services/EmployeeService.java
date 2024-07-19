@@ -6,7 +6,7 @@ import br.com.connectfy.EurofarmaCliente.exceptions.ResourceNotFoundException;
 import br.com.connectfy.EurofarmaCliente.models.Employee;
 import br.com.connectfy.EurofarmaCliente.models.EmployeeTraining;
 import br.com.connectfy.EurofarmaCliente.repositories.EmployeeRepository;
-import br.com.connectfy.EurofarmaCliente.repositories.TrainningRepository;
+import br.com.connectfy.EurofarmaCliente.repositories.TrainingRepository;
 import br.com.connectfy.EurofarmaCliente.util.GenerateEncryptedPassword;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
@@ -27,7 +27,7 @@ public class EmployeeService implements UserDetailsService {
     EmployeeRepository repository;
 
     @Autowired
-    TrainningRepository trainningRepository;
+    TrainingRepository trainningRepository;
 
     public EmployeeService(EmployeeRepository repository) {
         this.repository = repository;
