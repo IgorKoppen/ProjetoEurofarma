@@ -2,7 +2,6 @@ package br.com.connectfy.EurofarmaCliente.controllers;
 
 import br.com.connectfy.EurofarmaCliente.dtos.InstructorDTO;
 import br.com.connectfy.EurofarmaCliente.dtos.InstructorNameAndIdDTO;
-import br.com.connectfy.EurofarmaCliente.dtos.InstructorTrainingsDTO;
 import br.com.connectfy.EurofarmaCliente.dtos.TrainingHistoricDTO;
 import br.com.connectfy.EurofarmaCliente.services.InstructorService;
 import jakarta.validation.Valid;
@@ -44,5 +43,5 @@ public class InstructorController {
     }
 
     @GetMapping("/findTrainingByInstructor/{id}")
-    public List<TrainingHistoricDTO> fetchInstructorTrainings(@PathVariable Long id) { return instructorService.findTrainingById(id); }
+    public List<TrainingHistoricDTO> findInstructorTrainings(@PathVariable Long id) { return instructorService.findTrainingById(id); }
 }

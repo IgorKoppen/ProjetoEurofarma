@@ -1,8 +1,9 @@
 package br.com.connectfy.EurofarmaCliente.services;
 
 import br.com.connectfy.EurofarmaCliente.dtos.*;
-import br.com.connectfy.EurofarmaCliente.exceptions.EmployeeAlreadyInTrainning;
-import br.com.connectfy.EurofarmaCliente.exceptions.PasswordDontMatch;
+import br.com.connectfy.EurofarmaCliente.exceptions.EmployeeAlreadyInTrainingException;
+import br.com.connectfy.EurofarmaCliente.exceptions.InvalidDateException;
+import br.com.connectfy.EurofarmaCliente.exceptions.PasswordDoesntMatchException;
 import br.com.connectfy.EurofarmaCliente.exceptions.ResourceNotFoundException;
 import br.com.connectfy.EurofarmaCliente.models.*;
 import br.com.connectfy.EurofarmaCliente.repositories.TrainingRepository;
@@ -34,6 +35,8 @@ public class TrainingService {
 
         @Transactional
         public ResponseEntity<String> create(TrainingCreationDTO trainingDTO) {
+            LocalDateTime parsedDate = parseDate(trainingDTO.closingDate());
+            validateDateOfClose(parsedDate,"Data de fechamento não pode ser no passado!");
             List<Tag> tags = trainingDTO.tags().stream()
                     .map(this::getTagById)
                     .collect(Collectors.toList());
@@ -43,7 +46,6 @@ public class TrainingService {
                     .collect(Collectors.toList());
 
             LocalDateTime now = LocalDateTime.now();
-            LocalDateTime parsedDate = parseDate(trainingDTO.closingDate());
             String code;
             do {
                 code = RandomStringGenerator.generateRoomCode(10);
@@ -94,7 +96,7 @@ public class TrainingService {
                     .collect(Collectors.toList());
 
             LocalDateTime parsedDate = parseDate(trainingDTO.closingDate());
-
+            validateDateOfClose(training.getClosingDate(),"Data de fechamento não pode ser no passado!");
             training.setName(trainingDTO.name());
             training.setDescription(trainingDTO.description());
             training.setClosingDate(parsedDate);
@@ -109,14 +111,14 @@ public class TrainingService {
         public ResponseEntity<String> addEmployee(UserConfirmAssinatureDTO userConfirmAssinatureDTO) {
             try {
                 Training training = getTrainingByCode(userConfirmAssinatureDTO.code());
+                validateDateOfClose(training.getClosingDate(),"Sala já encerrada!");
                 validatePassword(training, userConfirmAssinatureDTO.password());
-
                 EmployeeInfoDTO employeeDTO = employeeService.findById(userConfirmAssinatureDTO.userId());
                 Employee employee = new Employee(employeeDTO);
 
                 addEmployeeToTraining(training, employee, userConfirmAssinatureDTO.assinatura());
 
-                return ResponseEntity.ok("Employee successfully added to the training!");
+                return ResponseEntity.ok("empregado adicionado com sucesso!");
             } catch (Exception e) {
                 throw new ResourceNotFoundException(e.getMessage());
             }
@@ -125,6 +127,7 @@ public class TrainingService {
         @Transactional(readOnly = true)
         public TrainingHistoricDTO findByCode(String code) {
             Training training = getTrainingByCode(code);
+            validateDateOfClose(training.getClosingDate(),"Sala já encerrada!");
             return convertToTrainingHistoricDTO(training);
         }
 
@@ -134,8 +137,9 @@ public class TrainingService {
             validatePassword(training, password);
             EmployeeInfoDTO employeeDTO = employeeService.findById(idUser);
             Employee employee = new Employee(employeeDTO);
+            validateDateOfClose(training.getClosingDate(),"Sala já encerrada!");
             if (isEmployeeInTraining(employee,training)) {
-                throw new EmployeeAlreadyInTrainning("Você já está no treinamento!");
+                throw new EmployeeAlreadyInTrainingException("Você já está no treinamento!");
             }
             return ResponseEntity.ok("Senha correta!");
         }
@@ -159,13 +163,17 @@ public class TrainingService {
 
         private void validatePassword(Training training, String password) {
             if (!training.getPassword().equals(password)) {
-                throw new PasswordDontMatch("Senha incorreta!");
+                throw new PasswordDoesntMatchException("Senha incorreta!");
             }
         }
-
+        private void validateDateOfClose(LocalDateTime date, String message) {
+        if(date.isBefore(LocalDateTime.now())) {
+            throw  new InvalidDateException(message);
+        }
+        }
         private void addEmployeeToTraining(Training training, Employee employee, String assinatura) {
             if (isEmployeeInTraining(employee,training)) {
-                throw new EmployeeAlreadyInTrainning("Você já está no treinamento!");
+                throw new EmployeeAlreadyInTrainingException("Você já está no treinamento!");
             }
             EmployeeTrainingKey key = new EmployeeTrainingKey(employee.getId(), training.getId());
             EmployeeTraining employeeTraining = new EmployeeTraining(key, employee, training, assinatura);
@@ -175,6 +183,8 @@ public class TrainingService {
 
             trainingRepository.save(training);
         }
+
+
 
         private boolean isEmployeeInTraining(Employee employee, Training training) {
             return training.getEmployees().stream()

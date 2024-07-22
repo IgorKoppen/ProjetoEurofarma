@@ -40,13 +40,18 @@ public class CustomizedEntityExceptionHandler extends ResponseEntityExceptionHan
         ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), ex.getMessage() + ex.getExpiredOn().toString(), request.getDescription(false));
         return new ResponseEntity<>(exceptionResponse, HttpStatus.UNAUTHORIZED);
     }
-    @ExceptionHandler({PasswordDontMatch.class})
-    public final ResponseEntity<ExceptionResponse> handlePasswordDontMatchException(PasswordDontMatch ex, WebRequest request) {
+    @ExceptionHandler({PasswordDoesntMatchException.class})
+    public final ResponseEntity<ExceptionResponse> handlePasswordDontMatchException(PasswordDoesntMatchException ex, WebRequest request) {
         ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), ex.getMessage() , request.getDescription(false));
         return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
     }
-    @ExceptionHandler({EmployeeAlreadyInTrainning.class})
-    public final ResponseEntity<ExceptionResponse> handleEmployeeAlreadyInTrainningException(EmployeeAlreadyInTrainning ex, WebRequest request) {
+    @ExceptionHandler({EmployeeAlreadyInTrainingException.class})
+    public final ResponseEntity<ExceptionResponse> handleEmployeeAlreadyInTrainingException(EmployeeAlreadyInTrainingException ex, WebRequest request) {
+        ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), ex.getMessage() , request.getDescription(false));
+        return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
+    }
+    @ExceptionHandler({InvalidDateException.class})
+    public final ResponseEntity<ExceptionResponse> handleInvalidDateExceptionException(InvalidDateException ex, WebRequest request) {
         ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), ex.getMessage() , request.getDescription(false));
         return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
     }
