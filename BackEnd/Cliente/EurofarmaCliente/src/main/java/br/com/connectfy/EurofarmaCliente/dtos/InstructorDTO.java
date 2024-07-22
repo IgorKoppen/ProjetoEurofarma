@@ -2,7 +2,6 @@ package br.com.connectfy.EurofarmaCliente.dtos;
 
 import br.com.connectfy.EurofarmaCliente.models.Employee;
 import br.com.connectfy.EurofarmaCliente.models.Training;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.validation.constraints.NotBlank;
 
 import java.io.Serial;

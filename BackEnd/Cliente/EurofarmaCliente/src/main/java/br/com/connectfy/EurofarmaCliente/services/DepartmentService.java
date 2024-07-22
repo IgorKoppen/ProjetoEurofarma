@@ -14,8 +14,11 @@ import java.util.stream.Collectors;
 @Service
 public class DepartmentService {
 
-    @Autowired
-    private DepartmentRepository departmentRepository;
+    private final DepartmentRepository departmentRepository;
+
+    public DepartmentService(DepartmentRepository departmentRepository) {
+        this.departmentRepository = departmentRepository;
+    }
 
     @Transactional
     public ResponseEntity<String> insert(DepartmentDTO departmentDTO) {

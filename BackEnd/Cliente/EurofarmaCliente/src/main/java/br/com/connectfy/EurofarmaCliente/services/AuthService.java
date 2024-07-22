@@ -18,14 +18,17 @@ import static org.springframework.http.ResponseEntity.ok;
 @Service
 public class AuthService {
 
-    @Autowired
-    private JwtTokenProvider tokenProvider;
+    private final JwtTokenProvider tokenProvider;
 
-    @Autowired
-    private AuthenticationManager authenticationManager;
+    private final AuthenticationManager authenticationManager;
 
-    @Autowired
-    private EmployeeRepository userRepository;
+    private final EmployeeRepository userRepository;
+
+    public AuthService(JwtTokenProvider tokenProvider, AuthenticationManager authenticationManager, EmployeeRepository userRepository) {
+        this.tokenProvider = tokenProvider;
+        this.authenticationManager = authenticationManager;
+        this.userRepository = userRepository;
+    }
 
     @SuppressWarnings("rawtypes")
     public ResponseEntity signIn(AccountCredentialsVO data) {
@@ -42,11 +45,11 @@ public class AuthService {
                 }
                 tokenResponse = tokenProvider.createToken(user.getId(), username, user.getName(), user.getRoles(), instructorId);
             } else {
-                throw new UsernameNotFoundException("Username " + username + " not found");
+                throw new UsernameNotFoundException("Usuário: " + username + " não encontrado!");
             }
             return ok(tokenResponse);
         } catch (Exception e) {
-            throw new BadCredentialsException("Invalid username or password");
+            throw new BadCredentialsException("Nome de usuário ou senha inválidos!");
         }
     }
 

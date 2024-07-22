@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -129,6 +130,17 @@ public class TrainingService {
             Training training = getTrainingByCode(code);
             validateDateOfClose(training.getClosingDate(),"Sala já encerrada!");
             return convertToTrainingHistoricDTO(training);
+        }
+        @Transactional(readOnly = true)
+        public List<RoomParticipantsDTO> findAllRoomParticipants(Long trainingId) {
+             Training training = trainingRepository.findById(trainingId) .orElseThrow(() -> new ResourceNotFoundException("No records found with id: " + trainingId));;
+             List<RoomParticipantsDTO> participants  = new ArrayList<>();
+             for (EmployeeTraining employeeTraining  : training.getEmployees()) {
+                 String fullName = employeeTraining.getEmployee().getName() + " " + employeeTraining.getEmployee().getSurname();
+                 RoomParticipantsDTO participantDTO = new RoomParticipantsDTO(fullName);
+                 participants.add(participantDTO);
+             }
+             return participants ;
         }
 
         @Transactional(readOnly = true)

@@ -48,10 +48,20 @@ public class CustomizedEntityExceptionHandler extends ResponseEntityExceptionHan
     @ExceptionHandler({EmployeeAlreadyInTrainingException.class})
     public final ResponseEntity<ExceptionResponse> handleEmployeeAlreadyInTrainingException(EmployeeAlreadyInTrainingException ex, WebRequest request) {
         ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), ex.getMessage() , request.getDescription(false));
-        return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(exceptionResponse, HttpStatus.CONFLICT);
     }
     @ExceptionHandler({InvalidDateException.class})
-    public final ResponseEntity<ExceptionResponse> handleInvalidDateExceptionException(InvalidDateException ex, WebRequest request) {
+    public final ResponseEntity<ExceptionResponse> handleInvalidDateException(InvalidDateException ex, WebRequest request) {
+        ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), ex.getMessage() , request.getDescription(false));
+        return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
+    }
+    @ExceptionHandler({AlreadyExisteException.class})
+    public final ResponseEntity<ExceptionResponse> handleAlreadyExisteException(AlreadyExisteException ex, WebRequest request) {
+        ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), ex.getMessage() , request.getDescription(false));
+        return new ResponseEntity<>(exceptionResponse, HttpStatus.CONFLICT);
+    }
+    @ExceptionHandler({InvalidPhoneNumberException.class})
+    public final ResponseEntity<ExceptionResponse> handleInvalidPhoneNumberException(InvalidPhoneNumberException ex, WebRequest request) {
         ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), ex.getMessage() , request.getDescription(false));
         return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
     }

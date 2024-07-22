@@ -1,9 +1,6 @@
 package br.com.connectfy.EurofarmaCliente.controllers;
 
-import br.com.connectfy.EurofarmaCliente.dtos.TrainingCreationDTO;
-import br.com.connectfy.EurofarmaCliente.dtos.TrainingDTO;
-import br.com.connectfy.EurofarmaCliente.dtos.TrainingHistoricDTO;
-import br.com.connectfy.EurofarmaCliente.dtos.UserConfirmAssinatureDTO;
+import br.com.connectfy.EurofarmaCliente.dtos.*;
 import br.com.connectfy.EurofarmaCliente.services.TrainingService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,4 +60,8 @@ public class TrainingController {
     public ResponseEntity<String> confirmPassword(@RequestParam Long userId,@RequestParam String code, @RequestParam String password) {
         return trainningService.confirmPassword(userId,code, password);
     }
+   @GetMapping("/getAllRoomParticipants")
+   public List<RoomParticipantsDTO> getAllRoomParticipants(@RequestParam Long roomId) {
+       return trainningService.findAllRoomParticipants(roomId);
+   }
 }

@@ -2,25 +2,35 @@ package br.com.connectfy.EurofarmaCliente.services;
 
 import br.com.connectfy.EurofarmaCliente.dtos.TagDTO;
 import br.com.connectfy.EurofarmaCliente.dtos.TagInsertDTO;
+import br.com.connectfy.EurofarmaCliente.exceptions.AlreadyExisteException;
 import br.com.connectfy.EurofarmaCliente.exceptions.ResourceNotFoundException;
 import br.com.connectfy.EurofarmaCliente.models.Tag;
 import br.com.connectfy.EurofarmaCliente.repositories.TagsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
 public class TagsService {
 
-    @Autowired
-    private TagsRepository tagsRepository;
+    private final TagsRepository tagsRepository;
+
+    public TagsService(TagsRepository tagsRepository) {
+        this.tagsRepository = tagsRepository;
+    }
 
     @Transactional
     public ResponseEntity<String> insert(TagInsertDTO tagDTO) {
+        Optional<Tag> existingTag = tagsRepository.findByNameIgnoreCase(tagDTO.name());
+        if (existingTag.isPresent()) {
+           throw new AlreadyExisteException("Tag " + tagDTO.name() + " já existe!");
+        }
         Tag tag = new Tag(tagDTO);
         tagsRepository.save(tag);
         return ResponseEntity.ok("Tag inserido com sucesso!");

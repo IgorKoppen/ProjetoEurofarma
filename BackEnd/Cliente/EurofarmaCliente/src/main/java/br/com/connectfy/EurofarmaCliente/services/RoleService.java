@@ -15,8 +15,11 @@ import java.util.stream.Collectors;
 @Service
 public class RoleService {
 
-    @Autowired
-    private RoleRepository roleRepository;
+    private final RoleRepository roleRepository;
+
+    public RoleService(RoleRepository roleRepository) {
+        this.roleRepository = roleRepository;
+    }
 
     @Transactional(readOnly = true)
     public List<RoleDTO> findAll() {

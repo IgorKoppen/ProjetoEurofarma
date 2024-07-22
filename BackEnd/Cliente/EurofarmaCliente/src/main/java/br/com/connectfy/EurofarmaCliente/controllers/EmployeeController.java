@@ -58,6 +58,12 @@ public class EmployeeController {
         employeeService.updatePassword(username, password);
         return ResponseEntity.ok("Atualizado com sucesso");
     }
+    @PatchMapping("/changePhone/{id}")
+    public ResponseEntity<?> updatePhone(@PathVariable Long id,@RequestParam String password,@RequestParam String  phone) {
+       employeeService.updateCellphoneNumber(id, password, phone);
+       return ResponseEntity.ok("Atualizado com sucesso");
+    }
+
 
     @GetMapping(value = "/findLastTrainings/{id}")
     public List<TrainingHistoricDTO> findLastTrainings(@PathVariable Long id) {
