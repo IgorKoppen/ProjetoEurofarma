@@ -61,6 +61,7 @@ public class Training {
 
     public Training(){}
 
+
     public Long getId() {
         return id;
     }

@@ -8,7 +8,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class GenerateEncryptedPassword {
-    private static final Pbkdf2PasswordEncoder pbkdf2Encoder = new Pbkdf2PasswordEncoder("eurofarma", 16, 310000, Pbkdf2PasswordEncoder.SecretKeyFactoryAlgorithm.PBKDF2WithHmacSHA256);
+    private static final String secret = "eurofarma";
+    private static final Pbkdf2PasswordEncoder pbkdf2Encoder = new Pbkdf2PasswordEncoder(secret, 16, 310000, Pbkdf2PasswordEncoder.SecretKeyFactoryAlgorithm.PBKDF2WithHmacSHA256);
     private static final DelegatingPasswordEncoder passwordEncoder;
 
     static  {

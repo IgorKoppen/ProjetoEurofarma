@@ -13,6 +13,7 @@ public record TrainingCreationDTO(
          @NotBlank(message = "Data de fechamento não pode ser vazia!") @JsonProperty("closing_date") String closingDate,
         @NotBlank(message = "Descrição não pode ser vazia!") String description,
         List<Long> instructor,
-        List<Long> tags
+        List<Long> tags,
+        List<Long> departments
 ) {
 }

@@ -26,12 +26,21 @@ public class TrainingService {
         private final TagsService tagsService;
         private final InstructorService instructorService;
         private final EmployeeService employeeService;
+        private final MessageService messageService;
+        private final DepartmentService departmentService;
 
-        public TrainingService(TrainingRepository trainingRepository, TagsService tagsService, InstructorService instructorService, EmployeeService employeeService) {
+        public TrainingService(TrainingRepository trainingRepository,
+                               TagsService tagsService,
+                               InstructorService instructorService,
+                               EmployeeService employeeService,
+                               MessageService messageService,
+                               DepartmentService departmentService) {
             this.trainingRepository = trainingRepository;
             this.tagsService = tagsService;
             this.instructorService = instructorService;
             this.employeeService = employeeService;
+            this.messageService = messageService;
+            this.departmentService = departmentService;
         }
 
         @Transactional
@@ -51,20 +60,9 @@ public class TrainingService {
             do {
                 code = RandomStringGenerator.generateRoomCode(10);
             } while (trainingRepository.existsByCode(code));
-
-
-            Training training = new Training();
-            training.setName(trainingDTO.name());
-            training.setCode(code);
-            training.setDescription(trainingDTO.description());
-            training.setCreationDate(now);
-            training.setClosingDate(parsedDate);
-            training.setPassword(RandomStringGenerator.generatePassword(10));
-            training.setStatus(true);
-            training.setInstructors(instructors);
-            training.setTags(tags);
-
+            Training training = buildTraining(trainingDTO, parsedDate, tags, instructors, code);
             trainingRepository.save(training);
+            messageToAllEmployeesOfDepartaments("Eurofarma: Código para participar da sala "+ trainingDTO.name() + ". Código: " + code,trainingDTO.departments());
             return ResponseEntity.ok("Treinamento inserido com sucesso!");
         }
 
@@ -224,6 +222,12 @@ public class TrainingService {
                     training.getEmployees()
             );
         }
+        private void messageToAllEmployeesOfDepartaments(String message,List<Long> departamentsIds){
+          List<String> phoneNumbers =  departmentService.getAllEmployeesPhoneNumberByDepartment(departamentsIds);
+          for (String phoneNumber : phoneNumbers) {
+              messageService.send(message,phoneNumber);
+          }
+        }
 
         private LocalDateTime parseDate(String date) {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yy HH:mm:ss,SSS");
@@ -239,4 +243,17 @@ public class TrainingService {
             InstructorDTO instructorDTO = instructorService.getById(id);
             return new Instructor(instructorDTO.id(), instructorDTO.employee(), instructorDTO.trainnings());
         }
+    private Training buildTraining(TrainingCreationDTO trainingDTO, LocalDateTime parsedDate, List<Tag> tags, List<Instructor> instructors, String code) {
+        Training training = new Training();
+        training.setName(trainingDTO.name());
+        training.setCode(code);
+        training.setDescription(trainingDTO.description());
+        training.setCreationDate(LocalDateTime.now());
+        training.setClosingDate(parsedDate);
+        training.setPassword(RandomStringGenerator.generatePassword(10));
+        training.setStatus(true);
+        training.setInstructors(instructors);
+        training.setTags(tags);
+        return training;
+    }
     }

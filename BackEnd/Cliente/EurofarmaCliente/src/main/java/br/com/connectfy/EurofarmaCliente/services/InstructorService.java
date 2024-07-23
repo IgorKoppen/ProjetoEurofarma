@@ -108,4 +108,45 @@ public class InstructorService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
+    public List<TrainingHistoricDTO> findTrainingByIdAndTag(Long id, String tagName) {
+
+        System.out.println(tagName + "banana");
+
+        Instructor instructor = instructorRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("No records found with id: " + id));
+
+        if (instructor.getTrainnings().isEmpty()) {
+            return new ArrayList<>();
+        }
+
+        return instructor.getTrainnings().stream()
+                .filter(training -> training.getTags().stream()
+                        .anyMatch(tag -> tag.getName().equalsIgnoreCase(tagName)))
+                .map(training -> {
+                    List<InstructorNameAndIdDTO> instructorNames = training.getInstructors().stream()
+                            .map(trainingInstructor -> new InstructorNameAndIdDTO(
+                                    trainingInstructor.getId(),
+                                    trainingInstructor.getEmployee().getName(),
+                                    trainingInstructor.getEmployee().getSurname(),
+                                    trainingInstructor.getEmployee().getName() + " " + trainingInstructor.getEmployee().getSurname()))
+                            .collect(Collectors.toList());
+                    return new TrainingHistoricDTO(
+                            training.getId(),
+                            training.getName(),
+                            training.getCode(),
+                            training.getCreationDate(),
+                            training.getClosingDate(),
+                            training.isStatus(),
+                            training.getPassword(),
+                            training.getDescription(),
+                            instructorNames,
+                            training.getTags(),
+                            training.getEmployees()
+                    );
+                })
+                .sorted(Comparator.comparing(TrainingHistoricDTO::closingDate).reversed())
+                .collect(Collectors.toList());
+    }
+
 }

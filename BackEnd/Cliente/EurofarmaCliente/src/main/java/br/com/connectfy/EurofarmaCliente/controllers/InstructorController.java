@@ -44,4 +44,7 @@ public class InstructorController {
 
     @GetMapping("/findTrainingByInstructor/{id}")
     public List<TrainingHistoricDTO> findInstructorTrainings(@PathVariable Long id) { return instructorService.findTrainingById(id); }
+
+    @GetMapping("/findTrainingByInstructorAndTag/{id}")
+    public List<TrainingHistoricDTO> findInstructorTrainings(@PathVariable Long id, @RequestParam String tag) { return instructorService.findTrainingByIdAndTag(id, tag); }
 }

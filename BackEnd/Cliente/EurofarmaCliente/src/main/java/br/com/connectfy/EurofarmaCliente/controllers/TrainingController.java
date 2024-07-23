@@ -14,54 +14,48 @@ import java.util.List;
 public class TrainingController {
 
     @Autowired
-    private TrainingService trainningService;
+    private TrainingService trainingService;
 
     @PostMapping
-    public ResponseEntity<String> insertTrainning(@RequestBody @Valid TrainingCreationDTO trainningCreationDTO) {
-        System.out.println(trainningCreationDTO);
-        System.out.println(trainningCreationDTO);System.out.println(trainningCreationDTO);System.out.println(trainningCreationDTO);System.out.println(trainningCreationDTO);System.out.println(trainningCreationDTO);
-
-
-
-
-        return trainningService.create(trainningCreationDTO);
+    public ResponseEntity<String> insertTraining(@RequestBody @Valid TrainingCreationDTO trainingCreationDTO) {
+        return trainingService.create(trainingCreationDTO);
     }
 
     @GetMapping
-    public List<TrainingHistoricDTO> findAllTrainning(){
-        return trainningService.findAll();
+    public List<TrainingHistoricDTO> findAllTraining(){
+        return trainingService.findAll();
     }
 
     @GetMapping("/{id}")
-    public TrainingHistoricDTO findTrainningById(@PathVariable Long id) {
-        return trainningService.getById(id);
+    public TrainingHistoricDTO findTrainingById(@PathVariable Long id) {
+        return trainingService.getById(id);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<String> updateTrainning(@PathVariable Long id, @RequestBody @Valid TrainingCreationDTO trainningCreationDTO) {
-        return trainningService.update(id, trainningCreationDTO);
+    public ResponseEntity<String> updateTraining(@PathVariable Long id, @RequestBody @Valid TrainingCreationDTO trainingCreationDTO) {
+        return trainingService.update(id, trainingCreationDTO);
     }
 
     @PutMapping("/addEmployee")
     public ResponseEntity<?> addEmployee(@RequestBody UserConfirmAssinatureDTO userConfirmAssinatureDTO) {
-        return trainningService.addEmployee(userConfirmAssinatureDTO);
+        return trainingService.addEmployee(userConfirmAssinatureDTO);
     }
 
     @DeleteMapping(value = "/{id}")
     public void deleteTrainning(@PathVariable Long id) {
-        trainningService.delete(id);
+        trainingService.delete(id);
     }
 
     @GetMapping("/getRoomByCode/{code}")
     public TrainingHistoricDTO getRoomByCode(@PathVariable  String code) {
-        return trainningService.findByCode(code);
+        return trainingService.findByCode(code);
     }
     @GetMapping("/confirmPassword")
     public ResponseEntity<String> confirmPassword(@RequestParam Long userId,@RequestParam String code, @RequestParam String password) {
-        return trainningService.confirmPassword(userId,code, password);
+        return trainingService.confirmPassword(userId,code, password);
     }
    @GetMapping("/getAllRoomParticipants")
    public List<RoomParticipantsDTO> getAllRoomParticipants(@RequestParam Long roomId) {
-       return trainningService.findAllRoomParticipants(roomId);
+       return trainingService.findAllRoomParticipants(roomId);
    }
 }

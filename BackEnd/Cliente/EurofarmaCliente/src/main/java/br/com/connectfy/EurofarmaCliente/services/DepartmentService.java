@@ -1,6 +1,7 @@
 package br.com.connectfy.EurofarmaCliente.services;
 
 import br.com.connectfy.EurofarmaCliente.dtos.DepartmentDTO;
+import br.com.connectfy.EurofarmaCliente.dtos.EmployeeInfoDTO;
 import br.com.connectfy.EurofarmaCliente.exceptions.ResourceNotFoundException;
 import br.com.connectfy.EurofarmaCliente.models.Department;
 import br.com.connectfy.EurofarmaCliente.repositories.DepartmentRepository;
@@ -8,7 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -60,5 +64,18 @@ public class DepartmentService {
         } catch (ResourceNotFoundException e) {
             throw new ResourceNotFoundException("No records found with id: " + id);
         }
+    }
+
+    @Transactional(readOnly = true)
+    public List<String> getAllEmployeesPhoneNumberByDepartment(List<Long> departmentIds) {
+        if (departmentIds == null || departmentIds.isEmpty()) {
+            return new ArrayList<>();
+        }
+        List<String> employeesPhoneNumber = new ArrayList<>();
+        for (Long departmentId : departmentIds) {
+           Optional<Department> department = departmentRepository.findById(departmentId);
+           department.ifPresent(value -> value.getEmployees().forEach(employee -> employeesPhoneNumber.add(employee.getCellphoneNumber())));
+        }
+        return employeesPhoneNumber;
     }
 }
