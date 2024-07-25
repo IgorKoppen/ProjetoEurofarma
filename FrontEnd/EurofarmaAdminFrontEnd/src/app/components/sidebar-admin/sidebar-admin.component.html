@@ -1,0 +1,38 @@
+<mat-drawer-container class="example-container" autosize>
+    <mat-drawer #drawer class="example-sidenav" [opened]="true" mode="side">
+      <div class="sidebarDiv">
+        
+          <img class="logoImg"
+            src="../../../assets/image/logoEurofarma.png"
+            alt="Logo da Eurofarma"
+            draggable="false"
+          />
+          <nav class="navigation">
+            <ul>
+              <li>Treinamentos</li>
+              <li>Funcionários</li>
+              <li>
+                <button mat-button [matMenuTriggerFor]="optionChatbotCompliance" >ChatBot Compliance  <mat-icon>arrow_drop_down</mat-icon></button>
+                <mat-menu #optionChatbotCompliance="matMenu" xPosition="after">
+                  <a mat-menu-item href="#">Adicionar</a>
+                  <a mat-menu-item href="#">Ver documentos</a>
+                </mat-menu>
+              </li>
+              <li>
+                <button mat-button [matMenuTriggerFor]="optionChatbotEurofarma">ChatBot Eurofarma <mat-icon>arrow_drop_down</mat-icon></button>
+                <mat-menu #optionChatbotEurofarma="matMenu">
+                  <a mat-menu-item href="#">Adicionar</a>
+                  <a mat-menu-item href="#">Ver documentos</a>
+                </mat-menu>
+              </li>
+            </ul>
+          </nav>
+        </div>
+    
+    
+    
+    </mat-drawer>
+    <div class="example-sidenav-content">
+      <ng-content></ng-content>
+    </div>
+</mat-drawer-container>

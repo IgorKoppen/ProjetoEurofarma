@@ -1,0 +1,61 @@
+.example-container {
+    width: 100%;
+    height: 100%;
+
+  }
+  
+  .example-sidenav-content {
+    display: flex;
+    height: 100%;
+    
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .example-sidenav {
+    width: 40%;
+    max-width: 350px;
+    background: linear-gradient(var(--main-color), var(--second-color));
+  }
+  .sidebarDiv{
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr 4fr;
+    grid-column-gap: 5px;
+    grid-row-gap: 5px;
+    align-items: center;
+  }
+.logoImg{
+  width: 40%;
+ justify-self: center;
+}
+.navigation {
+  align-self: start;
+}
+
+.navigation  ul li{
+  padding: 15px;
+ font-size: 30px;
+ color: white;
+ border-top: 3px white solid;
+}
+.navigation  ul li{
+  padding: 15px;
+ font-size: 30px;
+ color: white;
+ border-top: 2px white solid;
+}
+.navigation  ul li:last-child {
+  border-bottom: 2px solid white;
+}
+.navigation ul li button[mat-button] {
+  width: 100%;
+  font-size: 28px;
+  color: white; 
+  background-color: transparent; 
+  border: none; 
+  text-align: left; 
+  cursor: pointer;
+}
