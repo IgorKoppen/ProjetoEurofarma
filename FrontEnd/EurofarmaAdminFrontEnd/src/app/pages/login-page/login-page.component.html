@@ -1,0 +1,34 @@
+<main class="background" style="background-color: aqua">
+  <div class="container">
+    <div class="imgBox">
+      <img
+        src="../../../assets/image/logoEurofarma.png"
+        alt="Logo da Eurofarma"
+        draggable="false"
+      />
+    </div>
+    <h1 class="title">Admin</h1>
+    <form class="formLogin" (submit)="login($event)">
+      <div class="example-container" >
+        <mat-form-field appearance="outline"  class="matInput">
+          <mat-icon matIconPrefix class="icons">person</mat-icon>
+          <input matInput type="text" placeholder="Usuário" class="inputLogin"/>
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="matInput">
+          <mat-icon matIconPrefix class="icons">lock</mat-icon>
+          <input matInput [type]="hide() ? 'password' : 'text'"  placeholder="Senha" class="inputLogin"/>
+          <button
+            mat-icon-button
+            matSuffix
+            (click)="clickEvent($event)"
+            [attr.aria-label]="'Hide password'"
+            [attr.aria-pressed]="hide()"
+          >
+            <mat-icon class="icons">{{hide() ? 'visibility_off' : 'visibility'}}</mat-icon>
+          </button>
+        </mat-form-field>
+      </div>
+      <input type="submit" class="btnLogin" value="Login" />
+    </form>
+  </div>
+</main>
