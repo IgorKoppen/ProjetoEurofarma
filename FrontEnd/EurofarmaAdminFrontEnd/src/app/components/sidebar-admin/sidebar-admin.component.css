@@ -1,61 +1,110 @@
-.example-container {
-    width: 100%;
-    height: 100%;
+.container {
+  width: 100%;
+  height: 100%;
+}
 
-  }
-  
-  .example-sidenav-content {
-    display: flex;
-    height: 100%;
-    
-    align-items: center;
-    justify-content: center;
-  }
-  
-  .example-sidenav {
-    width: 40%;
-    max-width: 350px;
-    background: linear-gradient(var(--main-color), var(--second-color));
-  }
-  .sidebarDiv{
-    width: 100%;
-    height: 100%;
-    display: grid;
-    grid-template-columns: 1fr;
-    grid-template-rows: 1fr 4fr;
-    grid-column-gap: 5px;
-    grid-row-gap: 5px;
-    align-items: center;
-  }
-.logoImg{
+.sidenav-content {
+  height: 100%;
+  width: 100%;
+}
+
+.sidenav {
   width: 40%;
- justify-self: center;
+  max-width: 350px;
+  background: linear-gradient(var(--main-color), var(--second-color));
+}
+.sidebarDiv {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr 4fr;
+  grid-column-gap: 5px;
+  grid-row-gap: 5px;
+  align-items: center;
+}
+.logoImg {
+  width: 40%;
+  justify-self: center;
 }
 .navigation {
   align-self: start;
 }
 
-.navigation  ul li{
+.navigation ul li {
   padding: 15px;
- font-size: 30px;
- color: white;
- border-top: 3px white solid;
+  font-size: 30px;
+  color: white;
+  border-top: 3px white solid;
 }
-.navigation  ul li{
+.navigation ul li {
   padding: 15px;
- font-size: 30px;
- color: white;
- border-top: 2px white solid;
+  font-size: 30px;
+  color: white;
+  border-top: 2px white solid;
+  transition: 150ms ease-in;
+  font-family: "Inter", sans-serif;
 }
-.navigation  ul li:last-child {
+.navigation ul li:last-child {
   border-bottom: 2px solid white;
 }
-.navigation ul li button[mat-button] {
-  width: 100%;
+
+.iconBox:hover {
+  background: rgb(90, 90, 90);
+}
+
+.itensBox {
+  margin-top: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+.itensBox a {
   font-size: 28px;
-  color: white; 
-  background-color: transparent; 
-  border: none; 
-  text-align: left; 
+  text-decoration: none;
+}
+
+.sidebarIcon {
+  font-size: 35px;
+  width: 35px;
+  height: 35px;
+}
+.titleLink {
+  font-size: 30px;
+  text-decoration: none;
+}
+.iconBox {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.subMenu {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: white;
+  height: 35px;
+}
+.subMenu:hover {
+  color: lightgray;
+}
+.subMenuIcon {
+  width: 27px;
+  height: 27px;
+  font-size: 27px;
+}
+.logoutBtn {
+  justify-self: center;
+  width: 85%;
+  height: 60px;
+  border-radius: 30px;
+  margin-bottom: 20px;
+  font-size: 20px;
+  font-weight: bold;
+  border: none;
+  background-color: white;
   cursor: pointer;
+}
+.logoutBtn:hover {
+  background-color: lightgray;
 }
