@@ -4,8 +4,8 @@ import { Component, Input } from '@angular/core';
   selector: 'app-add-document-component',
   standalone: true,
   imports: [],
-  templateUrl: './add-document-component.component.html',
-  styleUrl: './add-document-component.component.css'
+  templateUrl: './add-document.component.html',
+  styleUrl: './add-document.component.css'
 })
 export class AddDocumentComponentComponent {
  @Input() titulo = "";

@@ -1,0 +1,64 @@
+.topFilter{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 30px 10px 30px;
+}
+.topFilter  h1{
+ font-size: 45px;
+ font-family: "Inter", sans-serif;
+}
+.actionsDiv{
+    padding: 15px 40px 15px 0;
+    width: 100%;
+    display: flex;
+    justify-content: end;
+    gap: 30px;
+}
+.actionsDiv button{
+    padding: 20px 40px 20px 40px;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 23px;
+    border: #284678 solid 4px;
+    background: transparent;
+    color: #284678;
+    font-weight: bold;
+    transition: 200ms ease-in-out;
+    cursor: pointer;
+    font-family: "Inter", sans-serif;
+}
+.actionsDiv button:hover{
+    border: #000000 solid 4px;
+    color: #000000;
+}
+.tableMain{
+    padding: 0 20px 0 20px;
+    
+}
+td, th {
+    font-family: "Inter", sans-serif;
+    width: 25%;
+  }
+  .demo-table {
+    width: 100%;
+  }
+  
+  .mat-mdc-row .mat-mdc-cell {
+    border-bottom: 1px solid transparent;
+    border-top: 1px solid transparent;
+    cursor: pointer;
+  }
+  
+  .mat-mdc-row:hover .mat-mdc-cell {
+    border-color: currentColor;
+  }
+  
+  .demo-row-is-clicked {
+    font-weight: bold;
+  }
+.filter{
+   width: 15%;
+}

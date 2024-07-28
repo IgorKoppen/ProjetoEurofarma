@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AddDocumentComponentComponent } from './add-document-component.component';
+import { AddDocumentComponentComponent } from './add-document.component';
 
 describe('AddDocumentComponentComponent', () => {
   let component: AddDocumentComponentComponent;

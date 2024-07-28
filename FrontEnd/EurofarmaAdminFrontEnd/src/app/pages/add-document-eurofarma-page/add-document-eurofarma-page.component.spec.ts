@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AddDocumentoEurofarmaPageComponent } from './add-documento-eurofarma-page.component';
+import { AddDocumentoEurofarmaPageComponent } from './add-document-eurofarma-page.component';
 
 describe('AddDocumentoEurofarmaPageComponent', () => {
   let component: AddDocumentoEurofarmaPageComponent;

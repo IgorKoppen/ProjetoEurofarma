@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AddDocumentoCompliancePageComponent } from './add-documento-compliance-page.component';
+import { AddDocumentoCompliancePageComponent } from './add-document-compliance-page.component';
 
 describe('AddDocumentoCompliancePageComponent', () => {
   let component: AddDocumentoCompliancePageComponent;
