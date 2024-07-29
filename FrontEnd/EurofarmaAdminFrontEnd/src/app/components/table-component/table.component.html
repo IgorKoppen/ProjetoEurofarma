@@ -1,24 +1,16 @@
-<div class="topFilter">
-  <h1>{{title}}</h1>
-  <mat-form-field appearance="fill" class="filter">
-    <mat-icon matIconPrefix class="icons">search</mat-icon>
-    <mat-label>Buscar</mat-label>
-    <input
-      matInput
-      
-      (keyup)="applyFilter($event)"
-      placeholder="Ex. nome"
-      #input
-    />
-  </mat-form-field>
+
+<div class="filterBox">
+<mat-form-field appearance="fill" class="filter" [style.width.%]="35">
+  <mat-icon matIconPrefix class="icons">search</mat-icon>
+  <mat-label>Buscar</mat-label>
+  <input
+    matInput
+    (keyup)="applyFilter($event)"
+    placeholder="Ex. nome"
+    #input
+  />
+</mat-form-field>
 </div>
-<div class="actionsDiv">
-  <button>Novo <mat-icon>add_circle</mat-icon></button>
-  <button>Editar <mat-icon>edit</mat-icon></button>
-</div>
-
-
-
 <div class="tableMain">
   <table mat-table [dataSource]="dataSource" matSort>
    @for (column of displayedColumns; track $index) {
@@ -30,6 +22,7 @@
         }@else {
           {{row[column]}}
         }
+        
         </td>
     </ng-container>
    }
@@ -41,7 +34,7 @@
     *matRowDef="let row; columns: displayedColumns;"
 ></tr>
 
-    <!-- Row shown when there is no matching data. -->
+
     <tr class="mat-row" *matNoDataRow>
       <td class="mat-cell" colspan="4">
         Nenhum resultado encontrado com: "{{ input.value }}"

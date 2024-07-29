@@ -1,8 +1,13 @@
+<div class="topDiv">
+  <h1>Funcionários</h1>
+  <div class="actionsDiv">
+    <button>Novo <mat-icon>add_circle</mat-icon></button>
+    <button>Editar <mat-icon>edit</mat-icon></button>
+  </div>
+</div>
 
-    <app-table-component
-        [title]="title"
-        [dataSource]="dataSource"
-        [displayedColumns]="displayedColumns">
-      </app-table-component>
-    
-
+<app-table-component
+  [dataSource]="dataSource"
+  [displayedColumns]="displayedColumns"
+>
+</app-table-component>

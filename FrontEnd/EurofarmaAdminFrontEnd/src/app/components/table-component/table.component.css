@@ -1,40 +1,10 @@
-.topFilter {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px 30px 10px 30px;
-}
-.topFilter h1 {
-  font-size: 45px;
-  font-family: "Inter", sans-serif;
-}
-.actionsDiv {
-  padding: 15px 40px 25px 0;
-  width: 100%;
+
+.filterBox{
   display: flex;
   justify-content: end;
-  gap: 30px;
-  border-bottom: 2px solid #000000;
+  padding-right: 30px;
 }
-.actionsDiv button {
-  padding: 20px 40px 20px 40px;
-  border-radius: 20px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-size: 23px;
-  border: #284678 solid 4px;
-  background: transparent;
-  color: #284678;
-  font-weight: bold;
-  transition: 200ms ease-in-out;
-  cursor: pointer;
-  font-family: "Inter", sans-serif;
-}
-.actionsDiv button:hover {
-  border: #000000 solid 4px;
-  color: #000000;
-}
+
 .tableMain {
   padding: 0 20px 0 20px;
 }

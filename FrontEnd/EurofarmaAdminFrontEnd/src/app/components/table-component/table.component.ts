@@ -17,7 +17,6 @@ import { MatIconModule } from '@angular/material/icon';
   styleUrl: './table.component.css'
 })
 export class TableComponent {
-  @Input({required: true}) title: string = "";
   @Input({required: true}) displayedColumns: string[] = [];
   @Input({required: true}) dataSource: MatTableDataSource<any> = new MatTableDataSource<any>();
   clickedRow: any = null;

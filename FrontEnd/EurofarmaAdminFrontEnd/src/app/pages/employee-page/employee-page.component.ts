@@ -3,6 +3,7 @@ import { TableComponent} from '../../components/table-component/table.component'
 import { MatTableDataSource } from '@angular/material/table';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import { EmployeeService } from '../../services/employee.service';
+import { MatIcon } from '@angular/material/icon';
 export interface EmployeeData {
   id: number;
   nome: string;
@@ -20,13 +21,12 @@ export interface EmployeeData {
 @Component({
   selector: 'app-employee-page',
   standalone: true,
-  imports: [TableComponent,MatProgressSpinnerModule],
+  imports: [TableComponent,MatProgressSpinnerModule,MatIcon],
   templateUrl: './employee-page.component.html',
   styleUrl: './employee-page.component.css'
 })
 
 export class EmployeePageComponent {
-  title = 'Funcionários';
   displayedColumns: string[] = ['id', 'nome', 'sobrenome','username', 'telefone','status','cargo','departamento','permissões'];
   dataSource: MatTableDataSource<any>;
   constructor(private employeeService: EmployeeService) {
