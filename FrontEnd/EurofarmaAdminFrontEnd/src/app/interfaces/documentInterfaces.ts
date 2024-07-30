@@ -1,11 +1,12 @@
-export interface Document {
+export interface DocumentChatbot {
     id: string;
     metadata: any;
   }
   
-  export interface DocumentResponse {
-    documents: Document[];
+  export interface DocumentApiResponse {
+    documents: DocumentChatbot[];
     metadata: {
       page_key: string;
     };
   }
+  

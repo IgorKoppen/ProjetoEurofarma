@@ -1,0 +1,32 @@
+
+.filterBox{
+    display: flex;
+    justify-content: end;
+    padding-right: 30px;
+  }
+  
+  .tableMain {
+    padding: 0 20px 0 20px;
+  }
+  th {
+    font-size: 17px;
+    font-weight: bold;
+  }
+  td {
+    font-size: 15px;
+    font-weight: 500;
+  }
+  td,
+  th {
+    font-family: "Inter", sans-serif;
+  }
+  .demo-table {
+    width: 100%;
+  }
+  .filter {
+    width: 15%;
+  }
+  .example-rate-limit-reached {
+    max-width: 360px;
+    text-align: center;
+  }

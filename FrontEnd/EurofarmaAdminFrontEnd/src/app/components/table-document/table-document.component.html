@@ -1,1 +1,50 @@
-<p>table-document works!</p>
+<div class="filterBox">
+  <mat-form-field appearance="fill" class="filter" [style.width.%]="35">
+    <mat-icon matIconPrefix class="icons">search</mat-icon>
+    <mat-label>Buscar</mat-label>
+    <input
+      matInput
+      (keyup)="applyFilter($event)"
+      placeholder="Ex. nome"
+      #input
+    />
+  </mat-form-field>
+</div>
+<div class="tableMain">
+  <table mat-table [dataSource]="dataSource" matSort>
+    <ng-container matColumnDef="id">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header="id">ID</th>
+      <td mat-cell *matCellDef="let row">{{ row.id }}</td>
+    </ng-container>
+  
+    <ng-container matColumnDef="Título">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header="metadata.title">Título</th>
+      <td mat-cell *matCellDef="let row">{{ row.metadata.title }}</td>
+    </ng-container>
+  
+    <ng-container matColumnDef="Data de criação">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header="metadata.CreationDate">Data de criação</th>
+      <td mat-cell *matCellDef="let row">{{ row.metadata.CreationDate * 1000 | date:'dd/MM/yyyy' }}</td>
+    </ng-container>
+   
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef></th>
+      <td mat-cell *matCellDef="let row">
+        <button mat-button (click)="delete(row.id)">Delete</button>
+      </td>
+    </ng-container>
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row  *matRowDef="let row; columns: displayedColumns"></tr>
+  
+    <tr class="mat-row" *matNoDataRow>
+      <td class="mat-cell" colspan="4">Nenhum resultado encontrado com: "{{ input.value }}"</td>
+    </tr>
+  </table>
+
+  <mat-paginator
+    [pageSizeOptions]="[15, 30, 50, 100]"
+    pageSize="15"
+    aria-label="Selecione página de funcionários"
+    showFirstLastButtons
+  ></mat-paginator>
+</div>
