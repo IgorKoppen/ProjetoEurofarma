@@ -1,0 +1,15 @@
+.topDiv{
+    display: flex;
+    align-items: center;
+    padding: 25px 25px 25px 25px;
+  }
+  .topDiv h1{
+     font-size: 40px;
+     font-family: "Inter", sans-serif;
+  }
+  .spinner-container {
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   height: 50vh
+ }

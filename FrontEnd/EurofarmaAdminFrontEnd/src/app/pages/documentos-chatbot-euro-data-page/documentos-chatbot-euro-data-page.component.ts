@@ -1,26 +1,25 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
-import { EuroComplianceChatbotDocsService } from '../../services/euro-compliance-chatbot-docs.service';
 import { DocumentChatbot } from '../../interfaces/documentInterfaces';
 import { TableDocumentComponent } from '../../components/table-document/table-document.component';
+import { EuroDataChatbotDocsService } from '../../services/euro-data-chatbot-docs.service';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 
-
 @Component({
-  selector: 'app-documentos-chatbot-compliance-page',
+  selector: 'app-documentos-chatbot-euro-data-page',
   standalone: true,
   imports: [TableDocumentComponent,MatProgressSpinner],
-  templateUrl: './documentos-chatbot-compliance-page.component.html',
-  styleUrl: './documentos-chatbot-compliance-page.component.css'
+  templateUrl: './documentos-chatbot-euro-data-page.component.html',
+  styleUrl: './documentos-chatbot-euro-data-page.component.css'
 })
-export class DocumentosChatbotCompliancePageComponent {
+export class DocumentosChatbotEuroDataPageComponent {
   displayedColumns: string[] = ['id', 'Título','Data de criação','actions'];
   dataSource: MatTableDataSource<any> = new MatTableDataSource();
-  documentData:DocumentChatbot[] = []
+  documentData: DocumentChatbot[] = [];
   isLoading: boolean = true;
-
-  constructor(private complianceService: EuroComplianceChatbotDocsService) {
-    this.complianceService.findAllDocs().subscribe({
+  
+  constructor(private euroDataService: EuroDataChatbotDocsService) {
+    this.euroDataService.findAllDocs().subscribe({
       next: (document) => {
         this.documentData = document.documents;
         this.dataSource.data = this.documentData;
@@ -31,11 +30,10 @@ export class DocumentosChatbotCompliancePageComponent {
         this.isLoading = false; 
       }
     });
-   }
+  }
   
-
-   deleteDoc = (id: string): void => {
-    this.complianceService.deleteDoc(id).subscribe({
+  deleteDoc = (id: string): void => {
+    this.euroDataService.deleteDoc(id).subscribe({
       next: () => {
         this.documentData = this.documentData.filter(doc => doc.id !== id);
         this.dataSource.data = this.documentData;

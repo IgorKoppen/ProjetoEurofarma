@@ -12,7 +12,7 @@ import { environment } from '../../environments/environment';
 export class EuroComplianceChatbotDocsService {
   constructor(private http: HttpClient) {
   }
-  private apiUrl = 'https://api.vectara.io/v2/corpora/' + environment.eurofarmaComplianceApi.corpus_key +'/documents';
+  private apiUrl = 'https://api.vectara.io/v2/corpora/' + environment.eurofarmaComplianceApi.corpus_key;
   
   private headers = new HttpHeaders({
     'Accept': 'application/json',
@@ -21,28 +21,18 @@ export class EuroComplianceChatbotDocsService {
 
 
   findAllDocs() : Observable<DocumentApiResponse>{
-   return this.http.get<DocumentApiResponse>(this.apiUrl, {headers: this.headers});
+   return this.http.get<DocumentApiResponse>(this.apiUrl +'/documents', {headers: this.headers});
   }
 
-  addNewDoc(){
-
+  addNewDoc(file: File, metadata: any): Observable<any> {
+    const formData: FormData = new FormData();
+    formData.append('file', file, file.name);
+    formData.append('metadata', JSON.stringify(metadata));
+    return this.http.post<any>(`${this.apiUrl}/upload_file`, formData, { headers: this.headers })
   }
 
-  deleteDoc(docId: string){
-  
-    this.http.delete<void>(`${this.apiUrl}/${docId}`, { headers: this.headers }).subscribe(() => {
 
-      console.log(`Document with ID ${docId} deleted successfully`);
-    }),
-    (error: any) => {
-      // Handle error
-      if (error.status === 404) {
-        console.error('Document not found or already deleted.');
-      } else if (error.status === 403) {
-        console.error('Authorization error. Check your API key and permissions.');
-      } else {
-        console.error('An error occurred:', error);
-      }
-    }
+  deleteDoc(docId: string): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/documents/${docId}`, { headers: this.headers });
   }
 }

@@ -4,7 +4,6 @@
     justify-content: end;
     padding-right: 30px;
   }
-  
   .tableMain {
     padding: 0 20px 0 20px;
   }
@@ -20,13 +19,19 @@
   th {
     font-family: "Inter", sans-serif;
   }
-  .demo-table {
-    width: 100%;
-  }
   .filter {
     width: 15%;
   }
-  .example-rate-limit-reached {
-    max-width: 360px;
-    text-align: center;
-  }
+.deleteButton{
+  text-align: center;
+  padding: 8px;
+  border-radius: 100%;
+  background: #d11a2a;
+  border: none;
+  color: white;
+  cursor: pointer;
+  transition: 150ms ease;
+}
+.deleteButton:hover{
+ background: #000000;
+}

@@ -7,7 +7,6 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { DocumentChatbot } from '../../interfaces/documentInterfaces';
 import { DatePipe } from '@angular/common';
-import { EuroComplianceChatbotDocsService } from '../../services/euro-compliance-chatbot-docs.service';
 
 
 @Component({
@@ -20,13 +19,13 @@ import { EuroComplianceChatbotDocsService } from '../../services/euro-compliance
 export class TableDocumentComponent {
   @Input({ required: true }) displayedColumns: string[] = [];
   @Input({ required: true }) dataSource: MatTableDataSource<DocumentChatbot> = new MatTableDataSource<DocumentChatbot>();
-
+  @Input() deleteDoc: (id: string) => void = () => {};
   
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
-  constructor(public _MatPaginatorIntl: MatPaginatorIntl,private complianceService: EuroComplianceChatbotDocsService) { }
+  constructor(public _MatPaginatorIntl: MatPaginatorIntl) { }
 
   ngOnInit() {
     this._MatPaginatorIntl.itemsPerPageLabel = 'Items por páginas';
@@ -90,7 +89,6 @@ export class TableDocumentComponent {
       this.dataSource.paginator.firstPage();
     }
   }
-  delete(id : string){
-    this.complianceService.deleteDoc(id);
-  }
+  
+  
 }
