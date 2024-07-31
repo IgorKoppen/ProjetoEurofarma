@@ -11,5 +11,9 @@ import { RouterLink } from '@angular/router';
   styleUrl: './sidebar-admin.component.css'
 })
 export class SidebarAdminComponent {
-
+  isOpen:boolean = false;
+   minimizeOrOpen = () => {
+    console.log(this.isOpen)
+    this.isOpen = !this.isOpen;
+  }
 }

@@ -14,8 +14,8 @@
     color: #284678;
 }
 .formDocument{
-    width: 22%;
-    margin-top: 200px;
+    
+    margin-top: 100px;
     display: grid;
     grid-template-columns: 1fr;
     grid-template-rows: repeat(2, 1fr);
@@ -43,6 +43,8 @@
     padding: 0.6em;
     border: 3px solid #284678;
     border-radius: 10px;
+    transition: 200ms ease;
+    cursor: pointer;
 }
 #sendBtn{
     margin-top: 50px;
@@ -52,4 +54,9 @@
     border-radius: 15px;
     color: #fff;
     height: 65px;
+    cursor: pointer;
+}
+#sendBtn:hover{
+    background: gray;
+
 }

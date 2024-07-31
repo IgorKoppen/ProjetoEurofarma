@@ -1,7 +1,7 @@
 export const environment = {
     production: true,
     eurofarmaComplianceApi: {
-        api_key: "zwt_O_UzAbv6w5PnwfrJCkyJdK5DhmHqvmE43GXRyQ",
+        api_key: "zwt_O_UzAetxbJ6129aLDwgCcx7ezgXfQVIbog4bFA",
         corpus_key: "EurofarmaCompliance"
     },
     euroDataApi:{

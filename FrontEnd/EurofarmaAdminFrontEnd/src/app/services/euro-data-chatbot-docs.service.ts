@@ -18,6 +18,10 @@ export class EuroDataChatbotDocsService {
     'x-api-key': environment.euroDataApi.api_key
   });
 
+  private headersDelete = new HttpHeaders({
+    'x-api-key': environment.euroDataApi.api_key
+  });
+
 
   findAllDocs() : Observable<DocumentApiResponse>{
    return this.http.get<DocumentApiResponse>(this.apiUrl +'/documents', {headers: this.headers});
@@ -26,12 +30,14 @@ export class EuroDataChatbotDocsService {
   addNewDoc(file: File, metadata: any): Observable<any> {
     const formData: FormData = new FormData();
     formData.append('file', file, file.name);
-    formData.append('metadata', JSON.stringify(metadata));
-    return this.http.post<any>(`${this.apiUrl}/upload_file`, formData, { headers: this.headers })
+    if (metadata) {
+      formData.append('metadata', JSON.stringify(metadata));
+    }
+    return this.http.post<any>(this.apiUrl + "/upload_file", formData, { headers: this.headers });
   }
 
   deleteDoc(docId: string): Observable<void> {
-   
-    return this.http.delete<void>(`${this.apiUrl}/documents/${docId}`, { headers: this.headers });
+    return this.http.delete<void>(`${this.apiUrl}/documents/${docId}`, { headers: this.headersDelete });
   }
+  
 }

@@ -1,12 +1,14 @@
 <mat-drawer-container class="container" autosize>
-  <mat-drawer #drawer class="sidenav" [opened]="true" mode="side">
+  <mat-drawer #drawer class="sidenav"  [class]="isOpen ? 'sidenav-open' : 'sidenav-minimized'" [opened]="true" mode="side">
     <div class="sidebarDiv">
+      <button (click)="minimizeOrOpen()" class="iconBtnMinimize" [class]="isOpen ? 'rightIcon' : 'centerIcon'"><mat-icon class="sidebarIcon" [class]="isOpen ? '' : 'rotateIcon'" >keyboard_arrow_left</mat-icon></button>
       <img
         class="logoImg"
         src="../../../assets/image/logoEurofarma.png"
         alt="Logo da Eurofarma"
         draggable="false"
       />
+      @if(isOpen){
       <nav class="navigation">
         <ul>
           <a class="titleLink" href="#">
@@ -23,7 +25,7 @@
             <h4 class="itenTitle">Chatbot Compliance</h4>
             <div class="itensBox">
               <a [routerLink]="['/dashboard/complianceAdicionar']" class="subMenu"
-                ><mat-icon class="subMenuIcon">add_circle</mat-icon>Adicionar</a
+                ><mat-icon class="subMenuIconMini">add_circle</mat-icon>Adicionar</a
               >
               <a  [routerLink]="['/dashboard/euroComplianceDocs']" class="subMenu"
                 ><mat-icon class="subMenuIcon">description</mat-icon>Ver
@@ -45,8 +47,39 @@
           </li>
         </ul>
       </nav>
+    }@else {
+      <nav class="navigationMinimized">
+        <ul>
+          <a class="titleLinkMinimized">
+            <li class="iconBoxMinized">
+              <mat-icon class="sidebarIconMinimized">assignment</mat-icon>
+            </li></a
+          >
+          <a class="titleLinkMinimized"
+            ><li class="iconBoxMinized">
+              <mat-icon class="sidebarIconMinimized">person</mat-icon>
+            </li></a
+          >
+          <a [routerLink]="['/dashboard/euroComplianceDocs']" class="titleLinkMinimized">
+          <li class="iconBoxMinized">
+              <mat-icon class="sidebarIconMinimized">assured_workload</mat-icon>
+            </li>
+          </a>
+          <a [routerLink]="['/dashboard/euroDataDocs']" class="titleLinkMinimized">
+          <li class="iconBoxMinized">
+           <mat-icon class="sidebarIconMinimized">chat</mat-icon>
+          </li>
+          </a>
+        </ul>
+      </nav>
+    }
+    @if(isOpen){
       <button class="logoutBtn">Sair</button>
+    }@else{
+      <button class="logoutBtnIcon"><mat-icon>logout</mat-icon></button>
+    }
     </div>
+
   </mat-drawer>
   <div class="sidenav-content">
     <ng-content></ng-content>

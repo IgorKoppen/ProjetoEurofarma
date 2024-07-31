@@ -27,8 +27,10 @@ export class EuroComplianceChatbotDocsService {
   addNewDoc(file: File, metadata: any): Observable<any> {
     const formData: FormData = new FormData();
     formData.append('file', file, file.name);
-    formData.append('metadata', JSON.stringify(metadata));
-    return this.http.post<any>(`${this.apiUrl}/upload_file`, formData, { headers: this.headers })
+    if (metadata) {
+      formData.append('metadata', JSON.stringify(metadata));
+    }
+    return this.http.post<any>(this.apiUrl + "/upload_file", formData, { headers: this.headers });
   }
 
 
