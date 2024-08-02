@@ -10,7 +10,10 @@
                 <p>{{fileErrorMessage}}</p>
             }
         </div>
-        <input id="sendBtn" type="submit" value="Enviar"  (click)="sendForm($event)">
+        <div class="actionBox">   
+            <a [routerLink]="[linkBack]"><p>Voltar</p> </a>
+            <input id="sendBtn" type="submit" value="Enviar"  (click)="sendForm($event)">
+        </div>
     </form>
  
 </div>

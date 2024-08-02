@@ -17,7 +17,7 @@ export class AddDocumentoEurofarmaPageComponent {
   onSubmit= (file:File): void => {
   if (file) {
     const metadata = { title: file.name};
-    this.euroDataService.addNewDoc(file, metadata).subscribe({
+    this.euroDataService.addNewDoc(file, file.name).subscribe({
         next: () => {
          console.log("Enviado")
         },

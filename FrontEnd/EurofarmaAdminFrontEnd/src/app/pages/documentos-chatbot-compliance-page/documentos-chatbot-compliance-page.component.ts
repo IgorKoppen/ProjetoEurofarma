@@ -4,12 +4,14 @@ import { EuroComplianceChatbotDocsService } from '../../services/euro-compliance
 import { DocumentChatbot } from '../../interfaces/documentInterfaces';
 import { TableDocumentComponent } from '../../components/table-document/table-document.component';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { MatIcon } from '@angular/material/icon';
+import { RouterLink } from '@angular/router';
 
 
 @Component({
   selector: 'app-documentos-chatbot-compliance-page',
   standalone: true,
-  imports: [TableDocumentComponent,MatProgressSpinner],
+  imports: [TableDocumentComponent,MatIcon,RouterLink],
   templateUrl: './documentos-chatbot-compliance-page.component.html',
   styleUrl: './documentos-chatbot-compliance-page.component.css'
 })
@@ -19,7 +21,14 @@ export class DocumentosChatbotCompliancePageComponent {
   documentData:DocumentChatbot[] = []
   isLoading: boolean = true;
 
-  constructor(private complianceService: EuroComplianceChatbotDocsService) {
+  constructor(private complianceService: EuroComplianceChatbotDocsService) {}
+   
+  ngOnInit(): void {
+    this.loadDocuments();
+  }
+
+  loadDocuments = (): void => {
+    this.isLoading = true;
     this.complianceService.findAllDocs().subscribe({
       next: (document) => {
         this.documentData = document.documents;
@@ -31,8 +40,11 @@ export class DocumentosChatbotCompliancePageComponent {
         this.isLoading = false; 
       }
     });
-   }
-  
+  }
+
+  refreshDocuments = (): void => {
+    this.loadDocuments();
+  }
 
    deleteDoc = (id: string): void => {
     this.complianceService.deleteDoc(id).subscribe({

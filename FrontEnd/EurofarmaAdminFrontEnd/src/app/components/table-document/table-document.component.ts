@@ -1,4 +1,4 @@
-import {Component, Input, ViewChild} from '@angular/core';
+import {Component, input, Input, ViewChild} from '@angular/core';
 import {MatPaginator, MatPaginatorIntl, MatPaginatorModule} from '@angular/material/paginator';
 import {MatSort, MatSortModule} from '@angular/material/sort';
 import {MatTableDataSource, MatTableModule} from '@angular/material/table';
@@ -7,21 +7,22 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { DocumentChatbot } from '../../interfaces/documentInterfaces';
 import { DatePipe } from '@angular/common';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
 
 
 @Component({
   selector: 'app-table-document',
   standalone: true,
-  imports: [MatFormFieldModule,MatIconModule, MatInputModule, MatTableModule, MatSortModule, MatPaginatorModule,DatePipe],
+  imports: [MatFormFieldModule,MatIconModule, MatInputModule, MatTableModule, MatSortModule, MatPaginatorModule,DatePipe,MatProgressSpinner],
   templateUrl: './table-document.component.html',
   styleUrl: './table-document.component.css'
 })
 export class TableDocumentComponent {
   @Input({ required: true }) displayedColumns: string[] = [];
   @Input({ required: true }) dataSource: MatTableDataSource<DocumentChatbot> = new MatTableDataSource<DocumentChatbot>();
-  @Input() deleteDoc: (id: string) => void = () => {};
-  
-
+  @Input({required:true}) deleteDoc: (id: string) => void = () => {};
+  @Input({required:true}) refreshDocuments: () => void = () =>{};
+  @Input({required:true}) isLoadingResults: boolean = true;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
@@ -36,7 +37,6 @@ export class TableDocumentComponent {
 
     this.dataSource.filterPredicate = (data: DocumentChatbot, filter: string) => {
         const filterValue = filter.toLowerCase();
-
         const formattedCreationDate = new Date(data.metadata.CreationDate * 1000).toLocaleDateString('pt-BR'); 
 
         return (

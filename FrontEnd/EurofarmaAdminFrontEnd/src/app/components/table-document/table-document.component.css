@@ -22,6 +22,31 @@
   .filter {
     width: 15%;
   }
+  .refreshButton{
+    background: black;
+    color: white;
+    height: 56px;
+    width: 56px;
+    border-radius: 20%;
+    align-self: baseline;
+    margin-right: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: none;
+    cursor: pointer;
+  }
+  .refreshButton:hover{
+    background: gray;
+  }
+  .refreshIcon{
+    width: 100%;
+    height: 100%;
+    font-size: 38px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 .deleteButton{
   text-align: center;
   padding: 8px;
@@ -34,4 +59,16 @@
 }
 .deleteButton:hover{
  background: #000000;
+}
+.loading-shade {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.15);
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }

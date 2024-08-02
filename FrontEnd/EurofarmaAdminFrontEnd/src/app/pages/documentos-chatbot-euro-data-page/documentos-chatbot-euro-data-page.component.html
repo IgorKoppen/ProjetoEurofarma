@@ -1,15 +1,14 @@
 <div class="topDiv">
     <h1>EuroData Documentos</h1>
-</div>
-  
-@if(isLoading){
-    <div class="spinner-container">
-        <mat-spinner></mat-spinner>
+    <div class="actionsDiv">
+        <a [routerLink]="['/dashboard/eurodataAdicionar']">Novo <mat-icon>add_circle</mat-icon></a>
       </div>
-}@else{
+</div>
+
 <app-table-document
 [dataSource]="dataSource"
 [displayedColumns]="displayedColumns"
-[deleteDoc]="deleteDoc">
+[deleteDoc]="deleteDoc"
+[refreshDocuments]="refreshDocuments"
+[isLoadingResults]="isLoading">
 </app-table-document>
-}

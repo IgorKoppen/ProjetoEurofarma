@@ -17,7 +17,7 @@ export class AddDocumentoCompliancePageComponent {
   onSubmit = (file:File): void => {
   if (file) {
     const metadata = { title: file.name};
-    this.euroComplianceService.addNewDoc(file, metadata).subscribe({
+    this.euroComplianceService.addNewDoc(file, file.name).subscribe({
         next: () => {
          console.log("Enviado")
         },

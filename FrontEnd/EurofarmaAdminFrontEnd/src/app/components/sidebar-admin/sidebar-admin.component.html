@@ -8,71 +8,45 @@
         alt="Logo da Eurofarma"
         draggable="false"
       />
-      @if(isOpen){
-      <nav class="navigation">
+    
+      <nav [className]="isOpen ? 'navigation' : 'navigationMinimized'">
         <ul>
-          <a class="titleLink" href="#">
+          <a [className]="isOpen ? 'titleLink' : 'titleLinkMinimized'" href="#" >
             <li class="iconBox">
-              <mat-icon class="sidebarIcon">assignment</mat-icon>Treinamentos
+              <mat-icon [class]="isOpen ?  'sidebarIcon' : 'sidebarIconMinimized'">assignment</mat-icon>
+              @if(isOpen){
+             Treinamentos
+              }
             </li></a
           >
-          <a class="titleLink" href="#"
+          <a [class]="isOpen ? 'titleLink' : 'titleLinkMinimized'"  href="#"
             ><li class="iconBox">
-              <mat-icon class="sidebarIcon">person</mat-icon>Funcionários
+              <mat-icon [class]="isOpen ?  'sidebarIcon' : 'sidebarIconMinimized'">person</mat-icon>
+              @if(isOpen){
+              Funcionários
+              }
             </li></a
           >
-          <li>
-            <h4 class="itenTitle">Chatbot Compliance</h4>
-            <div class="itensBox">
-              <a [routerLink]="['/dashboard/complianceAdicionar']" class="subMenu"
-                ><mat-icon class="subMenuIconMini">add_circle</mat-icon>Adicionar</a
-              >
-              <a  [routerLink]="['/dashboard/euroComplianceDocs']" class="subMenu"
-                ><mat-icon class="subMenuIcon">description</mat-icon>Ver
-                documentos</a
-              >
-            </div>
-          </li>
-          <li>
-            <h4 class="itenTitle">ChatBot Eurofarma</h4>
-            <div class="itensBox">
-              <a [routerLink]="['/dashboard/eurodataAdicionar']" class="subMenu"
-                ><mat-icon class="subMenuIcon">add_circle</mat-icon>Adicionar</a
-              >
-              <a  [routerLink]="['/dashboard/euroDataDocs']" class="subMenu"
-                ><mat-icon class="subMenuIcon">description</mat-icon>Ver
-                documentos</a
-              >
-            </div>
-          </li>
-        </ul>
-      </nav>
-    }@else {
-      <nav class="navigationMinimized">
-        <ul>
-          <a class="titleLinkMinimized">
-            <li class="iconBoxMinized">
-              <mat-icon class="sidebarIconMinimized">assignment</mat-icon>
-            </li></a
-          >
-          <a class="titleLinkMinimized"
-            ><li class="iconBoxMinized">
-              <mat-icon class="sidebarIconMinimized">person</mat-icon>
-            </li></a
-          >
-          <a [routerLink]="['/dashboard/euroComplianceDocs']" class="titleLinkMinimized">
-          <li class="iconBoxMinized">
-              <mat-icon class="sidebarIconMinimized">assured_workload</mat-icon>
+          <a [routerLink]="['/dashboard/euroComplianceDocs']" [class]="isOpen ? 'titleLink' : 'titleLinkMinimized'" >
+            <li class="iconBox">
+                <mat-icon [class]="isOpen ?  'sidebarIcon' : 'sidebarIconMinimized'">assured_workload</mat-icon>
+                @if(isOpen){
+                  ChatbotCompliance
+                }
+              </li>
+            </a>
+            <a [routerLink]="['/dashboard/euroDataDocs']"[class]="isOpen ? 'titleLink' : 'titleLinkMinimized'" >
+            <li class="iconBox">
+             <mat-icon [class]="isOpen ?  'sidebarIcon' : 'sidebarIconMinimized'">chat</mat-icon>
+             @if(isOpen){
+              ChatbotEuroData
+            }
             </li>
-          </a>
-          <a [routerLink]="['/dashboard/euroDataDocs']" class="titleLinkMinimized">
-          <li class="iconBoxMinized">
-           <mat-icon class="sidebarIconMinimized">chat</mat-icon>
-          </li>
-          </a>
+            </a>
+            <li></li>
         </ul>
       </nav>
-    }
+    
     @if(isOpen){
       <button class="logoutBtn">Sair</button>
     }@else{
