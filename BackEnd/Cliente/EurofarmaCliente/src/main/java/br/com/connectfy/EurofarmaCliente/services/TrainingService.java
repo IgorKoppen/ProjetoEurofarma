@@ -60,7 +60,7 @@ public class TrainingService {
         do {
             code = RandomStringGenerator.generateRoomCode(10);
         } while (trainingRepository.existsByCode(code));
-        Training training = buildTraining(trainingDTO, parsedDate, tags, instructors, code);
+        Training training = buildTraining(trainingDTO,now, parsedDate, tags, instructors, code);
         trainingRepository.save(training);
         messageToAllEmployeesOfDepartaments("Eurofarma: Código para participar da sala " + trainingDTO.name() + ". Código: " + code, trainingDTO.departments());
         return ResponseEntity.ok("Treinamento inserido com sucesso!");
@@ -146,7 +146,6 @@ public class TrainingService {
     @Transactional(readOnly = true)
     public List<RoomParticipantsDTO> findAllRoomParticipants(Long trainingId) {
         Training training = trainingRepository.findById(trainingId).orElseThrow(() -> new ResourceNotFoundException("No records found with id: " + trainingId));
-        ;
         List<RoomParticipantsDTO> participants = new ArrayList<>();
         for (EmployeeTraining employeeTraining : training.getEmployees()) {
             String fullName = employeeTraining.getEmployee().getName() + " " + employeeTraining.getEmployee().getSurname();
@@ -249,10 +248,11 @@ public class TrainingService {
         return new Instructor(instructorDTO.id(), instructorDTO.employee(), instructorDTO.trainnings());
     }
 
-    private Training buildTraining(TrainingCreationDTO trainingDTO, LocalDateTime parsedDate, List<Tag> tags, List<Instructor> instructors, String code) {
+    private Training buildTraining(TrainingCreationDTO trainingDTO,LocalDateTime nowDate, LocalDateTime parsedDate, List<Tag> tags, List<Instructor> instructors, String code) {
         Training training = new Training();
         training.setName(trainingDTO.name());
         training.setCode(code);
+        training.setCreationDate(nowDate);
         training.setDescription(trainingDTO.description());
         training.setCreationDate(LocalDateTime.now());
         training.setClosingDate(parsedDate);
