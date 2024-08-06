@@ -6,7 +6,9 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -17,29 +19,35 @@ public class DepartmentController {
     private DepartmentService departmentService;
 
     @PostMapping
-    public ResponseEntity<?> insertDepartment(@RequestBody @Valid DepartmentDTO departmentDTO) {
-      return departmentService.insert(departmentDTO);
+    public ResponseEntity<DepartmentDTO> insert(@RequestBody @Valid DepartmentDTO dto) {
+        DepartmentDTO departmentDTO = departmentService.insert(dto);
+        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(departmentDTO.id()).toUri();
+        return ResponseEntity.created(uri).body(departmentDTO);
     }
 
     @GetMapping
-    public List<DepartmentDTO> findAllDepartment(){
-        return departmentService.findAll();
+    public ResponseEntity<List<DepartmentDTO>> findAll() {
+        List<DepartmentDTO> departmentDTOS = departmentService.findAll();
+        return ResponseEntity.ok(departmentDTOS);
     }
 
     @GetMapping("/{id}")
-    public DepartmentDTO findDepartmentById(@PathVariable Long id) {
-       return departmentService.getById(id);
+    public ResponseEntity<DepartmentDTO> findById(@PathVariable Long id) {
+        DepartmentDTO departmentDTO = departmentService.getById(id);
+        return ResponseEntity.ok(departmentDTO);
     }
 
     @PutMapping("/{id}")
-    public  ResponseEntity<?> updateDepartment(@PathVariable Long id,
-                                               @RequestBody @Valid DepartmentDTO departmentDTO) {
-        return departmentService.update(id, departmentDTO);
+    public ResponseEntity<DepartmentDTO> update(@PathVariable Long id,
+                                                @RequestBody @Valid DepartmentDTO dto) {
+        DepartmentDTO departmentDTO = departmentService.update(id, dto);
+        return ResponseEntity.ok(departmentDTO);
     }
 
     @DeleteMapping(value = "/{id}")
-    public void deleteDepartment(@PathVariable Long id) {
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
         departmentService.delete(id);
+        return ResponseEntity.noContent().build();
     }
 
 }

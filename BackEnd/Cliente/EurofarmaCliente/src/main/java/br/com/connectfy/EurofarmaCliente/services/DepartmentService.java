@@ -1,18 +1,14 @@
 package br.com.connectfy.EurofarmaCliente.services;
-
 import br.com.connectfy.EurofarmaCliente.dtos.DepartmentDTO;
-import br.com.connectfy.EurofarmaCliente.dtos.EmployeeInfoDTO;
 import br.com.connectfy.EurofarmaCliente.exceptions.ResourceNotFoundException;
 import br.com.connectfy.EurofarmaCliente.models.Department;
+import br.com.connectfy.EurofarmaCliente.models.Employee;
 import br.com.connectfy.EurofarmaCliente.repositories.DepartmentRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -25,33 +21,31 @@ public class DepartmentService {
     }
 
     @Transactional
-    public ResponseEntity<String> insert(DepartmentDTO departmentDTO) {
-      Department  department = new Department(departmentDTO);
-      departmentRepository.save(department);
-      return ResponseEntity.ok("Departamento inserido com sucesso!");
+    public DepartmentDTO insert(DepartmentDTO departmentDTO) {
+        Department department = new Department(departmentDTO);
+        return toDTO(departmentRepository.save(department));
     }
 
     @Transactional(readOnly = true)
     public DepartmentDTO getById(Long id) {
-        Department department = departmentRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("No records found with id: " + id));
-        return new DepartmentDTO(department.getId(), department.getDepartName(), department.getEmployees());
+        return departmentRepository.findById(id)
+                .map(this::toDTO)
+                .orElseThrow(() -> new ResourceNotFoundException("No records found with id: " + id));
     }
 
     @Transactional(readOnly = true)
     public List<DepartmentDTO> findAll() {
-       List<Department> departments = departmentRepository.findAll();
-       return departments.stream().map(department
-               -> new DepartmentDTO(department.getId(),
-               department.getDepartName(),department.getEmployees()))
-               .collect(Collectors.toList());
+        return departmentRepository.findAll().stream()
+                .map(this::toDTO)
+                .collect(Collectors.toList());
     }
 
     @Transactional
-    public ResponseEntity<String> update(Long id, DepartmentDTO departmentDTO) {
-       Department updateDepartment = departmentRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("No records found with id: " + id));
-       updateDepartment.setDepartName(departmentDTO.departName());
-       departmentRepository.save(updateDepartment);
-       return ResponseEntity.ok("Departamento atualizado com sucesso!");
+    public DepartmentDTO update(Long id, DepartmentDTO departmentDTO) {
+        Department department = departmentRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("No records found with id: " + id));
+        department.setDepartName(departmentDTO.departName());
+        return toDTO(departmentRepository.save(department));
     }
 
     @Transactional
@@ -59,23 +53,21 @@ public class DepartmentService {
         if (!departmentRepository.existsById(id)) {
             throw new ResourceNotFoundException("No records found with id: " + id);
         }
-        try {
-            departmentRepository.deleteById(id);
-        } catch (ResourceNotFoundException e) {
-            throw new ResourceNotFoundException("No records found with id: " + id);
-        }
+        departmentRepository.deleteById(id);
     }
 
     @Transactional(readOnly = true)
     public List<String> getAllEmployeesPhoneNumberByDepartment(List<Long> departmentIds) {
         if (departmentIds == null || departmentIds.isEmpty()) {
-            return new ArrayList<>();
+            return Collections.emptyList();
         }
-        List<String> employeesPhoneNumber = new ArrayList<>();
-        for (Long departmentId : departmentIds) {
-           Optional<Department> department = departmentRepository.findById(departmentId);
-           department.ifPresent(value -> value.getEmployees().forEach(employee -> employeesPhoneNumber.add(employee.getCellphoneNumber())));
-        }
-        return employeesPhoneNumber;
+        return departmentRepository.findAllById(departmentIds).stream()
+                .flatMap(department -> department.getEmployees().stream())
+                .map(Employee::getCellphoneNumber)
+                .collect(Collectors.toList());
+    }
+
+    private DepartmentDTO toDTO(Department department) {
+        return new DepartmentDTO(department.getId(), department.getDepartName(), department.getEmployees());
     }
 }
