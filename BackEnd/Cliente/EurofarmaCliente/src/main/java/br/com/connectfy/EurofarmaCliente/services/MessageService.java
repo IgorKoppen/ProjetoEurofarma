@@ -1,7 +1,7 @@
 package br.com.connectfy.EurofarmaCliente.services;
 
 import br.com.connectfy.EurofarmaCliente.config.MessagerieConfig;
-import br.com.connectfy.EurofarmaCliente.services.interfaces.SenderSMS;
+import br.com.connectfy.EurofarmaCliente.services.interfaces.SmsSender;
 import com.twilio.Twilio;
 import com.twilio.exception.ApiException;
 import com.twilio.type.PhoneNumber;
@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class MessageService implements SenderSMS {
+public class MessageService implements SmsSender {
 
     private final MessagerieConfig messagerieConfig;
 

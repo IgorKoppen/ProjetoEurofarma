@@ -38,7 +38,7 @@ public class TrainingController {
 
     @PutMapping("/addEmployee")
     public ResponseEntity<?> addEmployee(@RequestBody UserConfirmAssinatureDTO userConfirmAssinatureDTO) {
-        return trainingService.addEmployee(userConfirmAssinatureDTO);
+        return trainingService.addEmployeeInTraining(userConfirmAssinatureDTO);
     }
 
     @DeleteMapping(value = "/{id}")
