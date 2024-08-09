@@ -1,6 +1,11 @@
 package br.com.connectfy.EurofarmaCliente.services;
 
 import br.com.connectfy.EurofarmaCliente.dtos.*;
+import br.com.connectfy.EurofarmaCliente.dtos.employee.EmployeeDTO;
+import br.com.connectfy.EurofarmaCliente.dtos.instructor.InstructorDTO;
+import br.com.connectfy.EurofarmaCliente.dtos.tag.TagInfoDTO;
+import br.com.connectfy.EurofarmaCliente.dtos.training.TrainingDTO;
+import br.com.connectfy.EurofarmaCliente.dtos.training.TrainingInsertDTO;
 import br.com.connectfy.EurofarmaCliente.exceptions.EmployeeAlreadyInTrainingException;
 import br.com.connectfy.EurofarmaCliente.exceptions.InvalidDateException;
 import br.com.connectfy.EurofarmaCliente.exceptions.PasswordDoesntMatchException;
@@ -23,14 +28,13 @@ public class TrainingService {
 
 
     private final TrainingRepository trainingRepository;
-    private final TagsService tagsService;
+    private final TagService tagsService;
     private final InstructorService instructorService;
     private final EmployeeService employeeService;
     private final MessageService messageService;
-    private final DepartmentService departmentService;
 
     public TrainingService(TrainingRepository trainingRepository,
-                           TagsService tagsService,
+                           TagService tagsService,
                            InstructorService instructorService,
                            EmployeeService employeeService,
                            MessageService messageService,
@@ -40,19 +44,17 @@ public class TrainingService {
         this.instructorService = instructorService;
         this.employeeService = employeeService;
         this.messageService = messageService;
-        this.departmentService = departmentService;
     }
 
     @Transactional
-    public ResponseEntity<String> create(TrainingCreationDTO trainingDTO) {
-        LocalDateTime parsedDate = parseDate(trainingDTO.closingDate());
-        validateDateOfClose(parsedDate, "Data de fechamento não pode ser no passado!");
-        List<Tag> tags = trainingDTO.tags().stream()
-                .map(this::getTagById)
+    public ResponseEntity<String> create(TrainingInsertDTO trainingDTO) {
+        validateDateOfClose(trainingDTO.getClosingDate(), "Data de fechamento não pode ser no passado!");
+        List<Tag> tags = trainingDTO.getTags().stream()
+                .map(tagDTO -> getTagById(tagDTO.getId()))
                 .collect(Collectors.toList());
 
-        List<Instructor> instructors = trainingDTO.instructor().stream()
-                .map(this::getInstructorById)
+        List<Instructor> instructors = trainingDTO.getInstructor().stream()
+                .map(instructorDTO -> getInstructorById(instructorDTO.getId()))
                 .collect(Collectors.toList());
 
         LocalDateTime now = LocalDateTime.now();
@@ -60,21 +62,21 @@ public class TrainingService {
         do {
             code = RandomStringGenerator.generateRoomCode(10);
         } while (trainingRepository.existsByCode(code));
-        Training training = buildTraining(trainingDTO,now, parsedDate, tags, instructors, code);
-        trainingRepository.save(training);
-        messageToAllEmployeesOfDepartaments("Eurofarma: Código para participar da sala " + trainingDTO.name() + ". Código: " + code, trainingDTO.departments());
+        Training training = buildTraining(trainingDTO,now, trainingDTO.getClosingDate(), tags, instructors, code);
+        Training trainingSaved = trainingRepository.save(training);
+        messageToAllEmployeesOfDepartaments("Eurofarma: Código para participar da sala " + trainingDTO.getName() + ". Código: " + code, trainingSaved.getEmployees().stream().map(employeeTraining -> employeeTraining.getEmployee().getCellphoneNumber()).toList());
         return ResponseEntity.ok("Treinamento inserido com sucesso!");
     }
 
     @Transactional(readOnly = true)
-    public TrainingHistoricDTO getById(Long id) {
+    public TrainingDTO findById(Long id) {
         Training training = trainingRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("No records found with id: " + id));
         return convertToTrainingHistoricDTO(training);
     }
 
     @Transactional(readOnly = true)
-    public List<TrainingHistoricDTO> findAll() {
+    public List<TrainingDTO> findAll() {
         List<Training> trainings = trainingRepository.findAll();
         return trainings.stream()
                 .map(this::convertToTrainingHistoricDTO)
@@ -82,23 +84,22 @@ public class TrainingService {
     }
 
     @Transactional
-    public ResponseEntity<String> update(Long id, TrainingCreationDTO trainingDTO) {
+    public ResponseEntity<String> update(Long id, TrainingInsertDTO trainingDTO) {
         Training training = trainingRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("No records found with id: " + id));
 
-        List<Tag> tags = trainingDTO.tags().stream()
-                .map(this::getTagById)
+        List<Tag> tags = trainingDTO.getTags().stream()
+                .map(tagDTO -> getTagById(tagDTO.getId()))
                 .collect(Collectors.toList());
 
-        List<Instructor> instructors = trainingDTO.instructor().stream()
-                .map(this::getInstructorById)
+        List<Instructor> instructors = trainingDTO.getInstructor().stream()
+                .map(instructorDTO -> getInstructorById(instructorDTO.getId()))
                 .collect(Collectors.toList());
 
-        LocalDateTime parsedDate = parseDate(trainingDTO.closingDate());
         validateDateOfClose(training.getClosingDate(), "Data de fechamento não pode ser no passado!");
-        training.setName(trainingDTO.name());
-        training.setDescription(trainingDTO.description());
-        training.setClosingDate(parsedDate);
+        training.setName(trainingDTO.getName());
+        training.setDescription(trainingDTO.getDescription());
+        training.setClosingDate(trainingDTO.getClosingDate());
         training.setInstructors(instructors);
         training.setTags(tags);
 
@@ -112,7 +113,7 @@ public class TrainingService {
             Training training = getTrainingByCode(userConfirmAssinatureDTO.code());
             validateDateOfClose(training.getClosingDate(), "Sala já encerrada!");
             validatePassword(training, userConfirmAssinatureDTO.password());
-            EmployeeInfoDTO employeeDTO = employeeService.findById(userConfirmAssinatureDTO.userId());
+            EmployeeDTO employeeDTO = employeeService.findById(userConfirmAssinatureDTO.userId());
             Employee employee = new Employee(employeeDTO);
 
             addEmployeeToTraining(training, employee, userConfirmAssinatureDTO.assinatura());
@@ -137,7 +138,7 @@ public class TrainingService {
     }
 
     @Transactional(readOnly = true)
-    public TrainingHistoricDTO findByCode(String code) {
+    public TrainingDTO findByCode(String code) {
         Training training = getTrainingByCode(code);
         validateDateOfClose(training.getClosingDate(), "Sala já encerrada!");
         return convertToTrainingHistoricDTO(training);
@@ -159,7 +160,7 @@ public class TrainingService {
     public ResponseEntity<String> confirmPassword(Long idUser, String code, String password) {
         Training training = getTrainingByCode(code);
         validatePassword(training, password);
-        EmployeeInfoDTO employeeDTO = employeeService.findById(idUser);
+        EmployeeDTO employeeDTO = employeeService.findById(idUser);
         Employee employee = new Employee(employeeDTO);
         validateDateOfClose(training.getClosingDate(), "Sala já encerrada!");
         if (isEmployeeInTraining(employee, training)) {
@@ -204,30 +205,11 @@ public class TrainingService {
                 .anyMatch(et -> et.getEmployee().equals(employee));
     }
 
-    private TrainingHistoricDTO convertToTrainingHistoricDTO(Training training) {
-        return new TrainingHistoricDTO(
-                training.getId(),
-                training.getName(),
-                training.getCode(),
-                training.getCreationDate(),
-                training.getClosingDate(),
-                training.getStatus(),
-                training.getPassword(),
-                training.getDescription(),
-                training.getInstructors().stream()
-                        .map(instructor -> new InstructorNameAndIdDTO(
-                                instructor.getId(),
-                                instructor.getEmployee().getName(),
-                                instructor.getEmployee().getSurname(),
-                                instructor.getEmployee().getName() + " " + instructor.getEmployee().getSurname()))
-                        .collect(Collectors.toList()),
-                training.getTags(),
-                training.getEmployees()
-        );
+    private TrainingDTO convertToTrainingHistoricDTO(Training training) {
+        return new TrainingDTO(training);
     }
 
-    private void messageToAllEmployeesOfDepartaments(String message, List<Long> departamentsIds) {
-        List<String> phoneNumbers = departmentService.getAllEmployeesPhoneNumberByDepartment(departamentsIds);
+    private void messageToAllEmployeesOfDepartaments(String message,List<String> phoneNumbers) {
         for (String phoneNumber : phoneNumbers) {
             messageService.send(message, phoneNumber);
         }
@@ -239,21 +221,21 @@ public class TrainingService {
     }
 
     private Tag getTagById(Long id) {
-        TagDTO tagDTO = tagsService.getById(id);
-        return new Tag(tagDTO.id(), tagDTO.name(), tagDTO.color(), tagDTO.trainings());
+        TagInfoDTO tagDTO = tagsService.getById(id);
+        return new Tag(tagDTO);
     }
 
     private Instructor getInstructorById(Long id) {
-        InstructorDTO instructorDTO = instructorService.getById(id);
-        return new Instructor(instructorDTO.id(), instructorDTO.employee(), instructorDTO.trainnings());
+        InstructorDTO instructorDTO = instructorService.findById(id);
+        return new Instructor(instructorDTO);
     }
 
-    private Training buildTraining(TrainingCreationDTO trainingDTO,LocalDateTime nowDate, LocalDateTime parsedDate, List<Tag> tags, List<Instructor> instructors, String code) {
+    private Training buildTraining(TrainingInsertDTO trainingDTO, LocalDateTime nowDate, LocalDateTime parsedDate, List<Tag> tags, List<Instructor> instructors, String code) {
         Training training = new Training();
-        training.setName(trainingDTO.name());
+        training.setName(trainingDTO.getName());
         training.setCode(code);
         training.setCreationDate(nowDate);
-        training.setDescription(trainingDTO.description());
+        training.setDescription(trainingDTO.getDescription());
         training.setCreationDate(LocalDateTime.now());
         training.setClosingDate(parsedDate);
         training.setPassword(RandomStringGenerator.generatePassword(10));

@@ -2,20 +2,25 @@ package br.com.connectfy.EurofarmaCliente.exceptions.handler;
 
 import br.com.connectfy.EurofarmaCliente.exceptions.*;
 import com.auth0.jwt.exceptions.TokenExpiredException;
+import org.springframework.context.support.DefaultMessageSourceResolvable;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
-import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
-
 import java.util.Date;
-
-@ControllerAdvice
-@RestController
-public class CustomizedEntityExceptionHandler extends ResponseEntityExceptionHandler {
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
+@Order(Ordered.HIGHEST_PRECEDENCE)
+@RestControllerAdvice
+public class CustomizedEntityExceptionHandler {
 
     @ExceptionHandler({InvalidJwtAuthenticationException.class})
     public final ResponseEntity<ExceptionResponse> handleInvalidJwtAuthenticationExceptions(Exception ex, WebRequest request) {
@@ -65,4 +70,28 @@ public class CustomizedEntityExceptionHandler extends ResponseEntityExceptionHan
         ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), ex.getMessage() , request.getDescription(false));
         return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
     }
+
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public final ResponseEntity<InputExceptionResponse> handleValidationExceptions(MethodArgumentNotValidException ex, WebRequest request) {
+        Map<String, List<String>> errors = ex.getBindingResult()
+                .getFieldErrors()
+                .stream()
+                .collect(Collectors.groupingBy(
+                        FieldError::getField,
+                        Collectors.mapping(
+                                DefaultMessageSourceResolvable::getDefaultMessage,
+                                Collectors.toList()
+                        )
+                ));
+
+        InputExceptionResponse exceptionResponse = new InputExceptionResponse(
+                new Date(),
+                "Validation Failed",
+                request.getDescription(false),
+                errors
+        );
+        return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
+    }
+
 }

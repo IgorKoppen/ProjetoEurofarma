@@ -1,17 +1,17 @@
 package br.com.connectfy.EurofarmaCliente.models;
 
-import br.com.connectfy.EurofarmaCliente.dtos.DepartmentDTO;
+import br.com.connectfy.EurofarmaCliente.dtos.department.DepartmentDTO;
+import br.com.connectfy.EurofarmaCliente.dtos.department.DepartmentInfoDTO;
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 @Entity
 @Table(name = "tb_department")
 public class Department {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -21,19 +21,18 @@ public class Department {
 
     @JsonBackReference
     @OneToMany(fetch = FetchType.EAGER,mappedBy = "department")
-    private List<Employee> employees = new ArrayList<>();
+    private List<Employee> employees;
 
-    public Department(){
-
-    }
-    public Department(String departName){
-        this.departName = departName;
+    public Department() {
     }
 
-    public Department(DepartmentDTO departmentDTO) {
-        this.id = departmentDTO.id();
-        this.departName = departmentDTO.departName();
-        this.employees = departmentDTO.employees();
+    public Department(DepartmentInfoDTO dto) {
+        this.id = dto.getId();
+        this.departName = dto.getDepartName();
+    }
+
+    public Department(DepartmentDTO dto) {
+        this.departName = dto.departName();
     }
 
     public Long getId() {
@@ -60,9 +59,8 @@ public class Department {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Department that = (Department) o;
-        return Objects.equals(id, that.id);
+        if (!(o instanceof Department that)) return false;
+        return Objects.equals(id, that.id) && Objects.equals(departName, that.departName) && Objects.equals(employees, that.employees);
     }
 
     @Override

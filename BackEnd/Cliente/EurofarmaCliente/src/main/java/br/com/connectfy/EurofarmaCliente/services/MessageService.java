@@ -26,7 +26,7 @@ public class MessageService implements SmsSender {
         try {
             Twilio.init(messagerieConfig.getAccountSid(), messagerieConfig.getAuthToken());
             Message.creator(
-                            new PhoneNumber("+55"+ toPhone),
+                            new PhoneNumber(toPhone),
                             new PhoneNumber(messagerieConfig.getPhoneNumberToUse()),
                             messageToUser
                     )

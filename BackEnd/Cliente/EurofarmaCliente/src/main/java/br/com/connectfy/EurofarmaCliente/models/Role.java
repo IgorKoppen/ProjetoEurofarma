@@ -1,5 +1,7 @@
 package br.com.connectfy.EurofarmaCliente.models;
 
+import br.com.connectfy.EurofarmaCliente.dtos.role.RoleInfoDTO;
+import br.com.connectfy.EurofarmaCliente.dtos.role.RoleDTO;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
@@ -26,6 +28,15 @@ public class Role {
         this.id = id;
         this.roleName = roleName;
         this.employee = employee;
+    }
+
+    public Role(RoleInfoDTO dto) {
+        this.id = dto.getId();
+        this.roleName = dto.getRoleName();
+    }
+
+    public Role(RoleDTO dto) {
+        this.roleName = dto.roleName();
     }
 
     public Role(String s) {
@@ -59,13 +70,12 @@ public class Role {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Role role = (Role) o;
+        if (!(o instanceof Role role)) return false;
         return Objects.equals(id, role.id) && Objects.equals(roleName, role.roleName) && Objects.equals(employee, role.employee);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, roleName, employee);
+        return Objects.hashCode(id);
     }
 }

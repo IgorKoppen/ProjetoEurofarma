@@ -29,9 +29,10 @@ public class Permission implements GrantedAuthority, Serializable {
 
     public Permission() {}
 
-    public Permission(Long id, String description) {
+    public Permission(Long id, String description, List<Employee> employees) {
         this.id = id;
         this.description = description;
+        this.employees = employees;
     }
 
     public Long getId() {
@@ -51,20 +52,19 @@ public class Permission implements GrantedAuthority, Serializable {
     }
 
     @Override
+    public String getAuthority() {
+        return this.description;
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Permission that = (Permission) o;
-        return Objects.equals(id, that.id) && Objects.equals(description, that.description);
+        if (!(o instanceof Permission that)) return false;
+        return Objects.equals(id, that.id) && Objects.equals(description, that.description) && Objects.equals(employees, that.employees);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, description);
-    }
-
-    @Override
-    public String getAuthority() {
-        return this.description;
+        return Objects.hashCode(id);
     }
 }

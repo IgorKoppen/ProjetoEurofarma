@@ -1,11 +1,13 @@
 package br.com.connectfy.EurofarmaCliente.services;
 
-import br.com.connectfy.EurofarmaCliente.dtos.InstructorDTO;
-import br.com.connectfy.EurofarmaCliente.dtos.InstructorNameAndIdDTO;
+import br.com.connectfy.EurofarmaCliente.dtos.instructor.InstructorDTO;
+import br.com.connectfy.EurofarmaCliente.dtos.instructor.InstructorInfoIdNameDTO;
 
-import br.com.connectfy.EurofarmaCliente.dtos.TrainingHistoricDTO;
+import br.com.connectfy.EurofarmaCliente.dtos.training.TrainingDTO;
 import br.com.connectfy.EurofarmaCliente.exceptions.ResourceNotFoundException;
+import br.com.connectfy.EurofarmaCliente.models.Employee;
 import br.com.connectfy.EurofarmaCliente.models.Instructor;
+import br.com.connectfy.EurofarmaCliente.models.Training;
 import br.com.connectfy.EurofarmaCliente.repositories.InstructorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -25,28 +27,24 @@ public class InstructorService {
 
     @Transactional
     public ResponseEntity<String> insert(InstructorDTO instructorDTO) {
-    Instructor instructor = new Instructor(instructorDTO.employee(),instructorDTO.trainnings());
+    Instructor instructor = new Instructor(instructorDTO);
     instructorRepository.save(instructor);
         return ResponseEntity.ok("Instrutor inserido com sucesso!");
     }
     @Transactional(readOnly = true)
-    public InstructorDTO getById(Long id) {
+    public InstructorDTO findById(Long id) {
         Instructor instructor = instructorRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("No records found with id: " + id));
 
 
-        return new InstructorDTO(
-                instructor.getId(),
-                instructor.getEmployee(),
-                instructor.getTrainnings()
-        );
+        return new InstructorDTO(instructor);
     }
     @Transactional(readOnly = true)
-    public List<InstructorNameAndIdDTO> findAll() {
+    public List<InstructorInfoIdNameDTO> findAll() {
         List<Instructor> instructors = instructorRepository.findAll();
 
         return instructors.stream()
-                .map(instructor -> new InstructorNameAndIdDTO(
+                .map(instructor -> new InstructorInfoIdNameDTO(
                         instructor.getId(),
                         instructor.getEmployee().getName(),
                         instructor.getEmployee().getSurname(),
@@ -57,8 +55,8 @@ public class InstructorService {
     @Transactional
     public ResponseEntity<String> update(Long id, InstructorDTO instructorDTO) {
         Instructor updateInstructor = instructorRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("No records found with id: " + id));
-        updateInstructor.setEmployee(instructorDTO.employee());
-        updateInstructor.setTrainnings(instructorDTO.trainnings());
+        updateInstructor.setEmployee(new Employee(instructorDTO.getEmployee()));
+        updateInstructor.setTrainnings(instructorDTO.getTrainnings().stream().map(Training::new).toList());
         instructorRepository.save(updateInstructor);
         return ResponseEntity.ok("Instrutor atualizado com sucesso!");
     }
@@ -77,7 +75,7 @@ public class InstructorService {
     }
 
     @Transactional(readOnly = true)
-    public List<TrainingHistoricDTO> findTrainingById(Long id) {
+    public List<TrainingDTO> findTrainingById(Long id) {
 
         Instructor instructor = instructorRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("No records found with id: " + id));
@@ -89,29 +87,15 @@ public class InstructorService {
 
         return instructor.getTrainnings().stream()
                 .map(training -> {
-                    List<InstructorNameAndIdDTO> instructorNames = training.getInstructors().stream()
-                            .map(trainingInstructor -> new InstructorNameAndIdDTO(trainingInstructor.getId(),trainingInstructor.getEmployee().getName(),trainingInstructor.getEmployee().getSurname(),trainingInstructor.getEmployee().getName()+" "+ trainingInstructor.getEmployee().getSurname())).toList();
-                    return new TrainingHistoricDTO(
-                            training.getId(),
-                            training.getName(),
-                            training.getCode(),
-                            training.getCreationDate(),
-                            training.getClosingDate(),
-                            training.isStatus(),
-                            training.getPassword(),
-                            training.getDescription(),
-                            instructorNames,
-                            training.getTags(),
-                            training.getEmployees()
-                    );
-                }).sorted(Comparator.comparing(TrainingHistoricDTO::closingDate).reversed())
+                    List<InstructorInfoIdNameDTO> instructorNames = training.getInstructors().stream()
+                            .map(trainingInstructor -> new InstructorInfoIdNameDTO(trainingInstructor.getId(),trainingInstructor.getEmployee().getName(),trainingInstructor.getEmployee().getSurname(),trainingInstructor.getEmployee().getName()+" "+ trainingInstructor.getEmployee().getSurname())).toList();
+                    return new TrainingDTO(training);
+                }).sorted(Comparator.comparing(TrainingDTO::getClosingDate).reversed())
                 .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
-    public List<TrainingHistoricDTO> findTrainingByIdAndTag(Long id, String tagName) {
-
-        System.out.println(tagName + "banana");
+    public List<TrainingDTO> findTrainingByIdAndTag(Long id, String tagName) {
 
         Instructor instructor = instructorRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("No records found with id: " + id));
@@ -124,28 +108,16 @@ public class InstructorService {
                 .filter(training -> training.getTags().stream()
                         .anyMatch(tag -> tag.getName().equalsIgnoreCase(tagName)))
                 .map(training -> {
-                    List<InstructorNameAndIdDTO> instructorNames = training.getInstructors().stream()
-                            .map(trainingInstructor -> new InstructorNameAndIdDTO(
+                    List<InstructorInfoIdNameDTO> instructorNames = training.getInstructors().stream()
+                            .map(trainingInstructor -> new InstructorInfoIdNameDTO(
                                     trainingInstructor.getId(),
                                     trainingInstructor.getEmployee().getName(),
                                     trainingInstructor.getEmployee().getSurname(),
                                     trainingInstructor.getEmployee().getName() + " " + trainingInstructor.getEmployee().getSurname()))
-                            .collect(Collectors.toList());
-                    return new TrainingHistoricDTO(
-                            training.getId(),
-                            training.getName(),
-                            training.getCode(),
-                            training.getCreationDate(),
-                            training.getClosingDate(),
-                            training.isStatus(),
-                            training.getPassword(),
-                            training.getDescription(),
-                            instructorNames,
-                            training.getTags(),
-                            training.getEmployees()
-                    );
+                            .toList();
+                    return new TrainingDTO(training);
                 })
-                .sorted(Comparator.comparing(TrainingHistoricDTO::closingDate).reversed())
+                .sorted(Comparator.comparing(TrainingDTO::getClosingDate).reversed())
                 .collect(Collectors.toList());
     }
 

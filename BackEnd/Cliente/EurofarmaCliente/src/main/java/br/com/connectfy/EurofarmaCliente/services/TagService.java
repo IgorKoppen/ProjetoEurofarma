@@ -1,14 +1,11 @@
 package br.com.connectfy.EurofarmaCliente.services;
 
-import br.com.connectfy.EurofarmaCliente.dtos.TagDTO;
-import br.com.connectfy.EurofarmaCliente.dtos.TagInsertDTO;
+import br.com.connectfy.EurofarmaCliente.dtos.tag.TagDTO;
+import br.com.connectfy.EurofarmaCliente.dtos.tag.TagInfoDTO;
 import br.com.connectfy.EurofarmaCliente.exceptions.AlreadyExisteException;
 import br.com.connectfy.EurofarmaCliente.exceptions.ResourceNotFoundException;
 import br.com.connectfy.EurofarmaCliente.models.Tag;
 import br.com.connectfy.EurofarmaCliente.repositories.TagsRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,46 +14,43 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-public class TagsService {
+public class TagService {
 
     private final TagsRepository tagsRepository;
 
-    public TagsService(TagsRepository tagsRepository) {
+    public TagService(TagsRepository tagsRepository) {
         this.tagsRepository = tagsRepository;
     }
 
     @Transactional
-    public ResponseEntity<String> insert(TagInsertDTO tagDTO) {
+    public TagInfoDTO insert(TagDTO tagDTO) {
         Optional<Tag> existingTag = tagsRepository.findByNameIgnoreCase(tagDTO.name());
         if (existingTag.isPresent()) {
            throw new AlreadyExisteException("Tag " + tagDTO.name() + " já existe!");
         }
         Tag tag = new Tag(tagDTO);
-        tagsRepository.save(tag);
-        return ResponseEntity.ok("Tag inserido com sucesso!");
+        return toDto(tagsRepository.save(tag));
     }
 
     @Transactional(readOnly = true)
-    public TagDTO getById(Long id) {
+    public TagInfoDTO getById(Long id) {
         Tag tag = tagsRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("No records found with id: " + id));
-        return new TagDTO(tag.getId(), tag.getName(), tag.getColor(), tag.getTrainnings());
+        return new TagInfoDTO(tag);
     }
 
     @Transactional(readOnly = true)
-    public List<TagDTO> findAll() {
+    public List<TagInfoDTO> findAll() {
         List<Tag> tags = tagsRepository.findAll();
-        return tags.stream().map(tag
-                        -> new TagDTO(tag.getId(),
-                        tag.getName(),tag.getColor(), tag.getTrainnings()))
+        return tags.stream().map(TagInfoDTO::new)
                 .collect(Collectors.toList());
     }
     @Transactional
-    public ResponseEntity<String> update(Long id, TagDTO tagDTO) {
+    public TagInfoDTO update(Long id, TagDTO tagDTO) {
         Tag updateTag = tagsRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("No records found with id: " + id));
         updateTag.setName(tagDTO.name());
         updateTag.setColor(tagDTO.color());
-        tagsRepository.save(updateTag);
-        return ResponseEntity.ok("Tag atualizado com sucesso!");
+
+        return toDto(tagsRepository.save(updateTag));
     }
 
     @Transactional
@@ -70,6 +64,8 @@ public class TagsService {
             throw new ResourceNotFoundException("No records found with id: " + id);
         }
     }
-
+    private TagInfoDTO toDto(Tag etity) {
+        return new TagInfoDTO(etity);
+    }
 
 }

@@ -1,6 +1,8 @@
 package br.com.connectfy.EurofarmaCliente.controllers;
 
 import br.com.connectfy.EurofarmaCliente.dtos.*;
+import br.com.connectfy.EurofarmaCliente.dtos.training.TrainingDTO;
+import br.com.connectfy.EurofarmaCliente.dtos.training.TrainingInsertDTO;
 import br.com.connectfy.EurofarmaCliente.services.TrainingService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,22 +19,22 @@ public class TrainingController {
     private TrainingService trainingService;
 
     @PostMapping
-    public ResponseEntity<String> insertTraining(@RequestBody @Valid TrainingCreationDTO trainingCreationDTO) {
+    public ResponseEntity<String> insertTraining(@RequestBody @Valid TrainingInsertDTO trainingCreationDTO) {
         return trainingService.create(trainingCreationDTO);
     }
 
     @GetMapping
-    public List<TrainingHistoricDTO> findAllTraining(){
+    public List<TrainingDTO> findAllTraining(){
         return trainingService.findAll();
     }
 
     @GetMapping("/{id}")
-    public TrainingHistoricDTO findTrainingById(@PathVariable Long id) {
-        return trainingService.getById(id);
+    public TrainingDTO findTrainingById(@PathVariable Long id) {
+        return trainingService.findById(id);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<String> updateTraining(@PathVariable Long id, @RequestBody @Valid TrainingCreationDTO trainingCreationDTO) {
+    public ResponseEntity<String> updateTraining(@PathVariable Long id, @RequestBody @Valid TrainingInsertDTO trainingCreationDTO) {
         return trainingService.update(id, trainingCreationDTO);
     }
 
@@ -47,7 +49,7 @@ public class TrainingController {
     }
 
     @GetMapping("/getRoomByCode/{code}")
-    public TrainingHistoricDTO getRoomByCode(@PathVariable  String code) {
+    public TrainingDTO getRoomByCode(@PathVariable  String code) {
         return trainingService.findByCode(code);
     }
     @GetMapping("/confirmPassword")

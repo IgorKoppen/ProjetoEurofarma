@@ -1,9 +1,7 @@
 package br.com.connectfy.EurofarmaCliente.models;
 
-import br.com.connectfy.EurofarmaCliente.dtos.EmployeeCreateDTO;
-import br.com.connectfy.EurofarmaCliente.dtos.EmployeeInfoDTO;
+import br.com.connectfy.EurofarmaCliente.dtos.employee.EmployeeDTO;
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -29,22 +27,22 @@ public class Employee implements UserDetails, Serializable {
     @Column(nullable = false)
     private String surname;
 
-    @JsonIgnore
+
     @Column(nullable = false)
     private String password;
 
     @Column(name = "cellphone_number",nullable = false)
     private String cellphoneNumber;
 
-    @JsonIgnore
+
     @Column(name = "account_non_expired", nullable = false)
     private boolean accountNonExpired;
 
-    @JsonIgnore
+
     @Column(name = "credentials_non_expired", nullable = false)
     private boolean credentialsNonExpired;
 
-    @JsonIgnore
+
     @Column(name = "account_non_locked", nullable = false)
     private boolean accountNonLocked;
 
@@ -73,7 +71,7 @@ public class Employee implements UserDetails, Serializable {
 
     @JsonBackReference
     @OneToMany(mappedBy = "employee")
-    private Set<EmployeeTraining> employeeTrainings;
+    private List<EmployeeTraining> employeeTrainings;
 
     public Employee() {
 
@@ -99,26 +97,14 @@ public class Employee implements UserDetails, Serializable {
         this.instructor = instructor;
     }
 
-    public Employee(EmployeeCreateDTO employeeDTO) {
-        this.id = employeeDTO.id();
-        this.userName = employeeDTO.userName();
-        this.name = employeeDTO.name();
-        this.surname = employeeDTO.surname();
-        this.password = employeeDTO.password();
-        this.cellphoneNumber = employeeDTO.cellphoneNumber();
-        this.roles = employeeDTO.roles();
-        this.department = employeeDTO.department();
-    }
-
-    public Employee(EmployeeInfoDTO employeeDTO) {
-        this.id = employeeDTO.id();
-        this.userName = employeeDTO.userName();
-        this.name = employeeDTO.name();
-        this.surname = employeeDTO.surname();
-        this.cellphoneNumber = employeeDTO.cellphoneNumber();
-        this.roles = employeeDTO.roles();
-        this.department = employeeDTO.department();
-        this.employeeTrainings = employeeDTO.trainings();
+    public Employee(EmployeeDTO dto) {
+        this.id = dto.getId();
+        this.userName = dto.getUserName();
+        this.name = dto.getName();
+        this.surname = dto.getSurname();
+        this.cellphoneNumber = dto.getCellphoneNumber();
+        this.roles = dto.getRoles().stream().map(Role::new).toList();
+        this.department = new Department(dto.getDepartment());
     }
 
     public Long getId() {
@@ -169,12 +155,12 @@ public class Employee implements UserDetails, Serializable {
         this.department = department;
     }
 
-    public Set<EmployeeTraining> getEmployeeTrainings() {
+    public List<EmployeeTraining> getEmployeeTrainings() {
         return employeeTrainings;
     }
 
-    public void setEmployeeTrainings(Set<EmployeeTraining> trainnings) {
-        this.employeeTrainings = trainnings;
+    public void setEmployeeTrainings(List<EmployeeTraining> trainings) {
+        this.employeeTrainings = trainings;
     }
 
     public Instructor getInstructor() {
@@ -243,9 +229,8 @@ public class Employee implements UserDetails, Serializable {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Employee employee = (Employee) o;
-        return Objects.equals(id, employee.id);
+        if (!(o instanceof Employee employee)) return false;
+        return accountNonExpired == employee.accountNonExpired && credentialsNonExpired == employee.credentialsNonExpired && accountNonLocked == employee.accountNonLocked && enabled == employee.enabled && Objects.equals(id, employee.id) && Objects.equals(userName, employee.userName) && Objects.equals(name, employee.name) && Objects.equals(surname, employee.surname) && Objects.equals(password, employee.password) && Objects.equals(cellphoneNumber, employee.cellphoneNumber) && Objects.equals(roles, employee.roles) && Objects.equals(department, employee.department) && Objects.equals(permissions, employee.permissions) && Objects.equals(instructor, employee.instructor) && Objects.equals(employeeTrainings, employee.employeeTrainings);
     }
 
     @Override

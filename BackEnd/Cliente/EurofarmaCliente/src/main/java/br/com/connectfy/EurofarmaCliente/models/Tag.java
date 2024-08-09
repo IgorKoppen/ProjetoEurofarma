@@ -1,7 +1,7 @@
 package br.com.connectfy.EurofarmaCliente.models;
 
-import br.com.connectfy.EurofarmaCliente.dtos.TagDTO;
-import br.com.connectfy.EurofarmaCliente.dtos.TagInsertDTO;
+import br.com.connectfy.EurofarmaCliente.dtos.tag.TagDTO;
+import br.com.connectfy.EurofarmaCliente.dtos.tag.TagInfoDTO;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
@@ -28,24 +28,22 @@ public class Tag {
     public Tag() {
     }
 
-    public Tag(Long id, String name, String color, List<Training> trainnings) {
+    public Tag(Long id, String name, String color, List<Training> trainings) {
         this.id = id;
         this.name = name;
         this.color = color;
-        this.trainnings = trainnings;
+        this.trainnings = trainings;
     }
 
-    public Tag(TagDTO tagDTO) {
-        this.id = tagDTO.id();
-        this.name = tagDTO.name();
-        this.color = tagDTO.color();
-        this.trainnings = tagDTO.trainings();
+    public Tag(TagInfoDTO dto) {
+        this.id = dto.getId();
+        this.name = dto.getName();
+        this.color = dto.getColor();
     }
 
-    public Tag(TagInsertDTO tagDTO) {
-        this.id = tagDTO.id();
-        this.name = tagDTO.name();
-        this.color = tagDTO.color();
+    public Tag(TagDTO dto) {
+        this.name = dto.name();
+        this.color = dto.color();
     }
 
     public Long getId() {
@@ -72,24 +70,23 @@ public class Tag {
         this.name = name;
     }
 
-    public List<Training> getTrainnings() {
+    public List<Training> getTrainings() {
         return trainnings;
     }
 
-    public void setTrainnings(List<Training> trainnings) {
-        this.trainnings = trainnings;
+    public void setTrainings(List<Training> trainings) {
+        this.trainnings = trainings;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Tag tag = (Tag) o;
+        if (!(o instanceof Tag tag)) return false;
         return Objects.equals(id, tag.id) && Objects.equals(name, tag.name) && Objects.equals(color, tag.color) && Objects.equals(trainnings, tag.trainnings);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, color, trainnings);
+        return Objects.hashCode(id);
     }
 }

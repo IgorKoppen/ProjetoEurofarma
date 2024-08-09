@@ -1,5 +1,6 @@
 package br.com.connectfy.EurofarmaCliente.models;
 
+import br.com.connectfy.EurofarmaCliente.dtos.instructor.InstructorDTO;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
@@ -36,6 +37,12 @@ public class Instructor {
         this.trainnings = trainnings;
     }
 
+    public Instructor(InstructorDTO dto) {
+      this.id = dto.getId();
+      this.employee = new Employee(dto.getEmployee());
+      this.trainnings = dto.getTrainnings().stream().map(Training::new).toList();
+    }
+
     public Long getId() {
         return id;
     }
@@ -63,9 +70,12 @@ public class Instructor {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Instructor that = (Instructor) o;
+        if (!(o instanceof Instructor that)) return false;
         return Objects.equals(id, that.id) && Objects.equals(employee, that.employee) && Objects.equals(trainnings, that.trainnings);
     }
 
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
+    }
 }

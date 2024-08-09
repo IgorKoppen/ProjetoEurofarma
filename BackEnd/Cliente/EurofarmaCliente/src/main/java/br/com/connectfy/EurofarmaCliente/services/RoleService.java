@@ -1,11 +1,10 @@
 package br.com.connectfy.EurofarmaCliente.services;
 
-import br.com.connectfy.EurofarmaCliente.dtos.RoleDTO;
+import br.com.connectfy.EurofarmaCliente.dtos.role.RoleInfoDTO;
+import br.com.connectfy.EurofarmaCliente.dtos.role.RoleDTO;
 import br.com.connectfy.EurofarmaCliente.exceptions.ResourceNotFoundException;
 import br.com.connectfy.EurofarmaCliente.models.Role;
 import br.com.connectfy.EurofarmaCliente.repositories.RoleRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,19 +21,16 @@ public class RoleService {
     }
 
     @Transactional(readOnly = true)
-    public List<RoleDTO> findAll() {
+    public List<RoleInfoDTO> findAll() {
         List<Role> roles = roleRepository.findAll();
-        return roles.stream().map(role
-                        -> new RoleDTO(role.getId(),
-                        role.getRoleName(), role.getEmployee()))
+        return roles.stream().map(this::toDTO)
                 .collect(Collectors.toList());
     }
 
     @Transactional
-    public ResponseEntity<String> insert(RoleDTO roleDTO) {
-        Role role = new Role(roleDTO.roleName());
-        roleRepository.save(role);
-        return ResponseEntity.ok("Role inserida com sucesso!");
+    public RoleInfoDTO insert(RoleDTO roleDTO) {
+        Role role = new Role(roleDTO);
+        return toDTO(roleRepository.save(role));
     }
 
     @Transactional
@@ -47,5 +43,8 @@ public class RoleService {
         } catch (ResourceNotFoundException e) {
             throw new ResourceNotFoundException("No records found with id: " + id);
         }
+    }
+    private RoleInfoDTO toDTO(Role entity){
+        return new RoleInfoDTO(entity);
     }
 }

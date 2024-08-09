@@ -1,10 +1,11 @@
 package br.com.connectfy.EurofarmaCliente.models;
 
+import br.com.connectfy.EurofarmaCliente.dtos.employee.EmployeeTrainingDTO;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
-import java.sql.Clob;
+import java.util.Objects;
 
 @Entity
 public class EmployeeTraining {
@@ -39,6 +40,16 @@ public class EmployeeTraining {
         this.signature = signature;
     }
 
+    public EmployeeTraining(EmployeeTrainingDTO dto) {
+        this.id = dto.getId();
+        this.employee = new Employee(dto.getEmployee());
+        this.training = new Training(dto.getTraining());
+        this.signature = dto.getSignature();
+    }
+
+    public EmployeeTraining(EmployeeTraining employeeTraining) {
+    }
+
     public EmployeeTrainingKey getId() {
         return id;
     }
@@ -69,5 +80,17 @@ public class EmployeeTraining {
 
     public void setSignature(String signature) {
         this.signature = signature;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof EmployeeTraining that)) return false;
+        return Objects.equals(id, that.id) && Objects.equals(employee, that.employee) && Objects.equals(training, that.training) && Objects.equals(signature, that.signature);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
     }
 }

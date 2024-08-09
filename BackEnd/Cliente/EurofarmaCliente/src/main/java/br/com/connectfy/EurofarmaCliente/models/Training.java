@@ -1,13 +1,13 @@
 package br.com.connectfy.EurofarmaCliente.models;
 
+import br.com.connectfy.EurofarmaCliente.dtos.training.TrainingDTO;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 
 
 @Entity
@@ -57,10 +57,22 @@ public class Training {
 
     @JsonBackReference
     @OneToMany(mappedBy = "training", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    private Set<EmployeeTraining> employeeTrainings;
+    private List<EmployeeTraining> employeeTrainings;
 
     public Training(){}
 
+    public Training(TrainingDTO dto) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yy HH:mm:ss,SSS");
+        this.id = dto.getId();
+        this.name = dto.getName();
+        this.code = dto.getCode();
+        this.creationDate = LocalDateTime.parse(dto.getCreationDate());
+        this.closingDate = LocalDateTime.parse(dto.getClosingDate());
+        this.status = dto.isOpened();
+        this.password = dto.getPassword();
+        this.description = dto.getDescription();
+        this.tags = dto.getTags().stream().map(Tag::new).toList();
+    }
 
     public Long getId() {
         return id;
@@ -146,11 +158,11 @@ public class Training {
         this.tags = tags;
     }
 
-    public Set<EmployeeTraining> getEmployees() {
+    public List<EmployeeTraining> getEmployees() {
         return employeeTrainings;
     }
 
-    public void setEmployees(Set<EmployeeTraining> employeeTrainings) {
+    public void setEmployees(List<EmployeeTraining> employeeTrainings) {
         this.employeeTrainings = employeeTrainings;
     }
 
@@ -174,9 +186,8 @@ public class Training {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Training training = (Training) o;
-        return Objects.equals(id, training.id);
+        if (!(o instanceof Training training)) return false;
+        return Objects.equals(id, training.id) && Objects.equals(name, training.name) && Objects.equals(code, training.code) && Objects.equals(creationDate, training.creationDate) && Objects.equals(closingDate, training.closingDate) && Objects.equals(status, training.status) && Objects.equals(password, training.password) && Objects.equals(description, training.description) && Objects.equals(instructors, training.instructors) && Objects.equals(tags, training.tags) && Objects.equals(employeeTrainings, training.employeeTrainings);
     }
 
     @Override

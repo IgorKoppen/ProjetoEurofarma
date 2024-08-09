@@ -1,8 +1,8 @@
 package br.com.connectfy.EurofarmaCliente.controllers;
 
-import br.com.connectfy.EurofarmaCliente.dtos.InstructorDTO;
-import br.com.connectfy.EurofarmaCliente.dtos.InstructorNameAndIdDTO;
-import br.com.connectfy.EurofarmaCliente.dtos.TrainingHistoricDTO;
+import br.com.connectfy.EurofarmaCliente.dtos.instructor.InstructorDTO;
+import br.com.connectfy.EurofarmaCliente.dtos.instructor.InstructorInfoIdNameDTO;
+import br.com.connectfy.EurofarmaCliente.dtos.training.TrainingDTO;
 import br.com.connectfy.EurofarmaCliente.services.InstructorService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,13 +23,13 @@ public class InstructorController {
         return instructorService.insert(instructorDTO);
     }
     @GetMapping
-    public List<InstructorNameAndIdDTO> findAllInstructors(){
+    public List<InstructorInfoIdNameDTO> findAllInstructors(){
         return instructorService.findAll();
     }
 
     @GetMapping("/{id}")
     public InstructorDTO findInstructorById(@PathVariable Long id) {
-        return instructorService.getById(id);
+        return instructorService.findById(id);
     }
 
     @PutMapping("/{id}")
@@ -43,8 +43,8 @@ public class InstructorController {
     }
 
     @GetMapping("/findTrainingByInstructor/{id}")
-    public List<TrainingHistoricDTO> findInstructorTrainings(@PathVariable Long id) { return instructorService.findTrainingById(id); }
+    public List<TrainingDTO> findInstructorTrainings(@PathVariable Long id) { return instructorService.findTrainingById(id); }
 
     @GetMapping("/findTrainingByInstructorAndTag/{id}")
-    public List<TrainingHistoricDTO> findInstructorTrainings(@PathVariable Long id, @RequestParam String tag) { return instructorService.findTrainingByIdAndTag(id, tag); }
+    public List<TrainingDTO> findInstructorTrainings(@PathVariable Long id, @RequestParam String tag) { return instructorService.findTrainingByIdAndTag(id, tag); }
 }

@@ -1,12 +1,15 @@
 package br.com.connectfy.EurofarmaCliente.controllers;
 
-import br.com.connectfy.EurofarmaCliente.dtos.RoleDTO;
+import br.com.connectfy.EurofarmaCliente.dtos.role.RoleInfoDTO;
+import br.com.connectfy.EurofarmaCliente.dtos.role.RoleDTO;
 import br.com.connectfy.EurofarmaCliente.services.RoleService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -17,17 +20,20 @@ public class RoleController {
     private RoleService roleService;
 
     @PostMapping
-    public ResponseEntity<String> insertRole(@RequestBody @Valid RoleDTO instructorDTO) {
-        return roleService.insert(instructorDTO);
+    public ResponseEntity<RoleInfoDTO> insert(@RequestBody @Valid RoleDTO dto) {
+        RoleInfoDTO roleDTO = roleService.insert(dto);
+        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(roleDTO.getId()).toUri();
+        return ResponseEntity.created(uri).body(roleDTO);
     }
     @GetMapping
-    public List<RoleDTO> findAllRoles(){
-        return roleService.findAll();
+    public ResponseEntity<List<RoleInfoDTO>> findAll(){
+        List<RoleInfoDTO> rolesDTO = roleService.findAll();
+        return ResponseEntity.ok(rolesDTO);
     }
 
-
     @DeleteMapping("/{id}")
-    public void deleteInstructor(@PathVariable Long id) {
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
         roleService.delete(id);
+        return ResponseEntity.noContent().build();
     }
 }
