@@ -1,7 +1,7 @@
 package br.com.connectfy.EurofarmaCliente.services;
 
 import br.com.connectfy.EurofarmaCliente.dtos.*;
-import br.com.connectfy.EurofarmaCliente.dtos.employee.EmployeeDTO;
+import br.com.connectfy.EurofarmaCliente.dtos.employee.EmployeeInfoDTO;
 import br.com.connectfy.EurofarmaCliente.dtos.instructor.InstructorDTO;
 import br.com.connectfy.EurofarmaCliente.dtos.tag.TagInfoDTO;
 import br.com.connectfy.EurofarmaCliente.dtos.training.TrainingDTO;
@@ -113,7 +113,7 @@ public class TrainingService {
             Training training = getTrainingByCode(userConfirmAssinatureDTO.code());
             validateDateOfClose(training.getClosingDate(), "Sala já encerrada!");
             validatePassword(training, userConfirmAssinatureDTO.password());
-            EmployeeDTO employeeDTO = employeeService.findById(userConfirmAssinatureDTO.userId());
+            EmployeeInfoDTO employeeDTO = employeeService.findById(userConfirmAssinatureDTO.userId());
             Employee employee = new Employee(employeeDTO);
 
             addEmployeeToTraining(training, employee, userConfirmAssinatureDTO.assinatura());
@@ -160,7 +160,7 @@ public class TrainingService {
     public ResponseEntity<String> confirmPassword(Long idUser, String code, String password) {
         Training training = getTrainingByCode(code);
         validatePassword(training, password);
-        EmployeeDTO employeeDTO = employeeService.findById(idUser);
+        EmployeeInfoDTO employeeDTO = employeeService.findById(idUser);
         Employee employee = new Employee(employeeDTO);
         validateDateOfClose(training.getClosingDate(), "Sala já encerrada!");
         if (isEmployeeInTraining(employee, training)) {
