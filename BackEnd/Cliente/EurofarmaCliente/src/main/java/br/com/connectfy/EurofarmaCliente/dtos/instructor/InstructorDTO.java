@@ -1,7 +1,7 @@
 package br.com.connectfy.EurofarmaCliente.dtos.instructor;
 
 import br.com.connectfy.EurofarmaCliente.dtos.training.TrainingDTO;
-import br.com.connectfy.EurofarmaCliente.dtos.employee.EmployeeDTO;
+import br.com.connectfy.EurofarmaCliente.dtos.employee.EmployeeInfoDTO;
 import br.com.connectfy.EurofarmaCliente.models.Instructor;
 import jakarta.validation.constraints.NotBlank;
 
@@ -16,16 +16,16 @@ public class InstructorDTO implements Serializable {
 
     private  Long id;
     @NotBlank(message = "Campo nome empregado não pode ser vazio")
-    private final EmployeeDTO employee;
+    private final EmployeeInfoDTO employee;
     private final List<TrainingDTO> trainnings;
 
     public InstructorDTO(Instructor entity) {
         this.id = entity.getId();
-        this.employee = new EmployeeDTO(entity.getEmployee());
+        this.employee = new EmployeeInfoDTO(entity.getEmployee());
         this.trainnings = entity.getTrainnings().stream().map(TrainingDTO::new).toList();
     }
 
-    public InstructorDTO(EmployeeDTO employee, List<TrainingDTO> trainings) {
+    public InstructorDTO(EmployeeInfoDTO employee, List<TrainingDTO> trainings) {
         this.employee = employee;
         this.trainnings = trainings;
     }
@@ -34,7 +34,7 @@ public class InstructorDTO implements Serializable {
         return id;
     }
 
-    public EmployeeDTO getEmployee() {
+    public EmployeeInfoDTO getEmployee() {
         return employee;
     }
 

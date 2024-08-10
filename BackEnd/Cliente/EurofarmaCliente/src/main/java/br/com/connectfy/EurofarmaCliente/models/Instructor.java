@@ -39,7 +39,7 @@ public class Instructor {
 
     public Instructor(InstructorDTO dto) {
       this.id = dto.getId();
-      this.employee = new Employee(dto.getEmployee());
+      this.employee = null;
       this.trainnings = dto.getTrainnings().stream().map(Training::new).toList();
     }
 
