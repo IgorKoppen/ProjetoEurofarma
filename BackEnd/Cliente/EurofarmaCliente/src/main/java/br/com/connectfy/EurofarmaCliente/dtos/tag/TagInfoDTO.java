@@ -1,12 +1,14 @@
 package br.com.connectfy.EurofarmaCliente.dtos.tag;
 
 import br.com.connectfy.EurofarmaCliente.models.Tag;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
 import java.io.Serial;
 import java.io.Serializable;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class TagInfoDTO implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
