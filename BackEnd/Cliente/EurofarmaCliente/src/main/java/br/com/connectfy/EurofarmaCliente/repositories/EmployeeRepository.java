@@ -7,16 +7,20 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public interface EmployeeRepository extends JpaRepository<Employee, Long> {
     @Query("SELECT u FROM Employee u where u.userName =:userName")
-    Employee findByUsername(@Param("userName") String userName);
+    Optional<Employee> findByUsername(@Param("userName") String userName);
 
     @Modifying
     @Query("UPDATE Employee p SET p.enabled =:status WHERE p.id = :id")
-    void toggleEmployeeStatus(@Param("id") Long id, @Param("status") boolean status);
+    Optional<Employee> toggleEmployeeStatus(@Param("id") Long id, @Param("status") boolean status);
 
     @Modifying
     @Query("UPDATE Employee p SET p.password =:password WHERE p.id =:id")
-    void changePassword(@Param("id") Long id, @Param("password") String password);
+    Optional<Employee> changePassword(@Param("id") Long id, @Param("password") String password);
+
+    boolean existsByCellphoneNumber(@Param("cellphoneNumber") String cellphoneNumber);
 }

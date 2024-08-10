@@ -1,6 +1,6 @@
 package br.com.connectfy.EurofarmaCliente.models;
 
-import br.com.connectfy.EurofarmaCliente.dtos.employee.EmployeeTrainingDTO;
+import br.com.connectfy.EurofarmaCliente.dtos.EmployeeTrainingDTO;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
@@ -40,15 +40,6 @@ public class EmployeeTraining {
         this.signature = signature;
     }
 
-    public EmployeeTraining(EmployeeTrainingDTO dto) {
-        this.id = dto.getId();
-        this.employee = new Employee(dto.getEmployee());
-        this.training = new Training(dto.getTraining());
-        this.signature = dto.getSignature();
-    }
-
-    public EmployeeTraining(EmployeeTraining employeeTraining) {
-    }
 
     public EmployeeTrainingKey getId() {
         return id;

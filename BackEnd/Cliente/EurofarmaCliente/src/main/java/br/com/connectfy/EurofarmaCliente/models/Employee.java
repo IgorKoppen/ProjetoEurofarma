@@ -1,6 +1,7 @@
 package br.com.connectfy.EurofarmaCliente.models;
 
-import br.com.connectfy.EurofarmaCliente.dtos.employee.EmployeeDTO;
+import br.com.connectfy.EurofarmaCliente.dtos.employee.EmployeeInfoDTO;
+import br.com.connectfy.EurofarmaCliente.dtos.employee.EmployeeInsertDTO;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
@@ -31,7 +32,7 @@ public class Employee implements UserDetails, Serializable {
     @Column(nullable = false)
     private String password;
 
-    @Column(name = "cellphone_number",nullable = false)
+    @Column(name = "cellphone_number", nullable = false,unique = true)
     private String cellphoneNumber;
 
 
@@ -49,27 +50,30 @@ public class Employee implements UserDetails, Serializable {
     @Column(nullable = false)
     private boolean enabled;
 
+
     @JsonBackReference
-    @OneToMany(fetch = FetchType.EAGER,mappedBy = "employee")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "employee")
     private List<Role> roles;
 
+
     @JsonManagedReference
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(optional = false, fetch = FetchType.EAGER)
     private Department department;
 
-    @JsonManagedReference
+
     @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "employee_permission", joinColumns = {@JoinColumn(name = "id_employee")},
+    @JoinTable(name = "employee_permission", joinColumns = {@JoinColumn(name = "id_employee",nullable = false)},
             inverseJoinColumns = {@JoinColumn(name = "id_permission")}
     )
-    private List<Permission> permissions;
+    private List<Permission> permissions = new ArrayList<>();
 
-    @JsonManagedReference
+
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "instructor_id", referencedColumnName = "id")
     private Instructor instructor;
 
-    @JsonBackReference
+
+
     @OneToMany(mappedBy = "employee")
     private List<EmployeeTraining> employeeTrainings;
 
@@ -97,14 +101,19 @@ public class Employee implements UserDetails, Serializable {
         this.instructor = instructor;
     }
 
-    public Employee(EmployeeDTO dto) {
-        this.id = dto.getId();
-        this.userName = dto.getUserName();
-        this.name = dto.getName();
-        this.surname = dto.getSurname();
-        this.cellphoneNumber = dto.getCellphoneNumber();
-        this.roles = dto.getRoles().stream().map(Role::new).toList();
-        this.department = new Department(dto.getDepartment());
+
+    public Employee(EmployeeInsertDTO dto) {
+        this.name = dto.name();
+        this.surname = dto.surname();
+        this.cellphoneNumber = dto.cellphoneNumber();
+    }
+
+    public Employee(EmployeeInfoDTO employeeDTO) {
+        this.id = employeeDTO.getId();
+        this.userName = employeeDTO.getUserName();
+        this.name = employeeDTO.getName();
+        this.surname = employeeDTO.getSurname();
+        this.cellphoneNumber = employeeDTO.getCellphoneNumber();
     }
 
     public Long getId() {
@@ -139,6 +148,50 @@ public class Employee implements UserDetails, Serializable {
         this.cellphoneNumber = cellphoneNumber;
     }
 
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public Department getDepartment() {
+        return department;
+    }
+
+    public void setAccountNonExpired(boolean accountNonExpired) {
+        this.accountNonExpired = accountNonExpired;
+    }
+
+    public void setCredentialsNonExpired(boolean credentialsNonExpired) {
+        this.credentialsNonExpired = credentialsNonExpired;
+    }
+
+    public void setAccountNonLocked(boolean accountNonLocked) {
+        this.accountNonLocked = accountNonLocked;
+    }
+
+    public void setRoles(List<Role> roles) {
+        this.roles = roles;
+    }
+
+    public void setDepartment(Department department) {
+        this.department = department;
+    }
+
+
+    public void setPermissions(List<Permission> permissions) {
+        this.permissions = permissions;
+    }
+   public void addPermission(Permission permission){
+        this.permissions.add(permission);
+   }
+   public void addPermissionsIds(List<Long> ids){
+        for(Long id : ids){
+            Permission permission = new Permission();
+            permission.setId(id);
+            this.permissions.add(permission);
+        }
+
+   }
     public List<Role> getList() {
         return roles;
     }
@@ -147,13 +200,6 @@ public class Employee implements UserDetails, Serializable {
         this.roles = roles;
     }
 
-    public Department  getDepartments() {
-        return department;
-    }
-
-    public void setDepartments(Department  department) {
-        this.department = department;
-    }
 
     public List<EmployeeTraining> getEmployeeTrainings() {
         return employeeTrainings;
@@ -186,6 +232,10 @@ public class Employee implements UserDetails, Serializable {
             roles.add(permission.getDescription());
         }
         return roles;
+    }
+
+    public List<Permission> getPermissions() {
+        return permissions;
     }
 
     @Override
@@ -238,23 +288,4 @@ public class Employee implements UserDetails, Serializable {
         return Objects.hashCode(id);
     }
 
-    @Override
-    public String toString() {
-        return "Employee{" +
-                "id=" + id +
-                ", userName='" + userName + '\'' +
-                ", name='" + name + '\'' +
-                ", surname='" + surname + '\'' +
-                ", password='" + password + '\'' +
-                ", cellphoneNumber='" + cellphoneNumber + '\'' +
-                ", accountNonExpired=" + accountNonExpired +
-                ", credentialsNonExpired=" + credentialsNonExpired +
-                ", accountNonLocked=" + accountNonLocked +
-                ", enabled=" + enabled +
-                ", roles=" + roles +
-                ", department=" + department +
-                ", permissions=" + permissions +
-                ", instructor=" + instructor +
-                '}';
-    }
 }

@@ -1,5 +1,6 @@
-package br.com.connectfy.EurofarmaCliente.dtos.employee;
+package br.com.connectfy.EurofarmaCliente.dtos;
 
+import br.com.connectfy.EurofarmaCliente.dtos.employee.EmployeeInfoDTO;
 import br.com.connectfy.EurofarmaCliente.dtos.training.TrainingDTO;
 import br.com.connectfy.EurofarmaCliente.models.EmployeeTraining;
 import br.com.connectfy.EurofarmaCliente.models.EmployeeTrainingKey;
@@ -13,8 +14,7 @@ public class EmployeeTrainingDTO implements Serializable {
     private static final long serialVersionUID = 1L;
     @JsonIgnore
     private final EmployeeTrainingKey id;
-    @JsonIgnore
-    private final EmployeeDTO employee;
+    @JsonIgnore    private final EmployeeInfoDTO employee;
     private final TrainingDTO training;
     @JsonIgnore
     private final String signature;
@@ -30,7 +30,7 @@ public class EmployeeTrainingDTO implements Serializable {
         return id;
     }
 
-    public EmployeeDTO getEmployee() {
+    public EmployeeInfoDTO getEmployee() {
         return employee;
     }
 
