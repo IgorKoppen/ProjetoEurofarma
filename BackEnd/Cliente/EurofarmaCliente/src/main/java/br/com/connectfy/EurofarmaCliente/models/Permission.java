@@ -51,6 +51,14 @@ public class Permission implements GrantedAuthority, Serializable {
         this.description = description;
     }
 
+    public void setEmployees(List<Employee> employees) {
+        this.employees = employees;
+    }
+
+    public List<Employee> getEmployees() {
+        return employees;
+    }
+
     @Override
     public String getAuthority() {
         return this.description;

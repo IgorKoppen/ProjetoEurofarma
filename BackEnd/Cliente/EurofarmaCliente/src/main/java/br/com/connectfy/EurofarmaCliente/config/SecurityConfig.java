@@ -60,10 +60,9 @@ public class SecurityConfig {
                 .authorizeHttpRequests(
                         authorizeHttpRequests -> authorizeHttpRequests
                                 .requestMatchers(
-                                        "/auth/signin",
-                                        "/auth/refresh/**"
+                                        "/auth/**"
                                 ).permitAll()
-                                .requestMatchers("/eurofarma/**").authenticated()
+                                .requestMatchers("/**").authenticated()
                 )
                 .cors(cors -> {})
                 .build();

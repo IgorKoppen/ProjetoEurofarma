@@ -36,17 +36,13 @@ public class AuthService {
             String username = data.getUserName();
             String password = data.getPassword();
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
-            Employee user = userRepository.findByUsername(username);
+            Employee user = userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("Usuário: " + username + " não encontrado!"));
             var tokenResponse = new TokenVO();
-            if (user != null) {
-                Long instructorId = null;
-                if (user.getInstructor() != null) {
-                    instructorId = user.getInstructor().getId();
-                }
-                tokenResponse = tokenProvider.createToken(user.getId(), username, user.getName(), user.getRoles(), instructorId);
-            } else {
-                throw new UsernameNotFoundException("Usuário: " + username + " não encontrado!");
+            Long instructorId = null;
+            if (user.getInstructor() != null) {
+                instructorId = user.getInstructor().getId();
             }
+            tokenResponse = tokenProvider.createToken(user.getId(), username, user.getName(), user.getRoles(), instructorId);
             return ok(tokenResponse);
         } catch (Exception e) {
             throw new BadCredentialsException("Nome de usuário ou senha inválidos!");
@@ -55,14 +51,10 @@ public class AuthService {
 
     @SuppressWarnings("rawtypes")
     public ResponseEntity refreshToken(String username, String refreshToken) {
-            var user = userRepository.findByUsername(username);
-            var tokenResponse = new TokenVO();
-            if (user != null) {
-                tokenResponse = tokenProvider.refreshToken(refreshToken);
-            } else {
-                throw new UsernameNotFoundException("Username " + username + " not found");
-            }
-            return ok(tokenResponse);
+        var user = userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("Usuário: " + username + " não encontrado!"));
+        var tokenResponse = new TokenVO();
+        tokenResponse = tokenProvider.refreshToken(refreshToken);
+        return ok(tokenResponse);
     }
 
 }
