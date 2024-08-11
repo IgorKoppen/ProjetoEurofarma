@@ -1,5 +1,6 @@
 package br.com.connectfy.EurofarmaCliente.util;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.DelegatingPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.crypto.password.Pbkdf2PasswordEncoder;
@@ -8,7 +9,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class GenerateEncryptedPassword {
-    private static final String secret = "eurofarma";
+
+
+    @Value("${secretOfEncoder}")
+    private static String secret = "eurofarma";
+
     private static final Pbkdf2PasswordEncoder pbkdf2Encoder = new Pbkdf2PasswordEncoder(secret, 16, 310000, Pbkdf2PasswordEncoder.SecretKeyFactoryAlgorithm.PBKDF2WithHmacSHA256);
     private static final DelegatingPasswordEncoder passwordEncoder;
 
