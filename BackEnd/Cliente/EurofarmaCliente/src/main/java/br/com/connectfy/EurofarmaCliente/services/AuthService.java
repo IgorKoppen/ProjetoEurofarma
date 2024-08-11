@@ -5,7 +5,6 @@ import br.com.connectfy.EurofarmaCliente.dtos.security.TokenVO;
 import br.com.connectfy.EurofarmaCliente.models.Employee;
 import br.com.connectfy.EurofarmaCliente.repositories.EmployeeRepository;
 import br.com.connectfy.EurofarmaCliente.security.jwt.JwtTokenProvider;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -42,7 +41,7 @@ public class AuthService {
             if (user.getInstructor() != null) {
                 instructorId = user.getInstructor().getId();
             }
-            tokenResponse = tokenProvider.createToken(user.getId(), username, user.getName(), user.getRoles(), instructorId);
+            tokenResponse = tokenProvider.createToken(user.getId(), username, user.getName(), user.getPermissionRoles(), instructorId);
             return ok(tokenResponse);
         } catch (Exception e) {
             throw new BadCredentialsException("Nome de usuário ou senha inválidos!");
