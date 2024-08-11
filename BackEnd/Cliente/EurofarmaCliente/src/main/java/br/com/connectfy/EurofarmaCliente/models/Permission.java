@@ -1,6 +1,6 @@
 package br.com.connectfy.EurofarmaCliente.models;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import br.com.connectfy.EurofarmaCliente.dtos.permission.PermissionDTO;
 import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
 
@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Objects;
 
 @Entity
-@Table(name = "tb_permission")
+@Table(name = "tb_permissions")
 public class Permission implements GrantedAuthority, Serializable {
 
     @Serial
@@ -23,7 +23,6 @@ public class Permission implements GrantedAuthority, Serializable {
     @Column(nullable = false)
     private String description;
 
-    @JsonBackReference
     @ManyToMany(mappedBy = "permissions")
     private List<Employee> employees;
 
@@ -33,6 +32,11 @@ public class Permission implements GrantedAuthority, Serializable {
         this.id = id;
         this.description = description;
         this.employees = employees;
+    }
+
+    public Permission(PermissionDTO dto){
+        this.id = dto.getId();
+        this.description = dto.getDescription();
     }
 
     public Long getId() {
@@ -74,5 +78,14 @@ public class Permission implements GrantedAuthority, Serializable {
     @Override
     public int hashCode() {
         return Objects.hashCode(id);
+    }
+
+    @Override
+    public String toString() {
+        return "Permission{" +
+                "id=" + id +
+                ", description='" + description + '\'' +
+                ", employees=" + employees +
+                '}';
     }
 }
