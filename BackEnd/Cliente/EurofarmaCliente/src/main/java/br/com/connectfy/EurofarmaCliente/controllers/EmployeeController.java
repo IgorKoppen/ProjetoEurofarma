@@ -3,7 +3,7 @@ package br.com.connectfy.EurofarmaCliente.controllers;
 import br.com.connectfy.EurofarmaCliente.dtos.employee.EmployeeInfoDTO;
 import br.com.connectfy.EurofarmaCliente.dtos.employee.EmployeeInsertDTO;
 import br.com.connectfy.EurofarmaCliente.dtos.employee.EmployeeUpdateDTO;
-import br.com.connectfy.EurofarmaCliente.dtos.training.TrainingDTO;
+import br.com.connectfy.EurofarmaCliente.dtos.training.TrainingOfEmployeeDTO;
 import br.com.connectfy.EurofarmaCliente.services.EmployeeService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,7 +60,7 @@ public class EmployeeController {
     public ResponseEntity<EmployeeInfoDTO> updatePassword(@PathVariable Long id,
                                                           @RequestParam String oldPassword,
                                                           @RequestParam String newPassword) {
-        EmployeeInfoDTO dto = employeeService.updatePassword(id,oldPassword, newPassword);
+        EmployeeInfoDTO dto = employeeService.updatePassword(id, oldPassword, newPassword);
         return ResponseEntity.ok(dto);
     }
 
@@ -71,8 +71,8 @@ public class EmployeeController {
     }
 
     @GetMapping(value = "/findLastTrainings/{id}")
-    public ResponseEntity<List<TrainingDTO>> findEmployeeTrainingById(@PathVariable Long id) {
-        List<TrainingDTO> dto = employeeService.findEmployeeTrainingsById(id);
+    public ResponseEntity<List<TrainingOfEmployeeDTO>> findEmployeeTrainingByIdWithPagination(@PathVariable Long id) {
+        List<TrainingOfEmployeeDTO> dto = employeeService.findEmployeeTrainingsById(id);
         return ResponseEntity.ok(dto);
     }
 

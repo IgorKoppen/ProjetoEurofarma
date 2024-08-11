@@ -1,8 +1,7 @@
 package br.com.connectfy.EurofarmaCliente.dtos.employee;
 
 import br.com.connectfy.EurofarmaCliente.dtos.permission.PermissionDTO;
-import br.com.connectfy.EurofarmaCliente.dtos.role.RoleInfoDTO;
-import br.com.connectfy.EurofarmaCliente.dtos.department.DepartmentInfoDTO;
+import br.com.connectfy.EurofarmaCliente.dtos.role.RoleDTO;
 import br.com.connectfy.EurofarmaCliente.models.Employee;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -33,11 +32,7 @@ public class EmployeeInfoDTO implements Serializable {
     @Column(nullable = false)
     private boolean enabled;
 
-    private final List<RoleInfoDTO> roles = new ArrayList<>();
-
-    @JsonIgnoreProperties({"employees"})
-    private  DepartmentInfoDTO department = null;
-
+    private RoleDTO role = null;
 
     private  Long instructorId = null;
 
@@ -51,17 +46,14 @@ public class EmployeeInfoDTO implements Serializable {
         this.surname = entity.getSurname();
         this.enabled = entity.isEnabled();
         this.cellphoneNumber = entity.getCellphoneNumber();
-        if(entity.getDepartment() != null){
-            this.department = new DepartmentInfoDTO(entity.getDepartment());
-        }
         if(entity.getInstructor() != null){
             this.instructorId = entity.getInstructor().getId();
         }
         if(entity.getPermissions() != null) {
             entity.getPermissions().forEach(permission -> this.permission.add(new PermissionDTO(permission)));
         }
-        if(entity.getList() != null){
-            entity.getList().forEach(list -> this.roles.add(new RoleInfoDTO(list)));
+        if(entity.getRole() != null){
+           this.role = new RoleDTO(entity.getRole());
         }
     }
 
@@ -90,12 +82,8 @@ public class EmployeeInfoDTO implements Serializable {
         return cellphoneNumber;
     }
 
-    public List<RoleInfoDTO> getRoles() {
-        return roles;
-    }
-
-    public DepartmentInfoDTO getDepartment() {
-        return department;
+    public RoleDTO getRole() {
+        return role;
     }
 
     public Long getInstructorId() {

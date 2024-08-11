@@ -1,26 +1,22 @@
 package br.com.connectfy.EurofarmaCliente.models;
 
-import br.com.connectfy.EurofarmaCliente.dtos.EmployeeTrainingDTO;
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.util.Objects;
 
 @Entity
+@Table(name = "tb_employee_trainings")
 public class EmployeeTraining {
 
     @EmbeddedId
     EmployeeTrainingKey id;
 
-    @JsonManagedReference
     @ManyToOne
     @MapsId("employeeId")
     @JoinColumn(name = "employee_id")
     Employee employee;
 
 
-    @JsonBackReference
     @ManyToOne
     @MapsId("trainingId")
     @JoinColumn(name = "training_id")
