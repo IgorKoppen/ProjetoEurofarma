@@ -56,7 +56,7 @@ public class InstructorService {
     public ResponseEntity<String> update(Long id, InstructorDTO instructorDTO) {
         Instructor updateInstructor = instructorRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("No records found with id: " + id));
         updateInstructor.setEmployee(new Employee(instructorDTO.getEmployee()));
-        updateInstructor.setTrainnings(instructorDTO.getTrainnings().stream().map(Training::new).toList());
+        updateInstructor.setTrainings(instructorDTO.getTrainnings().stream().map(Training::new).toList());
         instructorRepository.save(updateInstructor);
         return ResponseEntity.ok("Instrutor atualizado com sucesso!");
     }
@@ -81,11 +81,11 @@ public class InstructorService {
                 .orElseThrow(() -> new ResourceNotFoundException("No records found with id: " + id));
 
 
-        if(instructor.getTrainnings().isEmpty()){
+        if(instructor.getTrainings().isEmpty()){
             return new ArrayList<>();
         }
 
-        return instructor.getTrainnings().stream()
+        return instructor.getTrainings().stream()
                 .map(training -> {
                     List<InstructorInfoIdNameDTO> instructorNames = training.getInstructors().stream()
                             .map(trainingInstructor -> new InstructorInfoIdNameDTO(trainingInstructor.getId(),trainingInstructor.getEmployee().getName(),trainingInstructor.getEmployee().getSurname(),trainingInstructor.getEmployee().getName()+" "+ trainingInstructor.getEmployee().getSurname())).toList();
@@ -100,11 +100,11 @@ public class InstructorService {
         Instructor instructor = instructorRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("No records found with id: " + id));
 
-        if (instructor.getTrainnings().isEmpty()) {
+        if (instructor.getTrainings().isEmpty()) {
             return new ArrayList<>();
         }
 
-        return instructor.getTrainnings().stream()
+        return instructor.getTrainings().stream()
                 .filter(training -> training.getTags().stream()
                         .anyMatch(tag -> tag.getName().equalsIgnoreCase(tagName)))
                 .map(training -> {

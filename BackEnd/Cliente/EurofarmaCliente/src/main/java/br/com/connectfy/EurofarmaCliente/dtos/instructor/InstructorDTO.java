@@ -22,7 +22,7 @@ public class InstructorDTO implements Serializable {
     public InstructorDTO(Instructor entity) {
         this.id = entity.getId();
         this.employee = new EmployeeInfoDTO(entity.getEmployee());
-        this.trainnings = entity.getTrainnings().stream().map(TrainingDTO::new).toList();
+        this.trainnings = entity.getTrainings().stream().map(TrainingDTO::new).toList();
     }
 
     public InstructorDTO(EmployeeInfoDTO employee, List<TrainingDTO> trainings) {
