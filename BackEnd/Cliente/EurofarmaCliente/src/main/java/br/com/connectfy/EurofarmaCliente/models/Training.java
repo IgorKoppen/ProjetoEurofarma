@@ -1,8 +1,6 @@
 package br.com.connectfy.EurofarmaCliente.models;
 
 import br.com.connectfy.EurofarmaCliente.dtos.training.TrainingDTO;
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
@@ -11,7 +9,7 @@ import java.util.*;
 
 
 @Entity
-@Table(name = "tb_trainning")
+@Table(name = "tb_trainings")
 public class Training {
 
     @Id
@@ -31,15 +29,12 @@ public class Training {
     private LocalDateTime closingDate;
 
     @Column(nullable = false)
-    private Boolean  status;
-
-    @Column(nullable = false)
     private String password;
 
     @Column(nullable = false)
     private String description;
 
-    @JsonManagedReference
+
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "training_instructors",
             joinColumns = {@JoinColumn(name = "id_training")},
@@ -47,7 +42,6 @@ public class Training {
     )
     private List<Instructor> instructors;
 
-    @JsonManagedReference
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "training_tags",
             joinColumns = {@JoinColumn(name = "id_training")},
@@ -55,7 +49,6 @@ public class Training {
     )
     private List<Tag> tags;
 
-    @JsonBackReference
     @OneToMany(mappedBy = "training", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private List<EmployeeTraining> employeeTrainings;
 
@@ -68,11 +61,12 @@ public class Training {
         this.code = dto.getCode();
         this.creationDate = LocalDateTime.parse(dto.getCreationDate());
         this.closingDate = LocalDateTime.parse(dto.getClosingDate());
-        this.status = dto.isOpened();
         this.password = dto.getPassword();
         this.description = dto.getDescription();
         this.tags = dto.getTags().stream().map(Tag::new).toList();
     }
+
+
 
     public Long getId() {
         return id;
@@ -114,13 +108,6 @@ public class Training {
         this.closingDate = closingDate;
     }
 
-    public Boolean isStatus() {
-        return status;
-    }
-
-    public void setStatus(Boolean status) {
-        this.status = status;
-    }
 
     public String getPassword() {
         return password;
@@ -138,9 +125,6 @@ public class Training {
         this.description = description;
     }
 
-    public Boolean getStatus() {
-        return status;
-    }
 
     public List<Instructor> getInstructors() {
         return instructors;
@@ -167,27 +151,10 @@ public class Training {
     }
 
     @Override
-    public String toString() {
-        return "Training{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", code='" + code + '\'' +
-                ", creationDate=" + creationDate +
-                ", closingDate=" + closingDate +
-                ", status=" + status +
-                ", password='" + password + '\'' +
-                ", description='" + description + '\'' +
-                ", instructors=" + instructors +
-                ", tags=" + tags +
-                ", employees=" + employeeTrainings +
-                '}';
-    }
-
-    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Training training)) return false;
-        return Objects.equals(id, training.id) && Objects.equals(name, training.name) && Objects.equals(code, training.code) && Objects.equals(creationDate, training.creationDate) && Objects.equals(closingDate, training.closingDate) && Objects.equals(status, training.status) && Objects.equals(password, training.password) && Objects.equals(description, training.description) && Objects.equals(instructors, training.instructors) && Objects.equals(tags, training.tags) && Objects.equals(employeeTrainings, training.employeeTrainings);
+        return Objects.equals(id, training.id) && Objects.equals(name, training.name) && Objects.equals(code, training.code) && Objects.equals(creationDate, training.creationDate) && Objects.equals(closingDate, training.closingDate) && Objects.equals(password, training.password) && Objects.equals(description, training.description) && Objects.equals(instructors, training.instructors) && Objects.equals(tags, training.tags) && Objects.equals(employeeTrainings, training.employeeTrainings);
     }
 
     @Override

@@ -32,7 +32,6 @@ public class TrainingInsertDTO implements Serializable {
     @JsonProperty("closing_date")
     private LocalDateTime closingDate;
 
-    private boolean status;
 
     @NotBlank(message = "Password não pode ser vazio!")
     private String password;
@@ -50,7 +49,6 @@ public class TrainingInsertDTO implements Serializable {
         this.code = training.getCode();
         this.creationDate = training.getCreationDate();
         this.closingDate = training.getClosingDate();
-        this.status = training.getStatus();
         this.password = training.getPassword();
     }
 
@@ -72,10 +70,6 @@ public class TrainingInsertDTO implements Serializable {
 
     public LocalDateTime getClosingDate() {
         return closingDate;
-    }
-
-    public boolean isStatus() {
-        return status;
     }
 
     public String getPassword() {

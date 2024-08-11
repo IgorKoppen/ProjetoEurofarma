@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-public class TrainingDTO implements Serializable {
+public class TrainingOfEmployeeDTO implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
@@ -21,7 +21,6 @@ public class TrainingDTO implements Serializable {
     @NotBlank(message = "Nome não pode ser vazio!")
     private String name;
 
-    private final String code;
 
     @JsonProperty("creation_date")
     private String creationDate;
@@ -31,24 +30,19 @@ public class TrainingDTO implements Serializable {
 
     private final boolean isOpened;
 
-    @NotBlank(message = "Password não pode ser vazio!")
-    private String password;
-
     @NotBlank(message = "Descrição não pode ser vazia!")
     private String description;
 
-    private List<InstructorInfo>  instructorsInfo;
-    private List<TagInfoDTO> tags;
+    private final List<InstructorInfo> instructorsInfo;
+    private final List<TagInfoDTO> tags;
 
-    public TrainingDTO(Training entity) {
+    public TrainingOfEmployeeDTO(Training entity) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yy HH:mm:ss,SSS");
         this.id = entity.getId();
         this.name = entity.getName();
-        this.code = entity.getCode();
         this.creationDate = formatter.format(entity.getCreationDate());
         this.closingDate =  formatter.format(entity.getClosingDate());
         this.isOpened = LocalDateTime.now().isBefore(entity.getClosingDate());
-        this.password = entity.getPassword();
         this.description = entity.getDescription();
         this.instructorsInfo = entity.getInstructors().stream().map(InstructorInfo::new).toList();
         this.tags = entity.getTags().stream().map(TagInfoDTO::new).toList();
@@ -62,9 +56,6 @@ public class TrainingDTO implements Serializable {
         return name;
     }
 
-    public String getCode() {
-        return code;
-    }
 
     public String getCreationDate() {
         return creationDate;
@@ -77,10 +68,7 @@ public class TrainingDTO implements Serializable {
     public boolean isOpened() {
         return isOpened;
     }
-
-    public String getPassword() {
-        return password;
-    }
+    
 
     public String getDescription() {
         return description;

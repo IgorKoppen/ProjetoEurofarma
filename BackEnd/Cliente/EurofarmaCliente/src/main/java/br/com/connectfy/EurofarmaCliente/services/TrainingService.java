@@ -239,7 +239,6 @@ public class TrainingService {
         training.setCreationDate(LocalDateTime.now());
         training.setClosingDate(parsedDate);
         training.setPassword(RandomStringGenerator.generatePassword(10));
-        training.setStatus(true);
         training.setInstructors(instructors);
         training.setTags(tags);
         return training;
