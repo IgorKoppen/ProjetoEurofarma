@@ -1,7 +1,7 @@
 package br.com.connectfy.EurofarmaCliente.controllers;
 
+import br.com.connectfy.EurofarmaCliente.dtos.department.DepartmentInsertAndUpdateDTO;
 import br.com.connectfy.EurofarmaCliente.dtos.department.DepartmentDTO;
-import br.com.connectfy.EurofarmaCliente.dtos.department.DepartmentInfoDTO;
 import br.com.connectfy.EurofarmaCliente.services.DepartmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -19,29 +19,29 @@ public class DepartmentController {
     private DepartmentService departmentService;
 
     @PostMapping
-    public ResponseEntity<DepartmentInfoDTO> insert(@Validated @RequestBody DepartmentDTO dto) {
-        DepartmentInfoDTO departmentDTO = departmentService.insert(dto);
+    public ResponseEntity<DepartmentDTO> insert(@Validated @RequestBody DepartmentInsertAndUpdateDTO dto) {
+        DepartmentDTO departmentDTO = departmentService.insert(dto);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(departmentDTO.getId()).toUri();
         return ResponseEntity.created(uri).body(departmentDTO);
     }
 
     @GetMapping
-    public ResponseEntity<List<DepartmentInfoDTO>> findAll() {
-        List<DepartmentInfoDTO> departmentDTOS = departmentService.findAll();
+    public ResponseEntity<List<DepartmentDTO>> findAll() {
+        List<DepartmentDTO> departmentDTOS = departmentService.findAll();
         return ResponseEntity.ok(departmentDTOS);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<DepartmentInfoDTO> findById(@PathVariable Long id) {
-        DepartmentInfoDTO departmentDTO = departmentService.findById(id);
+    public ResponseEntity<DepartmentDTO> findById(@PathVariable Long id) {
+        DepartmentDTO departmentDTO = departmentService.findById(id);
         return ResponseEntity.ok(departmentDTO);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<DepartmentInfoDTO> update(@PathVariable Long id,
-                                                    @Validated
-                                                @RequestBody DepartmentDTO dto) {
-        DepartmentInfoDTO departmentDTO = departmentService.update(id, dto);
+    public ResponseEntity<DepartmentDTO> update(@PathVariable Long id,
+                                                @Validated
+                                                @RequestBody DepartmentInsertAndUpdateDTO dto) {
+        DepartmentDTO departmentDTO = departmentService.update(id, dto);
         return ResponseEntity.ok(departmentDTO);
     }
 

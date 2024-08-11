@@ -1,15 +1,15 @@
 package br.com.connectfy.EurofarmaCliente.models;
 
 import br.com.connectfy.EurofarmaCliente.dtos.department.DepartmentDTO;
-import br.com.connectfy.EurofarmaCliente.dtos.department.DepartmentInfoDTO;
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import br.com.connectfy.EurofarmaCliente.dtos.department.DepartmentInsertAndUpdateDTO;
+import br.com.connectfy.EurofarmaCliente.dtos.department.DepartmentWithRoleAndEmployeeDTO;
 import jakarta.persistence.*;
 
 import java.util.List;
 import java.util.Objects;
 
 @Entity
-@Table(name = "tb_department")
+@Table(name = "tb_departments")
 public class Department {
 
     @Id
@@ -19,20 +19,32 @@ public class Department {
     @Column(name = "depart_name", nullable = false)
     private String departName;
 
-    @JsonBackReference
-    @OneToMany(fetch = FetchType.EAGER,mappedBy = "department")
-    private List<Employee> employees;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "department", cascade = CascadeType.ALL)
+    private List<Role> roles;
+
 
     public Department() {
     }
 
-    public Department(DepartmentInfoDTO dto) {
+    public Department(DepartmentWithRoleAndEmployeeDTO dto) {
         this.id = dto.getId();
         this.departName = dto.getDepartName();
     }
 
-    public Department(DepartmentDTO dto) {
+    public Department(DepartmentInsertAndUpdateDTO dto) {
         this.departName = dto.departName();
+    }
+
+    public Department(Long id, String departName, List<Role> roles) {
+        this.id = id;
+        this.departName = departName;
+        this.roles = roles;
+    }
+
+    public Department(DepartmentDTO departmentDTO) {
+        this.id = departmentDTO.getId();
+        this.departName = departmentDTO.getDepartName();
     }
 
     public Long getId() {
@@ -48,19 +60,20 @@ public class Department {
         this.departName = departName;
     }
 
-    public List<Employee> getEmployees() {
-        return employees;
+
+    public List<Role> getRoles() {
+        return roles;
     }
 
-    public void setEmployees(List<Employee> employees) {
-        this.employees = employees;
+    public void setRoles(List<Role> roles) {
+        this.roles = roles;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Department that)) return false;
-        return Objects.equals(id, that.id) && Objects.equals(departName, that.departName) && Objects.equals(employees, that.employees);
+        return Objects.equals(id, that.id) && Objects.equals(departName, that.departName) && Objects.equals(roles, that.roles);
     }
 
     @Override

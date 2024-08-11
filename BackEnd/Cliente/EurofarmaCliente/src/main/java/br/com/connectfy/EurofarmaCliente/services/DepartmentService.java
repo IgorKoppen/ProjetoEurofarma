@@ -1,6 +1,6 @@
 package br.com.connectfy.EurofarmaCliente.services;
+import br.com.connectfy.EurofarmaCliente.dtos.department.DepartmentInsertAndUpdateDTO;
 import br.com.connectfy.EurofarmaCliente.dtos.department.DepartmentDTO;
-import br.com.connectfy.EurofarmaCliente.dtos.department.DepartmentInfoDTO;
 import br.com.connectfy.EurofarmaCliente.exceptions.ResourceNotFoundException;
 import br.com.connectfy.EurofarmaCliente.models.Department;
 import br.com.connectfy.EurofarmaCliente.repositories.DepartmentRepository;
@@ -20,27 +20,27 @@ public class DepartmentService {
     }
 
     @Transactional
-    public DepartmentInfoDTO insert(DepartmentDTO departmentDTO) {
+    public DepartmentDTO insert(DepartmentInsertAndUpdateDTO departmentDTO) {
         Department department = new Department(departmentDTO);
         return toDTO(departmentRepository.save(department));
     }
 
     @Transactional(readOnly = true)
-    public DepartmentInfoDTO findById(Long id) {
+    public DepartmentDTO findById(Long id) {
         return departmentRepository.findById(id)
                 .map(this::toDTO)
                 .orElseThrow(() -> new ResourceNotFoundException("No records found with id: " + id));
     }
 
     @Transactional(readOnly = true)
-    public List<DepartmentInfoDTO> findAll() {
+    public List<DepartmentDTO> findAll() {
         return departmentRepository.findAll().stream()
                 .map(this::toDTO)
                 .collect(Collectors.toList());
     }
 
     @Transactional
-    public DepartmentInfoDTO update(Long id, DepartmentDTO departmentDTO) {
+    public DepartmentDTO update(Long id, DepartmentInsertAndUpdateDTO departmentDTO) {
         Department department = departmentRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("No records found with id: " + id));
         department.setDepartName(departmentDTO.departName());
@@ -55,7 +55,7 @@ public class DepartmentService {
         departmentRepository.deleteById(id);
     }
 
-    private DepartmentInfoDTO toDTO(Department department) {
-        return new DepartmentInfoDTO(department);
+    private DepartmentDTO toDTO(Department department) {
+        return new DepartmentDTO(department);
     }
 }
