@@ -2,7 +2,6 @@ package br.com.connectfy.EurofarmaCliente.models;
 
 import br.com.connectfy.EurofarmaCliente.dtos.tag.TagDTO;
 import br.com.connectfy.EurofarmaCliente.dtos.tag.TagInfoDTO;
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 import java.util.List;
@@ -21,7 +20,6 @@ public class Tag {
     @Column(nullable = false, unique = true)
     private String color;
 
-    @JsonBackReference
     @ManyToMany(mappedBy = "tags")
     private List<Training> trainnings;
 
