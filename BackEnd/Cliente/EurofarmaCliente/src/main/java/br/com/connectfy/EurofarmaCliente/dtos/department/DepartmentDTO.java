@@ -18,6 +18,11 @@ public class DepartmentDTO implements Serializable {
         this.departName = entity.getDepartName();
     }
 
+    public DepartmentDTO(Long id, String departName) {
+        this.id = id;
+        this.departName = departName;
+    }
+
     public Long getId() {
         return id;
     }

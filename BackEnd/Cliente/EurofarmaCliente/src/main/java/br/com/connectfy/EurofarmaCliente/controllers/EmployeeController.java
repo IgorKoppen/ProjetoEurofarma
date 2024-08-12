@@ -1,5 +1,7 @@
 package br.com.connectfy.EurofarmaCliente.controllers;
 
+import br.com.connectfy.EurofarmaCliente.dtos.ChangePasswordDTO;
+import br.com.connectfy.EurofarmaCliente.dtos.PhoneNumberUpdateDTO;
 import br.com.connectfy.EurofarmaCliente.dtos.employee.EmployeeInfoDTO;
 import br.com.connectfy.EurofarmaCliente.dtos.employee.EmployeeInsertDTO;
 import br.com.connectfy.EurofarmaCliente.dtos.employee.EmployeeUpdateDTO;
@@ -7,7 +9,12 @@ import br.com.connectfy.EurofarmaCliente.dtos.training.TrainingOfEmployeeDTO;
 import br.com.connectfy.EurofarmaCliente.services.EmployeeService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -37,17 +44,17 @@ public class EmployeeController {
     }
 
     @GetMapping("/pagination")
-    public ResponseEntity<PagedModel<EmployeeInfoDTO>> findWithPagination(
-            @RequestParam(name = "page", defaultValue = "0") Integer page,
-            @RequestParam(name = "size", defaultValue = "10") Integer size,
-            @RequestParam(name = "direction", defaultValue = "ASC") String direction) {
-        PagedModel<EmployeeInfoDTO> pagedModel = employeeService.findWithPagination(page, size, direction);
+    public ResponseEntity<PagedModel<EntityModel<EmployeeInfoDTO>>> findWithPagination(@PageableDefault(size = 10, direction = Sort.Direction.ASC, sort = "name") Pageable pageable, PagedResourcesAssembler<EmployeeInfoDTO> assembler) {
+        Page<EmployeeInfoDTO> employeePage = employeeService.findWithPagination(pageable);
+        PagedModel<EntityModel<EmployeeInfoDTO>> pagedModel = assembler.toModel(employeePage);
         return ResponseEntity.ok(pagedModel);
     }
 
-    @PutMapping
-    public EmployeeInfoDTO update(@RequestBody @Valid EmployeeUpdateDTO employeeDTO) {
-        return employeeService.update(employeeDTO);
+    @PutMapping("/{id}")
+    public ResponseEntity<EmployeeInfoDTO> update(@PathVariable Long id,
+                                                  @RequestBody @Valid EmployeeUpdateDTO employeeDTO) {
+       EmployeeInfoDTO employee = employeeService.update(id,employeeDTO);
+        return ResponseEntity.ok(employee);
     }
 
     @DeleteMapping(value = "/{id}")
@@ -56,30 +63,27 @@ public class EmployeeController {
         return ResponseEntity.noContent().build();
     }
 
-    @PatchMapping("/{id}")
-    public ResponseEntity<EmployeeInfoDTO> updatePassword(@PathVariable Long id,
-                                                          @RequestParam String oldPassword,
-                                                          @RequestParam String newPassword) {
-        EmployeeInfoDTO dto = employeeService.updatePassword(id, oldPassword, newPassword);
-        return ResponseEntity.ok(dto);
-    }
-
-    @PatchMapping("/changePhone/{id}")
-    public ResponseEntity<EmployeeInfoDTO> updatePhone(@PathVariable Long id, @RequestParam String password, @RequestParam String phone) {
-        EmployeeInfoDTO dto = employeeService.updateCellphoneNumber(id, password, phone);
-        return ResponseEntity.ok(dto);
-    }
-
     @GetMapping(value = "/findLastTrainings/{id}")
-    public ResponseEntity<List<TrainingOfEmployeeDTO>> findEmployeeTrainingByIdWithPagination(@PathVariable Long id) {
+    public ResponseEntity<List<TrainingOfEmployeeDTO>> findEmployeeTrainingById(@PathVariable Long id) {
         List<TrainingOfEmployeeDTO> dto = employeeService.findEmployeeTrainingsById(id);
         return ResponseEntity.ok(dto);
     }
 
-    @PatchMapping(value = "/disable/{id}")
-    public ResponseEntity<EmployeeInfoDTO> disable(@PathVariable Long id) {
-        EmployeeInfoDTO dto = employeeService.toggleEmployeeStatus(id);
-        return ResponseEntity.ok(dto);
+    @PatchMapping("/updatePassword/{id}")
+    public ResponseEntity<Void> updatePassword(@PathVariable Long id, @RequestBody @Valid ChangePasswordDTO changePasswordDTO) {
+       employeeService.updatePassword(id,changePasswordDTO);
+        return ResponseEntity.noContent().build();
     }
 
+    @PatchMapping("/changePhone/{id}")
+    public ResponseEntity<Void> updatePhone(@PathVariable Long id,@RequestBody @Valid PhoneNumberUpdateDTO updateDTO) {
+      employeeService.updateCellphoneNumber(id, updateDTO);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PatchMapping(value = "/disable/{id}")
+    public ResponseEntity<Void> disable(@PathVariable Long id) {
+       employeeService.toggleEmployeeStatus(id);
+        return ResponseEntity.noContent().build();
+    }
 }

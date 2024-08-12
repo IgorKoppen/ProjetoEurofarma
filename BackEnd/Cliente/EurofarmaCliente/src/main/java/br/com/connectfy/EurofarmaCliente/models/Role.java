@@ -1,8 +1,8 @@
 package br.com.connectfy.EurofarmaCliente.models;
 
 import br.com.connectfy.EurofarmaCliente.dtos.role.RoleDTO;
-import br.com.connectfy.EurofarmaCliente.dtos.role.RoleWithDepartmentAndEmployeeDTO;
 import br.com.connectfy.EurofarmaCliente.dtos.role.RoleInsertDTO;
+import br.com.connectfy.EurofarmaCliente.dtos.role.RoleWithDepartmentAndEmployeeDTO;
 import jakarta.persistence.*;
 
 import java.util.List;
@@ -33,6 +33,10 @@ public class Role {
         this.roleName = roleDTO.getRoleName();
     }
 
+    public Role(RoleInsertDTO dto) {
+        this.roleName = dto.roleName();
+    }
+
     public Role(Long id, String roleName, List<Employee> employees) {
         this.id = id;
         this.roleName = roleName;
@@ -42,10 +46,6 @@ public class Role {
     public Role(RoleWithDepartmentAndEmployeeDTO dto) {
         this.id = dto.getId();
         this.roleName = dto.getRoleName();
-    }
-
-    public Role(RoleInsertDTO dto) {
-        this.roleName = dto.roleName();
     }
 
     public Role(String s) {

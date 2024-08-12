@@ -1,12 +1,13 @@
 package br.com.connectfy.EurofarmaCliente.services;
 
+import br.com.connectfy.EurofarmaCliente.dtos.ChangePasswordDTO;
+import br.com.connectfy.EurofarmaCliente.dtos.PhoneNumberUpdateDTO;
 import br.com.connectfy.EurofarmaCliente.dtos.employee.EmployeeInfoDTO;
 import br.com.connectfy.EurofarmaCliente.dtos.employee.EmployeeInsertDTO;
 import br.com.connectfy.EurofarmaCliente.dtos.employee.EmployeeUpdateDTO;
 import br.com.connectfy.EurofarmaCliente.dtos.permission.PermissionDTO;
-import br.com.connectfy.EurofarmaCliente.dtos.role.RoleDTO;
 import br.com.connectfy.EurofarmaCliente.dtos.training.TrainingOfEmployeeDTO;
-import br.com.connectfy.EurofarmaCliente.exceptions.AlreadyExisteException;
+import br.com.connectfy.EurofarmaCliente.exceptions.AlreadyExistException;
 import br.com.connectfy.EurofarmaCliente.exceptions.InvalidPhoneNumberException;
 import br.com.connectfy.EurofarmaCliente.exceptions.PasswordDoesntMatchException;
 import br.com.connectfy.EurofarmaCliente.exceptions.ResourceNotFoundException;
@@ -14,11 +15,10 @@ import br.com.connectfy.EurofarmaCliente.models.Employee;
 import br.com.connectfy.EurofarmaCliente.models.Permission;
 import br.com.connectfy.EurofarmaCliente.models.Role;
 import br.com.connectfy.EurofarmaCliente.repositories.EmployeeRepository;
-import br.com.connectfy.EurofarmaCliente.util.GenerateEncryptedPassword;
+import br.com.connectfy.EurofarmaCliente.util.EncryptedPassword;
 import br.com.connectfy.EurofarmaCliente.util.PhoneNumberValidator;
 import br.com.connectfy.EurofarmaCliente.util.RandomStringGenerator;
 import org.springframework.data.domain.*;
-import org.springframework.hateoas.PagedModel;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -36,8 +36,6 @@ public class EmployeeService implements UserDetailsService {
     EmployeeRepository employeeRepository;
 
     private final MessageService messageService;
-
-
     private final PermissionService permissionService;
     private final RoleService roleService;
 
@@ -50,20 +48,9 @@ public class EmployeeService implements UserDetailsService {
     }
 
     @Transactional(readOnly = true)
-    public PagedModel<EmployeeInfoDTO> findWithPagination(int pageNo, int pageSize, String sortDirection) {
-        Sort.Direction sort = sortDirection.equalsIgnoreCase("asc") ? Sort.Direction.ASC : Sort.Direction.DESC;
-        Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by(sort, "name"));
+    public Page<EmployeeInfoDTO> findWithPagination(Pageable pageable) {
         Page<Employee> employeePage = employeeRepository.findAll(pageable);
-        List<EmployeeInfoDTO> dtoList = employeePage.stream()
-                .map(this::toDTO)
-                .collect(Collectors.toList());
-        PagedModel.PageMetadata metadata = new PagedModel.PageMetadata(
-                employeePage.getSize(),
-                employeePage.getNumber(),
-                employeePage.getTotalElements(),
-                employeePage.getTotalPages()
-        );
-        return PagedModel.of(dtoList, metadata);
+        return employeePage.map(EmployeeInfoDTO::new);
     }
 
     @Transactional(readOnly = true)
@@ -75,7 +62,7 @@ public class EmployeeService implements UserDetailsService {
     @Transactional
     public EmployeeInfoDTO insert(EmployeeInsertDTO dto) {
         if (employeeRepository.existsByCellphoneNumber(dto.cellphoneNumber())) {
-            throw new AlreadyExisteException("O número de celular já está vinculado a uma conta!");
+            throw new AlreadyExistException("O número de celular já está vinculado a uma conta!");
         }
         Employee employee = new Employee(dto);
 
@@ -84,10 +71,10 @@ public class EmployeeService implements UserDetailsService {
         employee.setCellphoneNumber(formattedCellPhone);
         employee.setUserName(generateUserName(employee.getName(), employee.getSurname(), employee.getCellphoneNumber()));
         if (employeeRepository.existsByUserName(employee.getUsername())) {
-            throw new AlreadyExisteException("Usuário já cadastrado!");
+            throw new AlreadyExistException("Usuário já cadastrado!");
         }
         String randomPassword = RandomStringGenerator.generatePassword(10);
-        employee.setPassword(GenerateEncryptedPassword.encryptPassword(randomPassword));
+        employee.setPassword(EncryptedPassword.encryptPassword(randomPassword));
 
 
         employee.setEnabled(true);
@@ -116,12 +103,22 @@ public class EmployeeService implements UserDetailsService {
     }
 
     @Transactional
-    public EmployeeInfoDTO update(EmployeeUpdateDTO dto) {
-        Employee employee = null;
-        String formatedCellPhone = removeCellPhoneFormatting(employee.getCellphoneNumber());
-        validatePhoneNumber(formatedCellPhone);
-        employee.setCellphoneNumber(formatedCellPhone);
-        employee.setUserName(generateUserName(employee.getName(), employee.getSurname(), employee.getCellphoneNumber()));
+    public EmployeeInfoDTO update(Long id, EmployeeUpdateDTO dto) {
+
+        Employee employee = employeeRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("No records found with id: " + id));
+        String formattedCellPhone = removeCellPhoneFormatting(dto.cellphoneNumber());
+        validatePhoneNumber(formattedCellPhone);
+        employee.setCellphoneNumber(formattedCellPhone);
+
+        Role role = new Role(roleService.findById(dto.roleId()));
+        employee.setRole(role);
+
+        List<Permission> permissions = dto.permissionsIds().stream()
+                .map(permissionId -> new Permission(permissionService.findById(permissionId)))
+                .collect(Collectors.toList());
+        employee.setPermissions(permissions);
+
         return toDTO(employeeRepository.save(employee));
     }
 
@@ -138,28 +135,26 @@ public class EmployeeService implements UserDetailsService {
     }
 
     @Transactional
-    public EmployeeInfoDTO updatePassword(Long id, String oldPassword, String newPassword) {
+    public void updatePassword(Long id, ChangePasswordDTO dto) {
         Employee employee = employeeRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("No records found with id: " + id));
-        if (!employee.getPassword().equals(oldPassword)) {
+        if (!EncryptedPassword.matchesPassword(dto.oldPassword(), employee.getPassword())) {
             throw new PasswordDoesntMatchException("Senha incorreta!");
         }
-        Employee entity = employeeRepository.changePassword(id, GenerateEncryptedPassword.encryptPassword(newPassword)).orElseThrow(() -> new ResourceNotFoundException("No records found with id: " + id));
-        return toDTO(entity);
+        employeeRepository.changePassword(id, EncryptedPassword.encryptPassword(dto.newPassword()));
     }
 
     @Transactional
-    public EmployeeInfoDTO updateCellphoneNumber(Long id, String password, String cellphoneNumber) {
-        String formatedCellPhone = removeCellPhoneFormatting(cellphoneNumber);
+    public void updateCellphoneNumber(Long id, PhoneNumberUpdateDTO dto) {
+        String formatedCellPhone = removeCellPhoneFormatting(dto.phoneNumber());
         validatePhoneNumber(formatedCellPhone);
         if (employeeRepository.existsByCellphoneNumber(formatedCellPhone)) {
-            throw new AlreadyExisteException("O número de celular já está vinculado a uma conta!");
+            throw new AlreadyExistException("O número de celular já está vinculado a uma conta!");
         }
         Employee employee = employeeRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("No records found with id: " + id));
-        if (!GenerateEncryptedPassword.matchesPassword(password, employee.getPassword())) {
+        if (!EncryptedPassword.matchesPassword(dto.password(), employee.getPassword())) {
             throw new PasswordDoesntMatchException("Senha incorreta!");
         }
-        employee.setCellphoneNumber(formatedCellPhone);
-        return toDTO(employeeRepository.save(employee));
+        employeeRepository.changeCellphoneNumber(id, formatedCellPhone);
     }
 
     @Transactional(readOnly = true)
@@ -171,11 +166,11 @@ public class EmployeeService implements UserDetailsService {
     }
 
     @Transactional
-    public EmployeeInfoDTO toggleEmployeeStatus(Long id) {
-        Employee entity = employeeRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("No records found with id: " + id));
+    public void toggleEmployeeStatus(Long id) {
+        Employee entity = employeeRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("No records found with id: " + id));
         boolean newStatus = !entity.isEnabled();
         employeeRepository.toggleEmployeeStatus(id, newStatus);
-        return toDTO(entity);
     }
 
 

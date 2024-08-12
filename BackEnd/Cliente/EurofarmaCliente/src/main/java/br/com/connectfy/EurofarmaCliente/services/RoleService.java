@@ -40,6 +40,7 @@ public class RoleService {
         role.setDepartment(new Department(departmentDTO));
         return toDTO(roleRepository.save(role));
     }
+
    @Transactional(readOnly = true)
     public RoleDTO findById(Long id) {
         Role role = roleRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Role não encontrada com id: " + id));;

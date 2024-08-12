@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
-import java.util.List;
+import java.util.Set;
 
 public record EmployeeInsertDTO(
         @NotBlank(message = "O campo não pode ser nulo")
@@ -18,6 +18,6 @@ public record EmployeeInsertDTO(
         String cellphoneNumber,
         @NotNull(message = "O funcionário deve ter um cargo")
         Long roleId,
-        List<Long> permissionsIds
+        Set<Long> permissionsIds
 ) {
 }

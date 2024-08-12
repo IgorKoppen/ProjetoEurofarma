@@ -5,6 +5,7 @@ import br.com.connectfy.EurofarmaCliente.models.Role;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 
+
 import java.io.Serial;
 import java.io.Serializable;
 
@@ -15,10 +16,17 @@ public class RoleDTO implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private final Long id;
+
     private final String roleName;
 
     private DepartmentDTO department;
 
+
+    public RoleDTO(Long id, String roleName, DepartmentDTO department) {
+        this.id = id;
+        this.roleName = roleName;
+        this.department = department;
+    }
 
     public RoleDTO(Role entity) {
         this.id = entity.getId();

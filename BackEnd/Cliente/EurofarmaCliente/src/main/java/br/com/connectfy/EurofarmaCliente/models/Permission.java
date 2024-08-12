@@ -6,8 +6,8 @@ import org.springframework.security.core.GrantedAuthority;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Table(name = "tb_permissions")
@@ -24,11 +24,11 @@ public class Permission implements GrantedAuthority, Serializable {
     private String description;
 
     @ManyToMany(mappedBy = "permissions")
-    private List<Employee> employees;
+    private Set<Employee> employees;
 
     public Permission() {}
 
-    public Permission(Long id, String description, List<Employee> employees) {
+    public Permission(Long id, String description, Set<Employee> employees) {
         this.id = id;
         this.description = description;
         this.employees = employees;
@@ -55,11 +55,11 @@ public class Permission implements GrantedAuthority, Serializable {
         this.description = description;
     }
 
-    public void setEmployees(List<Employee> employees) {
+    public void setEmployees(Set<Employee> employees) {
         this.employees = employees;
     }
 
-    public List<Employee> getEmployees() {
+    public Set<Employee> getEmployees() {
         return employees;
     }
 

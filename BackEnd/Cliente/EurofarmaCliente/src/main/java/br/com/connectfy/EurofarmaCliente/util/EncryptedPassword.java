@@ -8,7 +8,7 @@ import org.springframework.security.crypto.password.Pbkdf2PasswordEncoder;
 import java.util.HashMap;
 import java.util.Map;
 
-public class GenerateEncryptedPassword {
+public class EncryptedPassword {
 
 
     @Value("${secretOfEncoder}")

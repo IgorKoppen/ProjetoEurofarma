@@ -16,11 +16,15 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
 
     @Modifying
     @Query("UPDATE Employee p SET p.enabled =:status WHERE p.id = :id")
-    Optional<Employee> toggleEmployeeStatus(@Param("id") Long id, @Param("status") boolean status);
+    void toggleEmployeeStatus(@Param("id") Long id, @Param("status") boolean status);
 
     @Modifying
     @Query("UPDATE Employee p SET p.password =:password WHERE p.id =:id")
-    Optional<Employee> changePassword(@Param("id") Long id, @Param("password") String password);
+    void changePassword(@Param("id") Long id, @Param("password") String password);
+
+    @Modifying
+    @Query("UPDATE Employee p SET p.cellphoneNumber =:cellphoneNumber WHERE p.id =:id")
+    void changeCellphoneNumber(@Param("id") Long id, @Param("cellphoneNumber") String cellphoneNumber);
 
     boolean existsByCellphoneNumber(@Param("cellphoneNumber") String cellphoneNumber);
 

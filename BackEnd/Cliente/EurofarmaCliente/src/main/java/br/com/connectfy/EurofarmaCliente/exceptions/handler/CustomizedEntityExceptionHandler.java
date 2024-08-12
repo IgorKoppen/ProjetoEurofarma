@@ -61,8 +61,8 @@ public class CustomizedEntityExceptionHandler {
         ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), ex.getMessage() , request.getDescription(false));
         return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
     }
-    @ExceptionHandler({AlreadyExisteException.class})
-    public final ResponseEntity<ExceptionResponse> handleAlreadyExisteException(AlreadyExisteException ex, WebRequest request) {
+    @ExceptionHandler({AlreadyExistException.class})
+    public final ResponseEntity<ExceptionResponse> handleAlreadyExistException(AlreadyExistException ex, WebRequest request) {
         ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), ex.getMessage() , request.getDescription(false));
         return new ResponseEntity<>(exceptionResponse, HttpStatus.CONFLICT);
     }

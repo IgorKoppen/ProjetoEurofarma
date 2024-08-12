@@ -2,7 +2,7 @@ package br.com.connectfy.EurofarmaCliente.services;
 
 import br.com.connectfy.EurofarmaCliente.dtos.tag.TagDTO;
 import br.com.connectfy.EurofarmaCliente.dtos.tag.TagInfoDTO;
-import br.com.connectfy.EurofarmaCliente.exceptions.AlreadyExisteException;
+import br.com.connectfy.EurofarmaCliente.exceptions.AlreadyExistException;
 import br.com.connectfy.EurofarmaCliente.exceptions.ResourceNotFoundException;
 import br.com.connectfy.EurofarmaCliente.models.Tag;
 import br.com.connectfy.EurofarmaCliente.repositories.TagsRepository;
@@ -26,7 +26,7 @@ public class TagService {
     public TagInfoDTO insert(TagDTO tagDTO) {
         Optional<Tag> existingTag = tagsRepository.findByNameIgnoreCase(tagDTO.name());
         if (existingTag.isPresent()) {
-           throw new AlreadyExisteException("Tag " + tagDTO.name() + " já existe!");
+           throw new AlreadyExistException("Tag " + tagDTO.name() + " já existe!");
         }
         Tag tag = new Tag(tagDTO);
         return toDto(tagsRepository.save(tag));

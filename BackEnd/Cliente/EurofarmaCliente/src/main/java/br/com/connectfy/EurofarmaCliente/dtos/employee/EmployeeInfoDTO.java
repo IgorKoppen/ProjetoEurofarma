@@ -29,7 +29,6 @@ public class EmployeeInfoDTO implements Serializable {
     @JsonProperty("cellphone_number")
     private final String cellphoneNumber;
 
-    @Column(nullable = false)
     private boolean enabled;
 
     private RoleDTO role = null;
