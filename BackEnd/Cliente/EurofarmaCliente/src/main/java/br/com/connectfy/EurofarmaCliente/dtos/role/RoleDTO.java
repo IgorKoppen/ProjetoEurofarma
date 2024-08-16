@@ -3,7 +3,8 @@ package br.com.connectfy.EurofarmaCliente.dtos.role;
 import br.com.connectfy.EurofarmaCliente.dtos.department.DepartmentDTO;
 import br.com.connectfy.EurofarmaCliente.models.Role;
 import com.fasterxml.jackson.annotation.JsonInclude;
-
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 
 import java.io.Serial;
@@ -15,10 +16,14 @@ public class RoleDTO implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
+
+
     private final Long id;
 
+    @NotBlank(message = "O campo não pode ser nulo")
     private final String roleName;
 
+    @NotNull(message = "Deve ter um cargo")
     private DepartmentDTO department;
 
 

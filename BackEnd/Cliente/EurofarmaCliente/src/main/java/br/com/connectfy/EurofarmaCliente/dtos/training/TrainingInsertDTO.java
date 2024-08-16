@@ -2,7 +2,7 @@ package br.com.connectfy.EurofarmaCliente.dtos.training;
 
 
 import br.com.connectfy.EurofarmaCliente.dtos.instructor.InstructorDTO;
-import br.com.connectfy.EurofarmaCliente.dtos.tag.TagInfoDTO;
+import br.com.connectfy.EurofarmaCliente.dtos.tag.TagDTO;
 import br.com.connectfy.EurofarmaCliente.models.EmployeeTraining;
 import br.com.connectfy.EurofarmaCliente.models.Training;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -40,7 +40,7 @@ public class TrainingInsertDTO implements Serializable {
     private String description;
 
     private List<InstructorDTO>  instructor;
-    private List<TagInfoDTO> tags;
+    private List<TagDTO> tags;
     private Set<EmployeeTraining> employees;
 
     public TrainingInsertDTO(Training training) {
@@ -84,7 +84,7 @@ public class TrainingInsertDTO implements Serializable {
         return instructor;
     }
 
-    public List<TagInfoDTO> getTags() {
+    public List<TagDTO> getTags() {
         return tags;
     }
 

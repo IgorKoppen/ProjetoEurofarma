@@ -1,6 +1,7 @@
 package br.com.connectfy.EurofarmaCliente.repositories;
 
 import br.com.connectfy.EurofarmaCliente.models.Employee;
+import br.com.connectfy.EurofarmaCliente.models.Instructor;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -25,6 +26,10 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
     @Modifying
     @Query("UPDATE Employee p SET p.cellphoneNumber =:cellphoneNumber WHERE p.id =:id")
     void changeCellphoneNumber(@Param("id") Long id, @Param("cellphoneNumber") String cellphoneNumber);
+
+    @Modifying
+    @Query("UPDATE Employee e SET e.instructor = :instructor WHERE e.id = :employeeId")
+    void updateInstructor(@Param("employeeId") Long employeeId, @Param("instructor") Instructor instructor);
 
     boolean existsByCellphoneNumber(@Param("cellphoneNumber") String cellphoneNumber);
 

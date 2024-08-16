@@ -6,7 +6,6 @@ import br.com.connectfy.EurofarmaCliente.models.Employee;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.persistence.Column;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -18,18 +17,18 @@ public class EmployeeInfoDTO implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
-    private final Long id;
+    private  Long id;
     @JsonProperty("user_name")
-    private final String userName;
+    private  String userName;
 
-    private final String name;
+    private  String name;
 
-    private final String surname;
+    private  String surname;
 
     @JsonProperty("cellphone_number")
-    private final String cellphoneNumber;
+    private  String cellphoneNumber;
 
-    private boolean enabled;
+    private  boolean enabled;
 
     private RoleDTO role = null;
 
@@ -56,6 +55,8 @@ public class EmployeeInfoDTO implements Serializable {
         }
     }
 
+    public EmployeeInfoDTO() {
+    }
 
     public List<PermissionDTO> getPermission() {
         return permission;

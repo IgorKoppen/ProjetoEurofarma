@@ -1,6 +1,5 @@
 package br.com.connectfy.EurofarmaCliente.controllers;
 
-import br.com.connectfy.EurofarmaCliente.dtos.department.DepartmentInsertAndUpdateDTO;
 import br.com.connectfy.EurofarmaCliente.dtos.department.DepartmentDTO;
 import br.com.connectfy.EurofarmaCliente.services.DepartmentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +18,7 @@ public class DepartmentController {
     private DepartmentService departmentService;
 
     @PostMapping
-    public ResponseEntity<DepartmentDTO> insert(@Validated @RequestBody DepartmentInsertAndUpdateDTO dto) {
+    public ResponseEntity<DepartmentDTO> insert(@Validated @RequestBody DepartmentDTO dto) {
         DepartmentDTO departmentDTO = departmentService.insert(dto);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(departmentDTO.getId()).toUri();
         return ResponseEntity.created(uri).body(departmentDTO);
@@ -40,7 +39,7 @@ public class DepartmentController {
     @PutMapping("/{id}")
     public ResponseEntity<DepartmentDTO> update(@PathVariable Long id,
                                                 @Validated
-                                                @RequestBody DepartmentInsertAndUpdateDTO dto) {
+                                                @RequestBody DepartmentDTO dto) {
         DepartmentDTO departmentDTO = departmentService.update(id, dto);
         return ResponseEntity.ok(departmentDTO);
     }

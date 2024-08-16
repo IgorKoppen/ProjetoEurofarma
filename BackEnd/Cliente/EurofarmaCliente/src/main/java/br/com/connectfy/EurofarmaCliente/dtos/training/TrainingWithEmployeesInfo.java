@@ -1,5 +1,6 @@
 package br.com.connectfy.EurofarmaCliente.dtos.training;
 
+import br.com.connectfy.EurofarmaCliente.dtos.employee.EmployeeUserProfileInfoDTO;
 import br.com.connectfy.EurofarmaCliente.dtos.instructor.InstructorInfo;
 import br.com.connectfy.EurofarmaCliente.dtos.tag.TagDTO;
 import br.com.connectfy.EurofarmaCliente.models.Training;
@@ -10,9 +11,11 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.stream.Collectors;
 
-public class TrainingDTO implements Serializable {
+public class TrainingWithEmployeesInfo implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
@@ -37,21 +40,33 @@ public class TrainingDTO implements Serializable {
     @NotBlank(message = "Descrição não pode ser vazia!")
     private String description;
 
-    private List<InstructorInfo>  instructorsInfo;
-    private List<TagDTO> tags;
+    private Set<InstructorInfo> instructorsInfo = new HashSet<>();
 
-    public TrainingDTO(Training entity) {
+    private Set<EmployeeUserProfileInfoDTO> employeesInfo = new HashSet<>();
+
+    private Set<TagDTO> tags = new HashSet<>();
+
+    public TrainingWithEmployeesInfo(Training entity) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yy HH:mm:ss,SSS");
         this.id = entity.getId();
         this.name = entity.getName();
         this.code = entity.getCode();
         this.creationDate = formatter.format(entity.getCreationDate());
-        this.closingDate =  formatter.format(entity.getClosingDate());
+        this.closingDate = formatter.format(entity.getClosingDate());
         this.isOpened = LocalDateTime.now().isBefore(entity.getClosingDate());
         this.password = entity.getPassword();
         this.description = entity.getDescription();
-        this.instructorsInfo = entity.getInstructors().stream().map(InstructorInfo::new).toList();
-        this.tags = entity.getTags().stream().map(TagDTO::new).toList();
+        if(entity.getInstructors() != null) {
+            this.instructorsInfo = entity.getInstructors().stream().map(InstructorInfo::new).collect(Collectors.toSet());
+        }
+        if(entity.getEmployees() != null){
+            this.employeesInfo = entity.getEmployees().stream().map(employeeTraining ->
+                    new EmployeeUserProfileInfoDTO(employeeTraining.getEmployee())
+            ).collect(Collectors.toSet());
+        }
+        if(entity.getTags() != null){
+            this.tags = entity.getTags().stream().map(TagDTO::new).collect(Collectors.toSet());
+        }
     }
 
     public Long getId() {
@@ -86,12 +101,15 @@ public class TrainingDTO implements Serializable {
         return description;
     }
 
-    public List<InstructorInfo> getInstructorsInfo() {
+    public Set<InstructorInfo> getInstructorsInfo() {
         return instructorsInfo;
     }
 
-    public List<TagDTO> getTags() {
-        return tags;
+    public Set<EmployeeUserProfileInfoDTO> getEmployeesInfo() {
+        return employeesInfo;
     }
 
+    public Set<TagDTO> getTags() {
+        return tags;
+    }
 }

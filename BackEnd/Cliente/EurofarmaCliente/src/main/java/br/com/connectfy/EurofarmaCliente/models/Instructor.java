@@ -3,8 +3,8 @@ package br.com.connectfy.EurofarmaCliente.models;
 import br.com.connectfy.EurofarmaCliente.dtos.instructor.InstructorDTO;
 import jakarta.persistence.*;
 
-import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Table(name = "tb_instructors")
@@ -13,12 +13,12 @@ public class Instructor {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne(mappedBy = "instructor")
+    @OneToOne(mappedBy = "instructor", cascade = CascadeType.ALL,optional = false)
     private Employee employee;
 
 
     @ManyToMany(mappedBy = "instructors")
-    private List<Training> trainings;
+    private Set<Training> trainings;
 
 
 
@@ -28,8 +28,7 @@ public class Instructor {
 
     public Instructor(InstructorDTO dto) {
       this.id = dto.getId();
-      this.employee = null;
-      this.trainings = dto.getTrainnings().stream().map(Training::new).toList();
+      this.employee = new Employee(dto.getEmployee());
     }
 
     public Long getId() {
@@ -48,11 +47,11 @@ public class Instructor {
         this.employee = employee;
     }
 
-    public List<Training> getTrainings() {
+    public Set<Training> getTrainings() {
         return trainings;
     }
 
-    public void setTrainings(List<Training> transactions) {
+    public void setTrainings(Set<Training> transactions) {
         this.trainings = transactions;
     }
 

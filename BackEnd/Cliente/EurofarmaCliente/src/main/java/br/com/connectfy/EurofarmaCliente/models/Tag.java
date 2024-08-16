@@ -1,11 +1,9 @@
 package br.com.connectfy.EurofarmaCliente.models;
 
 import br.com.connectfy.EurofarmaCliente.dtos.tag.TagDTO;
-import br.com.connectfy.EurofarmaCliente.dtos.tag.TagInfoDTO;
 import jakarta.persistence.*;
-
-import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Table(name = "tb_tags")
@@ -21,28 +19,26 @@ public class Tag {
     private String color;
 
     @ManyToMany(mappedBy = "tags")
-    private List<Training> trainnings;
+    private Set<Training> trainnings;
 
     public Tag() {
     }
 
-    public Tag(Long id, String name, String color, List<Training> trainings) {
+    public Tag(Long id, String name, String color, Set<Training> trainings) {
         this.id = id;
         this.name = name;
         this.color = color;
         this.trainnings = trainings;
     }
 
-    public Tag(TagInfoDTO dto) {
-        this.id = dto.getId();
+    public Tag(TagDTO dto) {
+        if(dto.getId() != null) {
+            this.id = dto.getId();
+        }
         this.name = dto.getName();
         this.color = dto.getColor();
     }
 
-    public Tag(TagDTO dto) {
-        this.name = dto.name();
-        this.color = dto.color();
-    }
 
     public Long getId() {
         return id;
@@ -68,11 +64,11 @@ public class Tag {
         this.name = name;
     }
 
-    public List<Training> getTrainings() {
+    public Set<Training> getTrainings() {
         return trainnings;
     }
 
-    public void setTrainings(List<Training> trainings) {
+    public void setTrainings(Set<Training> trainings) {
         this.trainnings = trainings;
     }
 

@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.stream.Collectors;
 
 
 @Entity
@@ -40,17 +41,17 @@ public class Training {
             joinColumns = {@JoinColumn(name = "id_training")},
             inverseJoinColumns = {@JoinColumn(name = "id_instructor")}
     )
-    private List<Instructor> instructors;
+    private Set<Instructor> instructors;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "training_tags",
             joinColumns = {@JoinColumn(name = "id_training")},
             inverseJoinColumns = {@JoinColumn(name = "id_tag")}
     )
-    private List<Tag> tags;
+    private Set<Tag> tags;
 
     @OneToMany(mappedBy = "training", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    private List<EmployeeTraining> employeeTrainings;
+    private Set<EmployeeTraining> employeeTrainings;
 
     public Training(){}
 
@@ -63,7 +64,7 @@ public class Training {
         this.closingDate = LocalDateTime.parse(dto.getClosingDate());
         this.password = dto.getPassword();
         this.description = dto.getDescription();
-        this.tags = dto.getTags().stream().map(Tag::new).toList();
+        this.tags = dto.getTags().stream().map(Tag::new).collect(Collectors.toSet());
     }
 
 
@@ -126,27 +127,27 @@ public class Training {
     }
 
 
-    public List<Instructor> getInstructors() {
+    public Set<Instructor> getInstructors() {
         return instructors;
     }
 
-    public void setInstructors(List<Instructor> instructors) {
+    public void setInstructors(Set<Instructor> instructors) {
         this.instructors = instructors;
     }
 
-    public List<Tag> getTags() {
+    public Set<Tag> getTags() {
         return tags;
     }
 
-    public void setTags(List<Tag> tags) {
+    public void setTags(Set<Tag> tags) {
         this.tags = tags;
     }
 
-    public List<EmployeeTraining> getEmployees() {
+    public Set<EmployeeTraining> getEmployees() {
         return employeeTrainings;
     }
 
-    public void setEmployees(List<EmployeeTraining> employeeTrainings) {
+    public void setEmployees(Set<EmployeeTraining> employeeTrainings) {
         this.employeeTrainings = employeeTrainings;
     }
 

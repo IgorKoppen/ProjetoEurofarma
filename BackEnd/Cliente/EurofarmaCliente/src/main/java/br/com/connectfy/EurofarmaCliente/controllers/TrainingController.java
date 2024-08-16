@@ -19,45 +19,52 @@ public class TrainingController {
     private TrainingService trainingService;
 
     @PostMapping
-    public ResponseEntity<String> insertTraining(@RequestBody @Valid TrainingInsertDTO trainingCreationDTO) {
-        return trainingService.create(trainingCreationDTO);
+        public ResponseEntity<TrainingDTO> insert(@RequestBody @Valid TrainingInsertDTO trainingCreationDTO) {
+        TrainingDTO  trainingDTO = trainingService.insert(trainingCreationDTO);
+        return ResponseEntity.ok(trainingDTO);
     }
 
     @GetMapping
-    public List<TrainingDTO> findAllTraining(){
-        return trainingService.findAll();
+    public ResponseEntity<List<TrainingDTO>> findAll(){
+         List<TrainingDTO> trainingDTOList = trainingService.findAll();
+        return ResponseEntity.ok(trainingDTOList);
     }
 
     @GetMapping("/{id}")
-    public TrainingDTO findTrainingById(@PathVariable Long id) {
-        return trainingService.findById(id);
+    public ResponseEntity<TrainingDTO> findById(@PathVariable Long id) {
+        TrainingDTO trainingDTO = trainingService.findById(id);
+        return ResponseEntity.ok(trainingDTO);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<String> updateTraining(@PathVariable Long id, @RequestBody @Valid TrainingInsertDTO trainingCreationDTO) {
-        return trainingService.update(id, trainingCreationDTO);
-    }
-
-    @PutMapping("/addEmployee")
-    public ResponseEntity<?> addEmployee(@RequestBody UserConfirmAssinatureDTO userConfirmAssinatureDTO) {
-        return trainingService.addEmployeeInTraining(userConfirmAssinatureDTO);
+    public ResponseEntity<TrainingDTO> update(@PathVariable Long id, @RequestBody @Valid TrainingInsertDTO trainingCreationDTO) {
+        TrainingDTO  trainingDTO = trainingService.update(id, trainingCreationDTO);
+        return ResponseEntity.ok(trainingDTO);
     }
 
     @DeleteMapping(value = "/{id}")
-    public void deleteTrainning(@PathVariable Long id) {
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
         trainingService.delete(id);
+        return ResponseEntity.noContent().build();
     }
-
     @GetMapping("/getRoomByCode/{code}")
-    public TrainingDTO getRoomByCode(@PathVariable  String code) {
-        return trainingService.findByCode(code);
+    public ResponseEntity<TrainingDTO> findByCode(@PathVariable  String code) {
+        TrainingDTO trainingDTO = trainingService.findByCode(code);
+        return ResponseEntity.ok(trainingDTO);
     }
     @GetMapping("/confirmPassword")
-    public ResponseEntity<String> confirmPassword(@RequestParam Long userId,@RequestParam String code, @RequestParam String password) {
-        return trainingService.confirmPassword(userId,code, password);
+    public ResponseEntity<Void> confirmPassword(@RequestParam Long userId,@RequestParam String code, @RequestParam String password) {
+         trainingService.confirmPassword(userId,code, password);
+         return ResponseEntity.noContent().build();
     }
-   @GetMapping("/getAllRoomParticipants")
-   public List<RoomParticipantsDTO> getAllRoomParticipants(@RequestParam Long roomId) {
-       return trainingService.findAllRoomParticipants(roomId);
+   @GetMapping("/getAllRoomParticipants/{roomId}")
+   public ResponseEntity<List<RoomParticipantsDTO>> getAllRoomParticipants(@PathVariable Long roomId) {
+        List<RoomParticipantsDTO> roomParticipantsDTOS = trainingService.findAllRoomParticipants(roomId);
+       return ResponseEntity.ok(roomParticipantsDTOS);
    }
+    @PutMapping("/addEmployee")
+    public ResponseEntity<Void> addEmployeeIntoTraining(@RequestBody UserConfirmAssinatureDTO userConfirmAssinatureDTO) {
+        trainingService.addEmployeeInTraining(userConfirmAssinatureDTO);
+        return ResponseEntity.noContent().build();
+    }
 }

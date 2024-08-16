@@ -1,7 +1,6 @@
 package br.com.connectfy.EurofarmaCliente.controllers;
 
 import br.com.connectfy.EurofarmaCliente.dtos.tag.TagDTO;
-import br.com.connectfy.EurofarmaCliente.dtos.tag.TagInfoDTO;
 import br.com.connectfy.EurofarmaCliente.services.TagService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,27 +18,27 @@ public class TagController {
     private TagService tagsService;
 
     @PostMapping
-    public ResponseEntity<TagInfoDTO> insert(@RequestBody @Valid TagDTO tagDTO) {
-        TagInfoDTO tagInfoDTO = tagsService.insert(tagDTO);
+    public ResponseEntity<TagDTO> insert(@RequestBody @Valid TagDTO tagDTO) {
+        TagDTO tagInfoDTO = tagsService.insert(tagDTO);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(tagInfoDTO.getId()).toUri();
         return ResponseEntity.created(uri).body(tagInfoDTO);
     }
 
     @GetMapping
-    public ResponseEntity<List<TagInfoDTO>> findAll(){
-        List<TagInfoDTO> TagInfoDTOs = tagsService.findAll();
+    public ResponseEntity<List<TagDTO>> findAll(){
+        List<TagDTO> TagInfoDTOs = tagsService.findAll();
         return ResponseEntity.ok(TagInfoDTOs);
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<TagInfoDTO> findById(@PathVariable Long id) {
-        TagInfoDTO tagInfoDTO = tagsService.getById(id);
+    public ResponseEntity<TagDTO> findById(@PathVariable Long id) {
+        TagDTO tagInfoDTO = tagsService.getById(id);
         return ResponseEntity.ok(tagInfoDTO);
     }
 
     @PutMapping(value ="/{id}")
-    public  ResponseEntity<TagInfoDTO> update(@PathVariable Long id,@RequestBody @Valid TagDTO tagDTO) {
-        TagInfoDTO tagInfoDTO = tagsService.update(id, tagDTO);
+    public  ResponseEntity<TagDTO> update(@PathVariable Long id, @RequestBody @Valid TagDTO tagDTO) {
+        TagDTO tagInfoDTO = tagsService.update(id, tagDTO);
         return ResponseEntity.ok(tagInfoDTO);
     }
 

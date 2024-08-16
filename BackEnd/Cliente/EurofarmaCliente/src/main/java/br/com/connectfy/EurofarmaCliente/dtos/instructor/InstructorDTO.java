@@ -3,7 +3,7 @@ package br.com.connectfy.EurofarmaCliente.dtos.instructor;
 import br.com.connectfy.EurofarmaCliente.dtos.training.TrainingDTO;
 import br.com.connectfy.EurofarmaCliente.dtos.employee.EmployeeInfoDTO;
 import br.com.connectfy.EurofarmaCliente.models.Instructor;
-import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -15,19 +15,19 @@ public class InstructorDTO implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private  Long id;
-    @NotBlank(message = "Campo nome empregado não pode ser vazio")
-    private final EmployeeInfoDTO employee;
-    private final List<TrainingDTO> trainnings;
+
+    @NotNull(message = "Campo não pode ser vazio")
+    private  EmployeeInfoDTO employee;
 
     public InstructorDTO(Instructor entity) {
         this.id = entity.getId();
-        this.employee = new EmployeeInfoDTO(entity.getEmployee());
-        this.trainnings = entity.getTrainings().stream().map(TrainingDTO::new).toList();
+        if(entity.getEmployee() != null) {
+            this.employee = new EmployeeInfoDTO(entity.getEmployee());
+        }
     }
 
     public InstructorDTO(EmployeeInfoDTO employee, List<TrainingDTO> trainings) {
         this.employee = employee;
-        this.trainnings = trainings;
     }
 
     public Long getId() {
@@ -36,10 +36,6 @@ public class InstructorDTO implements Serializable {
 
     public EmployeeInfoDTO getEmployee() {
         return employee;
-    }
-
-    public List<TrainingDTO> getTrainnings() {
-        return trainnings;
     }
 
 }

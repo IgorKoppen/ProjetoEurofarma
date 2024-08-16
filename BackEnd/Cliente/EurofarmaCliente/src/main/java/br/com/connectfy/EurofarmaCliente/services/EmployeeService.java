@@ -5,16 +5,17 @@ import br.com.connectfy.EurofarmaCliente.dtos.PhoneNumberUpdateDTO;
 import br.com.connectfy.EurofarmaCliente.dtos.employee.EmployeeInfoDTO;
 import br.com.connectfy.EurofarmaCliente.dtos.employee.EmployeeInsertDTO;
 import br.com.connectfy.EurofarmaCliente.dtos.employee.EmployeeUpdateDTO;
-import br.com.connectfy.EurofarmaCliente.dtos.permission.PermissionDTO;
-import br.com.connectfy.EurofarmaCliente.dtos.training.TrainingOfEmployeeDTO;
+import br.com.connectfy.EurofarmaCliente.dtos.training.TrainingDTO;
 import br.com.connectfy.EurofarmaCliente.exceptions.AlreadyExistException;
 import br.com.connectfy.EurofarmaCliente.exceptions.InvalidPhoneNumberException;
 import br.com.connectfy.EurofarmaCliente.exceptions.PasswordDoesntMatchException;
 import br.com.connectfy.EurofarmaCliente.exceptions.ResourceNotFoundException;
 import br.com.connectfy.EurofarmaCliente.models.Employee;
+import br.com.connectfy.EurofarmaCliente.models.Instructor;
 import br.com.connectfy.EurofarmaCliente.models.Permission;
 import br.com.connectfy.EurofarmaCliente.models.Role;
 import br.com.connectfy.EurofarmaCliente.repositories.EmployeeRepository;
+import br.com.connectfy.EurofarmaCliente.repositories.InstructorRepository;
 import br.com.connectfy.EurofarmaCliente.util.EncryptedPassword;
 import br.com.connectfy.EurofarmaCliente.util.PhoneNumberValidator;
 import br.com.connectfy.EurofarmaCliente.util.RandomStringGenerator;
@@ -25,8 +26,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -38,13 +39,15 @@ public class EmployeeService implements UserDetailsService {
     private final MessageService messageService;
     private final PermissionService permissionService;
     private final RoleService roleService;
+    private final InstructorRepository instructorRepository;
 
 
-    public EmployeeService(EmployeeRepository employeeRepository, MessageService messageService, PermissionService permissionService, RoleService roleService) {
+    public EmployeeService(EmployeeRepository employeeRepository, MessageService messageService, PermissionService permissionService, RoleService roleService, InstructorRepository instructorRepository) {
         this.employeeRepository = employeeRepository;
         this.messageService = messageService;
         this.permissionService = permissionService;
         this.roleService = roleService;
+        this.instructorRepository = instructorRepository;
     }
 
     @Transactional(readOnly = true)
@@ -64,23 +67,22 @@ public class EmployeeService implements UserDetailsService {
         if (employeeRepository.existsByCellphoneNumber(dto.cellphoneNumber())) {
             throw new AlreadyExistException("O número de celular já está vinculado a uma conta!");
         }
-        Employee employee = new Employee(dto);
 
+        Employee employee = new Employee(dto);
         String formattedCellPhone = removeCellPhoneFormatting(employee.getCellphoneNumber());
         validatePhoneNumber(formattedCellPhone);
         employee.setCellphoneNumber(formattedCellPhone);
         employee.setUserName(generateUserName(employee.getName(), employee.getSurname(), employee.getCellphoneNumber()));
+
         if (employeeRepository.existsByUserName(employee.getUsername())) {
             throw new AlreadyExistException("Usuário já cadastrado!");
         }
+
         String randomPassword = RandomStringGenerator.generatePassword(10);
         employee.setPassword(EncryptedPassword.encryptPassword(randomPassword));
-
-
         employee.setEnabled(true);
         employee.setAccountNonExpired(true);
         employee.setCredentialsNonExpired(true);
-
 
         if (dto.permissionsIds().isEmpty()) {
             Permission defaultPermission = new Permission();
@@ -88,23 +90,31 @@ public class EmployeeService implements UserDetailsService {
             defaultPermission.setDescription("funcionário");
             employee.addPermission(defaultPermission);
         } else {
-            List<Permission> permissions = new ArrayList<>();
-            for (Long permissionId : dto.permissionsIds()) {
-                PermissionDTO permissionDTO = permissionService.findById(permissionId);
-                permissions.add(new Permission(permissionDTO));
-            }
+            Set<Permission> permissions = dto.permissionsIds().stream()
+                    .map(permissionId -> new Permission(permissionService.findById(permissionId)))
+                    .collect(Collectors.toSet());
             employee.setPermissions(permissions);
         }
 
         employee.setRole(new Role(roleService.findById(dto.roleId())));
+
+        boolean hasTrainerPermission = employee.getPermissions().stream()
+                .anyMatch(permission -> "treinador".equals(permission.getDescription()));
+
+        if (hasTrainerPermission) {
+            Instructor instructor = new Instructor();
+            instructor.setEmployee(employee);
+            employee.setInstructor(instructor);
+        }
+
         Employee savedEmployee = employeeRepository.save(employee);
-        //sendCreationEmployeeMessage(employee.getName(),employee.getUserName(),randomPassword,employee.getCellphoneNumber());
+        // sendCreationEmployeeMessage(employee.getName(), employee.getUserName(), randomPassword, employee.getCellphoneNumber());
+
         return toDTO(savedEmployee);
     }
 
     @Transactional
     public EmployeeInfoDTO update(Long id, EmployeeUpdateDTO dto) {
-
         Employee employee = employeeRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("No records found with id: " + id));
         String formattedCellPhone = removeCellPhoneFormatting(dto.cellphoneNumber());
@@ -114,12 +124,23 @@ public class EmployeeService implements UserDetailsService {
         Role role = new Role(roleService.findById(dto.roleId()));
         employee.setRole(role);
 
-        List<Permission> permissions = dto.permissionsIds().stream()
+        Set<Permission> permissions = dto.permissionsIds().stream()
                 .map(permissionId -> new Permission(permissionService.findById(permissionId)))
-                .collect(Collectors.toList());
+                .collect(Collectors.toSet());
         employee.setPermissions(permissions);
+        if (employee.getInstructor() == null) {
+            boolean hasTrainerPermission = permissions.stream()
+                    .anyMatch(permission -> "treinador".equals(permission.getDescription()));
 
-        return toDTO(employeeRepository.save(employee));
+            if (hasTrainerPermission) {
+
+                Instructor instructor = new Instructor();
+                employee.setInstructor(instructor);
+                instructorRepository.save(instructor);
+            }
+        }
+        Employee savedEmployee = employeeRepository.save(employee);
+        return toDTO(savedEmployee);
     }
 
     @Transactional
@@ -133,6 +154,7 @@ public class EmployeeService implements UserDetailsService {
             throw new ResourceNotFoundException("No records found with id: " + id);
         }
     }
+
 
     @Transactional
     public void updatePassword(Long id, ChangePasswordDTO dto) {
@@ -158,11 +180,11 @@ public class EmployeeService implements UserDetailsService {
     }
 
     @Transactional(readOnly = true)
-    public List<TrainingOfEmployeeDTO> findEmployeeTrainingsById(Long id) {
+    public List<TrainingDTO> findEmployeeTrainingsById(Long id) {
         Employee entity = employeeRepository.findByIdWithTrainingsSortedByClosingDate(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Não foi encontrado funcionário com id: " + id));
 
-        return entity.getEmployeeTrainings().stream().map(employeeTraining -> new TrainingOfEmployeeDTO(employeeTraining.getTraining())).toList();
+        return entity.getEmployeeTrainings().stream().map(employeeTraining -> new TrainingDTO(employeeTraining.getTraining())).toList();
     }
 
     @Transactional

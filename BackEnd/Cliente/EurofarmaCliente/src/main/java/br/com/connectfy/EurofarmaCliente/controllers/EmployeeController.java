@@ -5,7 +5,7 @@ import br.com.connectfy.EurofarmaCliente.dtos.PhoneNumberUpdateDTO;
 import br.com.connectfy.EurofarmaCliente.dtos.employee.EmployeeInfoDTO;
 import br.com.connectfy.EurofarmaCliente.dtos.employee.EmployeeInsertDTO;
 import br.com.connectfy.EurofarmaCliente.dtos.employee.EmployeeUpdateDTO;
-import br.com.connectfy.EurofarmaCliente.dtos.training.TrainingOfEmployeeDTO;
+import br.com.connectfy.EurofarmaCliente.dtos.training.TrainingDTO;
 import br.com.connectfy.EurofarmaCliente.services.EmployeeService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,8 +64,8 @@ public class EmployeeController {
     }
 
     @GetMapping(value = "/findLastTrainings/{id}")
-    public ResponseEntity<List<TrainingOfEmployeeDTO>> findEmployeeTrainingById(@PathVariable Long id) {
-        List<TrainingOfEmployeeDTO> dto = employeeService.findEmployeeTrainingsById(id);
+    public ResponseEntity<List<TrainingDTO>> findEmployeeTrainingById(@PathVariable Long id) {
+        List<TrainingDTO> dto = employeeService.findEmployeeTrainingsById(id);
         return ResponseEntity.ok(dto);
     }
 

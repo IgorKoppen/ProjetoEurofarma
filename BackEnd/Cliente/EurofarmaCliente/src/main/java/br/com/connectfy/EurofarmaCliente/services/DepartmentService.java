@@ -1,5 +1,4 @@
 package br.com.connectfy.EurofarmaCliente.services;
-import br.com.connectfy.EurofarmaCliente.dtos.department.DepartmentInsertAndUpdateDTO;
 import br.com.connectfy.EurofarmaCliente.dtos.department.DepartmentDTO;
 import br.com.connectfy.EurofarmaCliente.exceptions.ResourceNotFoundException;
 import br.com.connectfy.EurofarmaCliente.models.Department;
@@ -20,7 +19,7 @@ public class DepartmentService {
     }
 
     @Transactional
-    public DepartmentDTO insert(DepartmentInsertAndUpdateDTO departmentDTO) {
+    public DepartmentDTO insert(DepartmentDTO departmentDTO) {
         Department department = new Department(departmentDTO);
         return toDTO(departmentRepository.save(department));
     }
@@ -40,10 +39,10 @@ public class DepartmentService {
     }
 
     @Transactional
-    public DepartmentDTO update(Long id, DepartmentInsertAndUpdateDTO departmentDTO) {
+    public DepartmentDTO update(Long id, DepartmentDTO departmentDTO) {
         Department department = departmentRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("No records found with id: " + id));
-        department.setDepartName(departmentDTO.departName());
+        department.setDepartName(departmentDTO.getDepartName());
         return toDTO(departmentRepository.save(department));
     }
 

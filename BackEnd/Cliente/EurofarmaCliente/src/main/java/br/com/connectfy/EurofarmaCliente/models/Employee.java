@@ -30,7 +30,7 @@ public class Employee implements UserDetails, Serializable {
     @Column(nullable = false)
     private String password;
 
-    @Column(name = "cellphone_number", nullable = false,unique = true)
+    @Column(name = "cellphone_number", nullable = false, unique = true)
     private String cellphoneNumber;
 
 
@@ -54,10 +54,10 @@ public class Employee implements UserDetails, Serializable {
 
 
     @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "employee_permission", joinColumns = {@JoinColumn(name = "id_employee",nullable = false)},
+    @JoinTable(name = "employee_permission", joinColumns = {@JoinColumn(name = "id_employee", nullable = false)},
             inverseJoinColumns = {@JoinColumn(name = "id_permission")}
     )
-    private List<Permission> permissions = new ArrayList<>();
+    private Set<Permission> permissions = new HashSet<>();
 
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
@@ -65,18 +65,14 @@ public class Employee implements UserDetails, Serializable {
     private Instructor instructor;
 
 
-
     @OneToMany(mappedBy = "employee")
-    private List<EmployeeTraining> employeeTrainings;
+    private Set<EmployeeTraining> employeeTrainings;
 
     public Employee() {
 
     }
 
-    public Employee(Long id, String userName, String name, String surname, String password,
-                    String cellphoneNumber, boolean accountNonExpired, boolean credentialsNonExpired,
-                    boolean accountNonLocked, boolean enabled, Role role,
-                    List<Permission> permissions, Instructor instructor) {
+    public Employee(Long id, String userName, String name, String surname, String password, String cellphoneNumber, boolean accountNonExpired, boolean credentialsNonExpired, boolean accountNonLocked, boolean enabled, Role role, Set<Permission> permissions, Instructor instructor, Set<EmployeeTraining> employeeTrainings) {
         this.id = id;
         this.userName = userName;
         this.name = name;
@@ -90,6 +86,7 @@ public class Employee implements UserDetails, Serializable {
         this.role = role;
         this.permissions = permissions;
         this.instructor = instructor;
+        this.employeeTrainings = employeeTrainings;
     }
 
 
@@ -174,10 +171,6 @@ public class Employee implements UserDetails, Serializable {
 
 
 
-    public void setPermissions(List<Permission> permissions) {
-        this.permissions = permissions;
-    }
-
     public Instructor getInstructor() {
         return instructor;
     }
@@ -186,17 +179,12 @@ public class Employee implements UserDetails, Serializable {
         this.instructor = instructor;
     }
 
-    public List<EmployeeTraining> getEmployeeTrainings() {
-        return employeeTrainings;
-    }
 
-    public void setEmployeeTrainings(List<EmployeeTraining> employeeTrainings) {
-        this.employeeTrainings = employeeTrainings;
-    }
 
-    public void addPermission(Permission permission){
-            this.permissions.add(permission);
-   }
+
+    public void addPermission(Permission permission) {
+        this.permissions.add(permission);
+    }
 
 
     public List<String> getPermissionRoles() {
@@ -207,9 +195,20 @@ public class Employee implements UserDetails, Serializable {
         return roles;
     }
 
-
-    public List<Permission> getPermissions() {
+    public Set<Permission> getPermissions() {
         return permissions;
+    }
+
+    public void setPermissions(Set<Permission> permissions) {
+        this.permissions = permissions;
+    }
+
+    public Set<EmployeeTraining> getEmployeeTrainings() {
+        return employeeTrainings;
+    }
+
+    public void setEmployeeTrainings(Set<EmployeeTraining> employeeTrainings) {
+        this.employeeTrainings = employeeTrainings;
     }
 
     @Override

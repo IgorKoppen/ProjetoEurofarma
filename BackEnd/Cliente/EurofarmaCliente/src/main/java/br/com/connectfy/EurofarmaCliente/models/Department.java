@@ -1,7 +1,6 @@
 package br.com.connectfy.EurofarmaCliente.models;
 
 import br.com.connectfy.EurofarmaCliente.dtos.department.DepartmentDTO;
-import br.com.connectfy.EurofarmaCliente.dtos.department.DepartmentInsertAndUpdateDTO;
 import br.com.connectfy.EurofarmaCliente.dtos.department.DepartmentWithRoleAndEmployeeDTO;
 import jakarta.persistence.*;
 
@@ -30,10 +29,6 @@ public class Department {
     public Department(DepartmentWithRoleAndEmployeeDTO dto) {
         this.id = dto.getId();
         this.departName = dto.getDepartName();
-    }
-
-    public Department(DepartmentInsertAndUpdateDTO dto) {
-        this.departName = dto.departName();
     }
 
     public Department(Long id, String departName, List<Role> roles) {
