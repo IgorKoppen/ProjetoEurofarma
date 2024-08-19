@@ -2,6 +2,7 @@ package br.com.connectfy.EurofarmaCliente.models;
 
 import jakarta.persistence.*;
 
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Entity
@@ -26,6 +27,9 @@ public class EmployeeTraining {
     @Lob
     String signature;
 
+    @Column(nullable = false)
+    LocalDateTime registrationDate;
+
     public EmployeeTraining() {
     }
 
@@ -34,8 +38,8 @@ public class EmployeeTraining {
         this.employee = employee;
         this.training = training;
         this.signature = signature;
+        this.registrationDate = LocalDateTime.now();
     }
-
 
     public EmployeeTrainingKey getId() {
         return id;
@@ -67,6 +71,14 @@ public class EmployeeTraining {
 
     public void setSignature(String signature) {
         this.signature = signature;
+    }
+
+    public LocalDateTime getRegistrationDate() {
+        return registrationDate;
+    }
+
+    public void setRegistrationDate(LocalDateTime registrationDate) {
+        this.registrationDate = registrationDate;
     }
 
     @Override

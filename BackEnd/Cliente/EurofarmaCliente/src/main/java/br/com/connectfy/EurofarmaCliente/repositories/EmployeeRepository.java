@@ -35,6 +35,5 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
 
     boolean existsByUserName(@Param("userName") String userName);
 
-    @Query("SELECT e FROM Employee e  LEFT JOIN FETCH e.employeeTrainings t LEFT JOIN FETCH t.training tr WHERE e.id = :id ORDER BY tr.closingDate ASC")
-    Optional<Employee> findByIdWithTrainingsSortedByClosingDate(@Param("id") Long id);
+
 }

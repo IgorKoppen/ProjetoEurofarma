@@ -29,10 +29,10 @@ public class RoleController {
         List<RoleDTO> rolesDTO = roleService.findAll();
         return ResponseEntity.ok(rolesDTO);
     }
-
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         roleService.delete(id);
         return ResponseEntity.noContent().build();
     }
+
 }

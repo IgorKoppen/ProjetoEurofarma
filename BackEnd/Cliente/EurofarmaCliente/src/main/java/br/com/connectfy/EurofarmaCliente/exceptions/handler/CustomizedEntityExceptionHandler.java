@@ -95,8 +95,13 @@ public class CustomizedEntityExceptionHandler {
         return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
     }
     @ExceptionHandler(NoHandlerFoundException.class)
-    public ResponseEntity<ExceptionResponse> handleNotFound(NoHandlerFoundException ex, WebRequest request) {
+    public ResponseEntity<ExceptionResponse> handleNotFoundExceptions(NoHandlerFoundException ex, WebRequest request) {
         ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), ex.getMessage() , request.getDescription(false));
         return new ResponseEntity<>(exceptionResponse, HttpStatus.NOT_FOUND);
+    }
+    @ExceptionHandler(TrainingHasEmployeesException.class)
+    public ResponseEntity<ExceptionResponse> TrainingHasEmployeesException(TrainingHasEmployeesException ex, WebRequest request) {
+        ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), ex.getMessage() , request.getDescription(false));
+        return new ResponseEntity<>(exceptionResponse, HttpStatus.CONFLICT);
     }
 }

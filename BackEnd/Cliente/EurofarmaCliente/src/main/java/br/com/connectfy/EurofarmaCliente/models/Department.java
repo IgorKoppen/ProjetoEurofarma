@@ -1,11 +1,11 @@
 package br.com.connectfy.EurofarmaCliente.models;
 
 import br.com.connectfy.EurofarmaCliente.dtos.department.DepartmentDTO;
-import br.com.connectfy.EurofarmaCliente.dtos.department.DepartmentWithRoleAndEmployeeDTO;
 import jakarta.persistence.*;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Table(name = "tb_departments")
@@ -20,18 +20,13 @@ public class Department {
 
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "department", cascade = CascadeType.ALL)
-    private List<Role> roles;
+    private Set<Role> roles;
 
 
     public Department() {
     }
 
-    public Department(DepartmentWithRoleAndEmployeeDTO dto) {
-        this.id = dto.getId();
-        this.departName = dto.getDepartName();
-    }
-
-    public Department(Long id, String departName, List<Role> roles) {
+    public Department(Long id, String departName, Set<Role> roles) {
         this.id = id;
         this.departName = departName;
         this.roles = roles;
@@ -56,11 +51,11 @@ public class Department {
     }
 
 
-    public List<Role> getRoles() {
+    public Set<Role> getRoles() {
         return roles;
     }
 
-    public void setRoles(List<Role> roles) {
+    public void setRoles(Set<Role> roles) {
         this.roles = roles;
     }
 

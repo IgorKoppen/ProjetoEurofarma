@@ -14,8 +14,12 @@ public class EmployeeTrainingDTO implements Serializable {
     private static final long serialVersionUID = 1L;
     @JsonIgnore
     private final EmployeeTrainingKey id;
-    @JsonIgnore    private final EmployeeInfoDTO employee;
+    @JsonIgnore
+    private final EmployeeInfoDTO employee;
+
+
     private final TrainingDTO training;
+
     @JsonIgnore
     private final String signature;
 

@@ -12,28 +12,26 @@ import java.util.ArrayList;
 import java.util.List;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class RoleWithDepartmentAndEmployeeDTO implements Serializable {
+public class RoleWithEmployeeDTO implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
     private Long id;
     private final String roleName;
 
-    private DepartmentDTO department;
 
     @JsonIgnoreProperties({"role"})
     private List<EmployeeInfoDTO> employees = new ArrayList<>();
 
-    public RoleWithDepartmentAndEmployeeDTO(Role entity) {
+    public RoleWithEmployeeDTO(Role entity) {
         this.id = entity.getId();
         this.roleName = entity.getRoleName();
-        this.department = new DepartmentDTO(entity.getDepartment());
         if (entity.getEmployees() != null) {
             this.employees = entity.getEmployees().stream().map(EmployeeInfoDTO::new).toList();
         }
     }
 
-    public RoleWithDepartmentAndEmployeeDTO(String roleName) {
+    public RoleWithEmployeeDTO(String roleName) {
         this.roleName = roleName;
     }
 
@@ -45,9 +43,6 @@ public class RoleWithDepartmentAndEmployeeDTO implements Serializable {
         return roleName;
     }
 
-    public DepartmentDTO getDepartment() {
-        return department;
-    }
 
     public List<EmployeeInfoDTO> getEmployees() {
         return employees;

@@ -5,7 +5,6 @@ import br.com.connectfy.EurofarmaCliente.dtos.PhoneNumberUpdateDTO;
 import br.com.connectfy.EurofarmaCliente.dtos.employee.EmployeeInfoDTO;
 import br.com.connectfy.EurofarmaCliente.dtos.employee.EmployeeInsertDTO;
 import br.com.connectfy.EurofarmaCliente.dtos.employee.EmployeeUpdateDTO;
-import br.com.connectfy.EurofarmaCliente.dtos.training.TrainingDTO;
 import br.com.connectfy.EurofarmaCliente.exceptions.AlreadyExistException;
 import br.com.connectfy.EurofarmaCliente.exceptions.InvalidPhoneNumberException;
 import br.com.connectfy.EurofarmaCliente.exceptions.PasswordDoesntMatchException;
@@ -26,7 +25,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -179,13 +177,7 @@ public class EmployeeService implements UserDetailsService {
         employeeRepository.changeCellphoneNumber(id, formatedCellPhone);
     }
 
-    @Transactional(readOnly = true)
-    public List<TrainingDTO> findEmployeeTrainingsById(Long id) {
-        Employee entity = employeeRepository.findByIdWithTrainingsSortedByClosingDate(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Não foi encontrado funcionário com id: " + id));
 
-        return entity.getEmployeeTrainings().stream().map(employeeTraining -> new TrainingDTO(employeeTraining.getTraining())).toList();
-    }
 
     @Transactional
     public void toggleEmployeeStatus(Long id) {

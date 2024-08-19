@@ -1,6 +1,6 @@
 package br.com.connectfy.EurofarmaCliente.services;
 
-import br.com.connectfy.EurofarmaCliente.config.MessagerieConfig;
+import br.com.connectfy.EurofarmaCliente.config.MessageConfig;
 import br.com.connectfy.EurofarmaCliente.services.interfaces.SmsSender;
 import com.twilio.Twilio;
 import com.twilio.exception.ApiException;
@@ -11,10 +11,10 @@ import org.springframework.stereotype.Service;
 @Service
 public class MessageService implements SmsSender {
 
-    private final MessagerieConfig messagerieConfig;
+    private final MessageConfig messagerieConfig;
 
 
-    public MessageService(MessagerieConfig messagerieConfig) {
+    public MessageService(MessageConfig messagerieConfig) {
         this.messagerieConfig = messagerieConfig;
     }
 

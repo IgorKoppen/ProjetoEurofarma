@@ -12,5 +12,5 @@ public record UserConfirmAssinatureDTO(
         @NotBlank(message = "Password não pode ser vazio")
         String password,
         @NotBlank(message = "Assinatura não pode ser vazio")
-        String assinatura) {
+        String signature) {
 }

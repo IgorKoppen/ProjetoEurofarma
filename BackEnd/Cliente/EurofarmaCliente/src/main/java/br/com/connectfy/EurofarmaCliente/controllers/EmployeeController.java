@@ -5,7 +5,6 @@ import br.com.connectfy.EurofarmaCliente.dtos.PhoneNumberUpdateDTO;
 import br.com.connectfy.EurofarmaCliente.dtos.employee.EmployeeInfoDTO;
 import br.com.connectfy.EurofarmaCliente.dtos.employee.EmployeeInsertDTO;
 import br.com.connectfy.EurofarmaCliente.dtos.employee.EmployeeUpdateDTO;
-import br.com.connectfy.EurofarmaCliente.dtos.training.TrainingDTO;
 import br.com.connectfy.EurofarmaCliente.services.EmployeeService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +20,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
-import java.util.List;
 
 @RestController
 @RequestMapping("/eurofarma/employee")
@@ -61,12 +59,6 @@ public class EmployeeController {
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         employeeService.delete(id);
         return ResponseEntity.noContent().build();
-    }
-
-    @GetMapping(value = "/findLastTrainings/{id}")
-    public ResponseEntity<List<TrainingDTO>> findEmployeeTrainingById(@PathVariable Long id) {
-        List<TrainingDTO> dto = employeeService.findEmployeeTrainingsById(id);
-        return ResponseEntity.ok(dto);
     }
 
     @PatchMapping("/updatePassword/{id}")

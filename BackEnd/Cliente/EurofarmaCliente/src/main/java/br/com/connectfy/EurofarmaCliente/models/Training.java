@@ -4,7 +4,6 @@ import br.com.connectfy.EurofarmaCliente.dtos.training.TrainingDTO;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -56,7 +55,6 @@ public class Training {
     public Training(){}
 
     public Training(TrainingDTO dto) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yy HH:mm:ss,SSS");
         this.id = dto.getId();
         this.name = dto.getName();
         this.code = dto.getCode();

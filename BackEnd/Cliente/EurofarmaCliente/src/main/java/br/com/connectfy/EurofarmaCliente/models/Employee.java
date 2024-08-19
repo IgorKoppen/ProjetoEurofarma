@@ -66,7 +66,7 @@ public class Employee implements UserDetails, Serializable {
 
 
     @OneToMany(mappedBy = "employee")
-    private Set<EmployeeTraining> employeeTrainings;
+    private Set<EmployeeTraining> employeeTrainings = new HashSet<>();
 
     public Employee() {
 

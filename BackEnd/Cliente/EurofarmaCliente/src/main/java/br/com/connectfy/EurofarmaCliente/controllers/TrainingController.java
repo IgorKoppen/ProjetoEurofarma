@@ -3,6 +3,8 @@ package br.com.connectfy.EurofarmaCliente.controllers;
 import br.com.connectfy.EurofarmaCliente.dtos.*;
 import br.com.connectfy.EurofarmaCliente.dtos.training.TrainingDTO;
 import br.com.connectfy.EurofarmaCliente.dtos.training.TrainingInsertDTO;
+import br.com.connectfy.EurofarmaCliente.dtos.training.TrainingOfEmployeeDTO;
+import br.com.connectfy.EurofarmaCliente.dtos.training.TrainingWithEmployeesInfo;
 import br.com.connectfy.EurofarmaCliente.services.TrainingService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,15 +45,27 @@ public class TrainingController {
     }
 
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
-        trainingService.delete(id);
+    public ResponseEntity<Void> cancel(@PathVariable Long id) {
+        trainingService.cancelTraining(id);
         return ResponseEntity.noContent().build();
     }
+
     @GetMapping("/getRoomByCode/{code}")
     public ResponseEntity<TrainingDTO> findByCode(@PathVariable  String code) {
         TrainingDTO trainingDTO = trainingService.findByCode(code);
         return ResponseEntity.ok(trainingDTO);
     }
+    @GetMapping(value = "/EmployeeTrainings/{id}")
+    public ResponseEntity<List<TrainingOfEmployeeDTO>> findEmployeeTrainingsByEmployeeId(@PathVariable Long id) {
+        List<TrainingOfEmployeeDTO> dto = trainingService.findEmployeeTrainingsById(id);
+        return ResponseEntity.ok(dto);
+    }
+    @GetMapping("/InstructorTrainings/{id}")
+    public ResponseEntity<List<TrainingWithEmployeesInfo>> findInstructorTrainingsByInstructorId(@PathVariable Long id) {
+        List<TrainingWithEmployeesInfo> dto = trainingService.findInstructorTrainingsById(id);
+        return ResponseEntity.ok(dto);
+    }
+
     @GetMapping("/confirmPassword")
     public ResponseEntity<Void> confirmPassword(@RequestParam Long userId,@RequestParam String code, @RequestParam String password) {
          trainingService.confirmPassword(userId,code, password);

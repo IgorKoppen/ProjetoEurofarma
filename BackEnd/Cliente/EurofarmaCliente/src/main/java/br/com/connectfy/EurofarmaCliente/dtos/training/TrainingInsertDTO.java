@@ -3,53 +3,48 @@ package br.com.connectfy.EurofarmaCliente.dtos.training;
 
 import br.com.connectfy.EurofarmaCliente.dtos.instructor.InstructorDTO;
 import br.com.connectfy.EurofarmaCliente.dtos.tag.TagDTO;
-import br.com.connectfy.EurofarmaCliente.models.EmployeeTraining;
-import br.com.connectfy.EurofarmaCliente.models.Training;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.*;
 
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Set;
 
 public class TrainingInsertDTO implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
-    private Long id;
+    private final Long id;
+
     @NotBlank(message = "Nome não pode ser vazio!")
     private String name;
 
-    private String code;
-
-    @PastOrPresent(message = "Data de criação tem que ser atual ou passada")
-    @JsonProperty("creation_date")
-    private LocalDateTime creationDate;
-
     @Future(message = "Data de fechamento tem que ser no futuro")
     @JsonProperty("closing_date")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy HH:mm:ss")
     private LocalDateTime closingDate;
-
-
-    @NotBlank(message = "Password não pode ser vazio!")
-    private String password;
 
     @NotBlank(message = "Descrição não pode ser vazia!")
     private String description;
 
-    private List<InstructorDTO>  instructor;
-    private List<TagDTO> tags;
-    private Set<EmployeeTraining> employees;
+    private final Set<Long> departmentIdsToSendMessage;
 
-    public TrainingInsertDTO(Training training) {
-        this.id = training.getId();
-        this.name = training.getName();
-        this.code = training.getCode();
-        this.creationDate = training.getCreationDate();
-        this.closingDate = training.getClosingDate();
-        this.password = training.getPassword();
+    @NotNull(message = "Precisa de instrutores para gerar um Treinamento")
+    private Set<InstructorDTO>  instructor;
+
+    private final Set<TagDTO> tags;
+
+
+    public TrainingInsertDTO(Long id, String name, LocalDateTime closingDate, String description, Set<Long> departmentIdsToSendMessage, Set<InstructorDTO> instructor, Set<TagDTO> tags) {
+        this.id = id;
+        this.name = name;
+        this.closingDate = closingDate;
+        this.description = description;
+        this.departmentIdsToSendMessage = departmentIdsToSendMessage;
+        this.instructor = instructor;
+        this.tags = tags;
     }
 
     public Long getId() {
@@ -60,35 +55,23 @@ public class TrainingInsertDTO implements Serializable {
         return name;
     }
 
-    public String getCode() {
-        return code;
-    }
-
-    public LocalDateTime getCreationDate() {
-        return creationDate;
-    }
-
     public LocalDateTime getClosingDate() {
         return closingDate;
-    }
-
-    public String getPassword() {
-        return password;
     }
 
     public String getDescription() {
         return description;
     }
 
-    public List<InstructorDTO> getInstructor() {
+    public Set<Long> getDepartmentIdsToSendMessage() {
+        return departmentIdsToSendMessage;
+    }
+
+    public Set<InstructorDTO> getInstructor() {
         return instructor;
     }
 
-    public List<TagDTO> getTags() {
+    public Set<TagDTO> getTags() {
         return tags;
-    }
-
-    public Set<EmployeeTraining> getEmployees() {
-        return employees;
     }
 }

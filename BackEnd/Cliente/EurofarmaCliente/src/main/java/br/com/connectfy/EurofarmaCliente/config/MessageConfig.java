@@ -4,7 +4,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class MessagerieConfig {
+public class MessageConfig {
+
 
     @Value("${account_sid}")
     private String accountSid;

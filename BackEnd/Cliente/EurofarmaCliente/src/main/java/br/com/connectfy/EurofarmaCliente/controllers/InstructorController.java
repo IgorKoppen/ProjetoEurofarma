@@ -35,10 +35,6 @@ public class InstructorController {
         return ResponseEntity.ok(dto);
     }
 
-    @GetMapping("/findTrainingByInstructor/{id}")
-    public ResponseEntity<List<TrainingWithEmployeesInfo>> findInstructorTrainings(@PathVariable Long id) {
-        List<TrainingWithEmployeesInfo> dto = instructorService.findTrainingById(id);
-        return ResponseEntity.ok(dto);
-    }
+
 
 }

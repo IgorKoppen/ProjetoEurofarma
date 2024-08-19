@@ -2,6 +2,7 @@ package br.com.connectfy.EurofarmaCliente.dtos.training;
 
 import br.com.connectfy.EurofarmaCliente.dtos.instructor.InstructorInfo;
 import br.com.connectfy.EurofarmaCliente.dtos.tag.TagDTO;
+import br.com.connectfy.EurofarmaCliente.models.EmployeeTraining;
 import br.com.connectfy.EurofarmaCliente.models.Training;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -15,15 +16,15 @@ import java.util.List;
 
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class TrainingDTO implements Serializable {
+public class TrainingOfEmployeeDTO implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
     private final Long id;
 
-    private final String name;
+    @NotBlank(message = "Nome não pode ser vazio!")
+    private String name;
 
-    private final String code;
 
     @JsonProperty("creation_date")
     private String creationDate;
@@ -33,28 +34,34 @@ public class TrainingDTO implements Serializable {
 
     private final boolean isOpened;
 
-    private final String password;
+    private final String description;
 
-    @NotBlank(message = "Descrição não pode ser vazia!")
-    private String description;
-
-    private final List<InstructorInfo>  instructorsInfo;
+    private final List<InstructorInfo> instructorsInfo;
 
     private final List<TagDTO> tags;
 
-    public TrainingDTO(Training entity) {
+    private final String registrationDate;
+
+    private final String signature;
+
+    public TrainingOfEmployeeDTO(EmployeeTraining employeeTraining) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yy HH:mm:ss,SSS");
+
+        Training entity = employeeTraining.getTraining();
+
         this.id = entity.getId();
         this.name = entity.getName();
-        this.code = entity.getCode();
         this.creationDate = formatter.format(entity.getCreationDate());
-        this.closingDate =  formatter.format(entity.getClosingDate());
+        this.closingDate = formatter.format(entity.getClosingDate());
         this.isOpened = LocalDateTime.now().isBefore(entity.getClosingDate());
-        this.password = entity.getPassword();
         this.description = entity.getDescription();
         this.instructorsInfo = entity.getInstructors().stream().map(InstructorInfo::new).toList();
         this.tags = entity.getTags().stream().map(TagDTO::new).toList();
+        this.registrationDate = formatter.format(employeeTraining.getRegistrationDate());
+        this.signature = employeeTraining.getSignature();
     }
+
+
 
     public Long getId() {
         return id;
@@ -64,9 +71,6 @@ public class TrainingDTO implements Serializable {
         return name;
     }
 
-    public String getCode() {
-        return code;
-    }
 
     public String getCreationDate() {
         return creationDate;
@@ -80,9 +84,6 @@ public class TrainingDTO implements Serializable {
         return isOpened;
     }
 
-    public String getPassword() {
-        return password;
-    }
 
     public String getDescription() {
         return description;
@@ -95,5 +96,14 @@ public class TrainingDTO implements Serializable {
     public List<TagDTO> getTags() {
         return tags;
     }
+
+    public String getRegistrationDate() {
+        return registrationDate;
+    }
+
+    public String getSignature() {
+        return signature;
+    }
+
 
 }
