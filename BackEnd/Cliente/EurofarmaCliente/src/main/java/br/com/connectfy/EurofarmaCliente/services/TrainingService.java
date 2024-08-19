@@ -13,6 +13,8 @@ import br.com.connectfy.EurofarmaCliente.models.*;
 import br.com.connectfy.EurofarmaCliente.repositories.EmployeeRepository;
 import br.com.connectfy.EurofarmaCliente.repositories.TrainingRepository;
 import br.com.connectfy.EurofarmaCliente.util.RandomStringGenerator;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -115,14 +117,10 @@ public class TrainingService {
     }
 
     @Transactional(readOnly = true)
-    public List<TrainingDTO> findAll() {
-        List<Training> trainings = trainingRepository.findAll();
-        return trainings.stream()
-                .map(this::toDTO)
-                .collect(Collectors.toList());
+    public Page<TrainingDTO> findWithPagination(Pageable pageable) {
+        Page<Training> trainingPage = trainingRepository.findAll(pageable);
+        return trainingPage.map(this::toDTO);
     }
-
-
 
     @Transactional
     public void addEmployeeInTraining(UserConfirmAssinatureDTO userConfirmAssinatureDTO) {

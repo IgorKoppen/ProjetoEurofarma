@@ -8,6 +8,13 @@ import br.com.connectfy.EurofarmaCliente.dtos.training.TrainingWithEmployeesInfo
 import br.com.connectfy.EurofarmaCliente.services.TrainingService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,10 +33,13 @@ public class TrainingController {
         return ResponseEntity.ok(trainingDTO);
     }
 
-    @GetMapping
-    public ResponseEntity<List<TrainingDTO>> findAll(){
-         List<TrainingDTO> trainingDTOList = trainingService.findAll();
-        return ResponseEntity.ok(trainingDTOList);
+    @GetMapping("/pagination")
+    public ResponseEntity<PagedModel<EntityModel<TrainingDTO>>> findWithPagination(
+            @PageableDefault(size = 10, direction = Sort.Direction.ASC)
+            Pageable pageable, PagedResourcesAssembler<TrainingDTO> assembler) {
+        Page<TrainingDTO> trainingDTOPage = trainingService.findWithPagination(pageable);
+        PagedModel<EntityModel<TrainingDTO>> pagedModel = assembler.toModel(trainingDTOPage);
+        return ResponseEntity.ok(pagedModel);
     }
 
     @GetMapping("/{id}")

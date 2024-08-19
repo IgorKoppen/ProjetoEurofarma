@@ -31,9 +31,10 @@ public class TrainingInsertDTO implements Serializable {
 
     private final Set<Long> departmentIdsToSendMessage;
 
-    @NotNull(message = "Precisa de instrutores para gerar um Treinamento")
+    @NotEmpty(message = "Precisa de instrutores para gerar um Treinamento")
     private Set<InstructorDTO>  instructor;
 
+    @NotEmpty(message = "Precisa ao menos uma tag para gerar um Treinamento")
     private final Set<TagDTO> tags;
 
 

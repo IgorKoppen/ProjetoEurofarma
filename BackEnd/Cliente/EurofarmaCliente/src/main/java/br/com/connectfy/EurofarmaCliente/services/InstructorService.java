@@ -1,10 +1,14 @@
 package br.com.connectfy.EurofarmaCliente.services;
 
+import br.com.connectfy.EurofarmaCliente.dtos.employee.EmployeeInfoDTO;
 import br.com.connectfy.EurofarmaCliente.dtos.instructor.InstructorDTO;
 import br.com.connectfy.EurofarmaCliente.dtos.instructor.InstructorIdAndFullNameDTO;
 import br.com.connectfy.EurofarmaCliente.exceptions.ResourceNotFoundException;
+import br.com.connectfy.EurofarmaCliente.models.Employee;
 import br.com.connectfy.EurofarmaCliente.models.Instructor;
 import br.com.connectfy.EurofarmaCliente.repositories.InstructorRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,6 +40,12 @@ public class InstructorService {
         return instructors.stream()
                 .map(InstructorDTO::new)
                 .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public Page<InstructorDTO> findWithPagination(Pageable pageable) {
+        Page<Instructor> instructorPage = instructorRepository.findAll(pageable);
+        return instructorPage.map(InstructorDTO::new);
     }
 
     @Transactional(readOnly = true)
