@@ -28,36 +28,27 @@ public class InstructorController {
     private InstructorService instructorService;
 
 
-    @GetMapping(produces = "aplication/json")
+    @GetMapping(produces = "application/json")
     @Operation(summary = "Consulta instrutores", description = "Retorna todos os instrutores",
             tags = {"Instructor"},
             responses = {
                     @ApiResponse(description = "Success", responseCode = "200", content = @Content()),
-                    @ApiResponse(description = "No Content", responseCode = "204", content = @Content),
-                    @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
                     @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
-                    @ApiResponse(description = "Forbidden", responseCode = "403", content = @Content),
-                    @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
-                    @ApiResponse(description = "Conflict", responseCode = "409", content = @Content),
-                    @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content),
+                    @ApiResponse(description = "Forbidden", responseCode = "403", content = @Content)
             })
     public ResponseEntity<List<InstructorDTO>> findAll(){
         List<InstructorDTO> list = instructorService.findAll();
         return ResponseEntity.ok(list);
     }
 
-    @GetMapping(value = "/pagination", produces = "aplication/json")
+    @GetMapping(value = "/pagination", produces = "application/json")
     @Operation(summary = "Consulta instrutores com paginação", description = "Retorna todos instrutores com paginação",
             tags = {"Instructor"},
             responses = {
                     @ApiResponse(description = "Success", responseCode = "200", content = @Content()),
-                    @ApiResponse(description = "No Content", responseCode = "204", content = @Content),
                     @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
                     @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
-                    @ApiResponse(description = "Forbidden", responseCode = "403", content = @Content),
-                    @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
-                    @ApiResponse(description = "Conflict", responseCode = "409", content = @Content),
-                    @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content),
+                    @ApiResponse(description = "Forbidden", responseCode = "403", content = @Content)
             })
     public ResponseEntity<PagedModel<EntityModel<InstructorDTO>>> findWithPagination(
             @PageableDefault(size = 10, direction = Sort.Direction.ASC)
@@ -67,36 +58,28 @@ public class InstructorController {
         return ResponseEntity.ok(pagedModel);
     }
 
-    @GetMapping(value = "/findAllFullName", produces = "aplication/json")
+    @GetMapping(value = "/findAllFullName", produces = "application/json")
     @Operation(summary = "Consulta o nome completo dos instrutores", description = "Retorna todos os nomes completos dos instrutores",
             tags = {"Instructor"},
             responses = {
                     @ApiResponse(description = "Success", responseCode = "200", content = @Content()),
-                    @ApiResponse(description = "No Content", responseCode = "204", content = @Content),
-                    @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
                     @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
                     @ApiResponse(description = "Forbidden", responseCode = "403", content = @Content),
-                    @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
-                    @ApiResponse(description = "Conflict", responseCode = "409", content = @Content),
-                    @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content),
             })
     public ResponseEntity<List<InstructorIdAndFullNameDTO>> findAllFullName() {
         List<InstructorIdAndFullNameDTO> dto  = instructorService.findAllIdAndFullName();
         return ResponseEntity.ok(dto);
     }
 
-    @GetMapping(value = "/{id}", produces = "aplication/json")
+    @GetMapping(value = "/{id}", produces = "application/json")
     @Operation(summary = "Consulta um instrutor", description = "Retorna um instrutor a partir de um id",
             tags = {"Instructor"},
             responses = {
                     @ApiResponse(description = "Success", responseCode = "200", content = @Content()),
-                    @ApiResponse(description = "No Content", responseCode = "204", content = @Content),
                     @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
                     @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
                     @ApiResponse(description = "Forbidden", responseCode = "403", content = @Content),
-                    @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
-                    @ApiResponse(description = "Conflict", responseCode = "409", content = @Content),
-                    @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content),
+                    @ApiResponse(description = "Not Found", responseCode = "404", content = @Content)
             })
     public ResponseEntity<InstructorDTO> findById(@PathVariable Long id) {
         InstructorDTO dto  = instructorService.findById(id);

@@ -30,19 +30,15 @@ public class TagController {
     @Autowired
     private TagService tagsService;
 
-    @PostMapping(produces = "aplication/json")
+    @PostMapping(produces = "application/json")
     @Operation(summary = "Cria uma tag", description = "Cria uma novo tag",
             tags = {"tag"},
             responses = {
-                    @ApiResponse(description = "Success", responseCode = "200", content = @Content()),
                     @ApiResponse(description = "Created", responseCode = "201", content = @Content()),
-                    @ApiResponse(description = "No Content", responseCode = "204", content = @Content),
                     @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
                     @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
                     @ApiResponse(description = "Forbidden", responseCode = "403", content = @Content),
-                    @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
                     @ApiResponse(description = "Conflict", responseCode = "409", content = @Content),
-                    @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content),
             })
     public ResponseEntity<TagDTO> insert(@RequestBody @Valid TagDTO tagDTO) {
         TagDTO tagInfoDTO = tagsService.insert(tagDTO);
@@ -50,36 +46,27 @@ public class TagController {
         return ResponseEntity.created(uri).body(tagInfoDTO);
     }
 
-    @GetMapping(produces = "aplication/json")
+    @GetMapping(produces = "application/json")
     @Operation(summary = "Consulta tags", description = "Consulta todas tags",
             tags = {"tag"},
             responses = {
                     @ApiResponse(description = "Success", responseCode = "200", content = @Content()),
-                    @ApiResponse(description = "No Content", responseCode = "204", content = @Content),
-                    @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
                     @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
                     @ApiResponse(description = "Forbidden", responseCode = "403", content = @Content),
-                    @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
-                    @ApiResponse(description = "Conflict", responseCode = "409", content = @Content),
-                    @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content),
             })
     public ResponseEntity<List<TagDTO>> findAll(){
         List<TagDTO> TagInfoDTOs = tagsService.findAll();
         return ResponseEntity.ok(TagInfoDTOs);
     }
 
-    @GetMapping(value = "/pagination", produces = "aplication/json")
+    @GetMapping(value = "/pagination", produces = "application/json")
     @Operation(summary = "Consulta tags com paginação", description = "Consulta todas tags com paginação",
             tags = {"tag"},
             responses = {
                     @ApiResponse(description = "Success", responseCode = "200", content = @Content()),
-                    @ApiResponse(description = "No Content", responseCode = "204", content = @Content),
                     @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
                     @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
-                    @ApiResponse(description = "Forbidden", responseCode = "403", content = @Content),
-                    @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
-                    @ApiResponse(description = "Conflict", responseCode = "409", content = @Content),
-                    @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content),
+                    @ApiResponse(description = "Forbidden", responseCode = "403", content = @Content)
             })
     public ResponseEntity<PagedModel<EntityModel<TagDTO>>> findWithPagination(
             @PageableDefault(size = 10, direction = Sort.Direction.ASC)
@@ -89,53 +76,47 @@ public class TagController {
         return ResponseEntity.ok(pagedModel);
     }
 
-    @GetMapping(value = "/{id}", produces = "aplication/json")
+    @GetMapping(value = "/{id}", produces = "application/json")
     @Operation(summary = "Consulta uma tag", description = "Consulta uma tag a partir de um id",
             tags = {"tag"},
             responses = {
                     @ApiResponse(description = "Success", responseCode = "200", content = @Content()),
-                    @ApiResponse(description = "No Content", responseCode = "204", content = @Content),
                     @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
                     @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
                     @ApiResponse(description = "Forbidden", responseCode = "403", content = @Content),
-                    @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
-                    @ApiResponse(description = "Conflict", responseCode = "409", content = @Content),
-                    @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content),
+                    @ApiResponse(description = "Not Found", responseCode = "404", content = @Content)
             })
     public ResponseEntity<TagDTO> findById(@PathVariable Long id) {
         TagDTO tagInfoDTO = tagsService.getById(id);
         return ResponseEntity.ok(tagInfoDTO);
     }
 
-    @PutMapping(value ="/{id}", produces = "aplication/json")
+    @PutMapping(value ="/{id}", produces = "application/json")
     @Operation(summary = "Atualiza uma tag", description = "Atualiza uma tag a partir de um id",
             tags = {"tag"},
             responses = {
                     @ApiResponse(description = "Success", responseCode = "200", content = @Content()),
-                    @ApiResponse(description = "No Content", responseCode = "204", content = @Content),
                     @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
                     @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
                     @ApiResponse(description = "Forbidden", responseCode = "403", content = @Content),
                     @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
                     @ApiResponse(description = "Conflict", responseCode = "409", content = @Content),
-                    @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content),
+                    @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content)
             })
     public  ResponseEntity<TagDTO> update(@PathVariable Long id, @RequestBody @Valid TagDTO tagDTO) {
         TagDTO tagInfoDTO = tagsService.update(id, tagDTO);
         return ResponseEntity.ok(tagInfoDTO);
     }
 
-    @DeleteMapping(value = "/{id}", produces = "aplication/json")
+    @DeleteMapping(value = "/{id}", produces = "application/json")
     @Operation(summary = "Exclui uma tag", description = "Exclui uma tag a partir de um id",
             tags = {"tag"},
             responses = {
-                    @ApiResponse(description = "Success", responseCode = "200", content = @Content()),
                     @ApiResponse(description = "No Content", responseCode = "204", content = @Content),
                     @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
                     @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
                     @ApiResponse(description = "Forbidden", responseCode = "403", content = @Content),
                     @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
-                    @ApiResponse(description = "Conflict", responseCode = "409", content = @Content),
                     @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content),
             })
     public ResponseEntity<Void> delete(@PathVariable Long id) {

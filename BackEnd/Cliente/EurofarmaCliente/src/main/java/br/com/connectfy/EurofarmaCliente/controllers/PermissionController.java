@@ -23,36 +23,28 @@ public class PermissionController {
     @Autowired
     private PermissionService permissionService;
 
-    @GetMapping(produces = "aplication/json")
+    @GetMapping(produces = "application/json")
     @Operation(summary = "Consulta todas permições", description = "Retorna todas as permições",
             tags = {"Permission"},
             responses = {
                     @ApiResponse(description = "Success", responseCode = "200", content = @Content()),
-                    @ApiResponse(description = "No Content", responseCode = "204", content = @Content),
-                    @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
                     @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
                     @ApiResponse(description = "Forbidden", responseCode = "403", content = @Content),
-                    @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
-                    @ApiResponse(description = "Conflict", responseCode = "409", content = @Content),
-                    @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content),
             })
     public ResponseEntity<List<PermissionDTO>> findAll() {
         List<PermissionDTO> permissionDTOS = permissionService.findAll();
         return ResponseEntity.ok(permissionDTOS);
     }
 
-    @GetMapping(value = "/{id}", produces = "aplication/json")
+    @GetMapping(value = "/{id}", produces = "application/json")
     @Operation(summary = "Consulta uma permição", description = "Retorna uma permição a partir de um id",
             tags = {"Permission"},
             responses = {
                     @ApiResponse(description = "Success", responseCode = "200", content = @Content()),
-                    @ApiResponse(description = "No Content", responseCode = "204", content = @Content),
                     @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
                     @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
                     @ApiResponse(description = "Forbidden", responseCode = "403", content = @Content),
-                    @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
-                    @ApiResponse(description = "Conflict", responseCode = "409", content = @Content),
-                    @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content),
+                    @ApiResponse(description = "Not Found", responseCode = "404", content = @Content)
             })
     public ResponseEntity<PermissionDTO> findById(@PathVariable Long id) {
         PermissionDTO permissionDTO = permissionService.findById(id);

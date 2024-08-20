@@ -1,7 +1,5 @@
 package br.com.connectfy.EurofarmaCliente.dtos.security;
 
-import br.com.connectfy.EurofarmaCliente.models.Role;
-
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.Date;
@@ -130,4 +128,5 @@ public class TokenVO implements Serializable {
     public int hashCode() {
         return Objects.hash(username, authenticated, created, expiration, accessToken, refreshToken);
     }
+
 }

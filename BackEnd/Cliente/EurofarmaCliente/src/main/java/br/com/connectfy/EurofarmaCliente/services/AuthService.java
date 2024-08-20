@@ -2,6 +2,7 @@ package br.com.connectfy.EurofarmaCliente.services;
 
 import br.com.connectfy.EurofarmaCliente.dtos.security.AccountCredentialsVO;
 import br.com.connectfy.EurofarmaCliente.dtos.security.TokenVO;
+import br.com.connectfy.EurofarmaCliente.exceptions.IncorrectPasswordException;
 import br.com.connectfy.EurofarmaCliente.models.Employee;
 import br.com.connectfy.EurofarmaCliente.repositories.EmployeeRepository;
 import br.com.connectfy.EurofarmaCliente.security.jwt.JwtTokenProvider;
@@ -43,8 +44,9 @@ public class AuthService {
             }
             tokenResponse = tokenProvider.createToken(user.getId(), username, user.getName(), user.getPermissionRoles(), instructorId);
             return ok(tokenResponse);
-        } catch (Exception e) {
-            throw new BadCredentialsException("Nome de usuário ou senha inválidos!");
+        }
+        catch (BadCredentialsException e) {
+            throw new IncorrectPasswordException("Senha incorreta!");
         }
     }
 

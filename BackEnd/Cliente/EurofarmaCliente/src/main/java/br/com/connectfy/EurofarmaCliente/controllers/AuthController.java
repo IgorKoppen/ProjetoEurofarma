@@ -23,17 +23,14 @@ public class AuthController {
     AuthService authService;
 
     @SuppressWarnings("rawtypes")
-    @PostMapping(value = "/signin", produces = "aplication/json")
+    @PostMapping(value = "/signin",produces ="application/json")
     @Operation(summary = "Autoriza um usuário", description = "Autoriza um usuário e retorna o token com dados do usuário",
             tags = {"Auth"},
             responses = {
                     @ApiResponse(description = "Success", responseCode = "200", content = @Content()),
-                    @ApiResponse(description = "No Content", responseCode = "204", content = @Content),
                     @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
-                    @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
                     @ApiResponse(description = "Forbidden", responseCode = "403", content = @Content),
                     @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
-                    @ApiResponse(description = "Conflict", responseCode = "409", content = @Content),
                     @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content),
             })
     public ResponseEntity signIn(@RequestBody AccountCredentialsVO data) {
@@ -48,17 +45,15 @@ public class AuthController {
     }
 
     @SuppressWarnings("rawtypes")
-    @PutMapping(value = "/refresh/{userName}", produces = "aplication/json")
+    @PutMapping(value = "/refresh/{userName}",produces ="application/json")
     @Operation(summary = "Atualiza um token", description = "Atualiza um token",
             tags = {"Auth"},
             responses = {
                     @ApiResponse(description = "Success", responseCode = "200", content = @Content()),
-                    @ApiResponse(description = "No Content", responseCode = "204", content = @Content),
                     @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
                     @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
                     @ApiResponse(description = "Forbidden", responseCode = "403", content = @Content),
                     @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
-                    @ApiResponse(description = "Conflict", responseCode = "409", content = @Content),
                     @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content),
             })
     public ResponseEntity refreshToken(@PathVariable ("userName") String userName, @RequestHeader("Authorization") String refreshToken) {

@@ -46,4 +46,12 @@ public class AccountCredentialsVO implements Serializable {
     public int hashCode() {
         return Objects.hash(userName, password);
     }
+
+    @Override
+    public String toString() {
+        return "AccountCredentialsVO{" +
+                "userName='" + userName + '\'' +
+                ", password='" + password + '\'' +
+                '}';
+    }
 }

@@ -21,7 +21,9 @@ import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -36,19 +38,18 @@ public class TrainingController {
     @Operation(summary = "Cria um treinamento", description = "Cria um novo treinamento",
             tags = {"Training"},
             responses = {
-                    @ApiResponse(description = "Success", responseCode = "200", content = @Content()),
+
                     @ApiResponse(description = "Created", responseCode = "201", content = @Content()),
-                    @ApiResponse(description = "No Content", responseCode = "204", content = @Content),
                     @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
                     @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
                     @ApiResponse(description = "Forbidden", responseCode = "403", content = @Content),
-                    @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
                     @ApiResponse(description = "Conflict", responseCode = "409", content = @Content),
                     @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content),
             })
         public ResponseEntity<TrainingDTO> insert(@RequestBody @Valid TrainingInsertDTO trainingCreationDTO) {
         TrainingDTO  trainingDTO = trainingService.insert(trainingCreationDTO);
-        return ResponseEntity.ok(trainingDTO);
+        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(trainingDTO.getId()).toUri();
+        return ResponseEntity.created(uri).body(trainingDTO);
     }
 
     @GetMapping(value = "/pagination", produces = "aplication/json")
@@ -56,13 +57,9 @@ public class TrainingController {
             tags = {"Training"},
             responses = {
                     @ApiResponse(description = "Success", responseCode = "200", content = @Content()),
-                    @ApiResponse(description = "No Content", responseCode = "204", content = @Content),
                     @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
                     @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
-                    @ApiResponse(description = "Forbidden", responseCode = "403", content = @Content),
-                    @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
-                    @ApiResponse(description = "Conflict", responseCode = "409", content = @Content),
-                    @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content),
+                    @ApiResponse(description = "Forbidden", responseCode = "403", content = @Content)
             })
     public ResponseEntity<PagedModel<EntityModel<TrainingDTO>>> findWithPagination(
             @PageableDefault(size = 10, direction = Sort.Direction.ASC)
@@ -77,13 +74,10 @@ public class TrainingController {
             tags = {"Training"},
             responses = {
                     @ApiResponse(description = "Success", responseCode = "200", content = @Content()),
-                    @ApiResponse(description = "No Content", responseCode = "204", content = @Content),
                     @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
                     @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
                     @ApiResponse(description = "Forbidden", responseCode = "403", content = @Content),
-                    @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
-                    @ApiResponse(description = "Conflict", responseCode = "409", content = @Content),
-                    @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content),
+                    @ApiResponse(description = "Not Found", responseCode = "404", content = @Content)
             })
     public ResponseEntity<TrainingDTO> findById(@PathVariable Long id) {
         TrainingDTO trainingDTO = trainingService.findById(id);
@@ -95,13 +89,12 @@ public class TrainingController {
             tags = {"Training"},
             responses = {
                     @ApiResponse(description = "Success", responseCode = "200", content = @Content()),
-                    @ApiResponse(description = "No Content", responseCode = "204", content = @Content),
                     @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
                     @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
                     @ApiResponse(description = "Forbidden", responseCode = "403", content = @Content),
                     @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
                     @ApiResponse(description = "Conflict", responseCode = "409", content = @Content),
-                    @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content),
+                    @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content)
             })
     public ResponseEntity<TrainingDTO> update(@PathVariable Long id, @RequestBody @Valid TrainingInsertDTO trainingCreationDTO) {
         TrainingDTO  trainingDTO = trainingService.update(id, trainingCreationDTO);
@@ -112,13 +105,11 @@ public class TrainingController {
     @Operation(summary = "Cancela um treinamento", description = "Cancela um treinamento a partir de um id",
             tags = {"Training"},
             responses = {
-                    @ApiResponse(description = "Success", responseCode = "200", content = @Content()),
                     @ApiResponse(description = "No Content", responseCode = "204", content = @Content),
                     @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
                     @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
                     @ApiResponse(description = "Forbidden", responseCode = "403", content = @Content),
                     @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
-                    @ApiResponse(description = "Conflict", responseCode = "409", content = @Content),
                     @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content),
             })
     public ResponseEntity<Void> cancel(@PathVariable Long id) {
@@ -131,13 +122,10 @@ public class TrainingController {
             tags = {"Training"},
             responses = {
                     @ApiResponse(description = "Success", responseCode = "200", content = @Content()),
-                    @ApiResponse(description = "No Content", responseCode = "204", content = @Content),
                     @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
                     @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
                     @ApiResponse(description = "Forbidden", responseCode = "403", content = @Content),
-                    @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
-                    @ApiResponse(description = "Conflict", responseCode = "409", content = @Content),
-                    @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content),
+                    @ApiResponse(description = "Not Found", responseCode = "404", content = @Content)
             })
     public ResponseEntity<TrainingDTO> findByCode(@PathVariable  String code) {
         TrainingDTO trainingDTO = trainingService.findByCode(code);
@@ -148,13 +136,10 @@ public class TrainingController {
             tags = {"Training"},
             responses = {
                     @ApiResponse(description = "Success", responseCode = "200", content = @Content()),
-                    @ApiResponse(description = "No Content", responseCode = "204", content = @Content),
                     @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
                     @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
                     @ApiResponse(description = "Forbidden", responseCode = "403", content = @Content),
-                    @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
-                    @ApiResponse(description = "Conflict", responseCode = "409", content = @Content),
-                    @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content),
+                    @ApiResponse(description = "Not Found", responseCode = "404", content = @Content)
             })
     public ResponseEntity<List<TrainingOfEmployeeDTO>> findEmployeeTrainingsByEmployeeId(@PathVariable Long id) {
         List<TrainingOfEmployeeDTO> dto = trainingService.findEmployeeTrainingsById(id);
@@ -166,13 +151,10 @@ public class TrainingController {
             tags = {"Training"},
             responses = {
                     @ApiResponse(description = "Success", responseCode = "200", content = @Content()),
-                    @ApiResponse(description = "No Content", responseCode = "204", content = @Content),
                     @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
                     @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
                     @ApiResponse(description = "Forbidden", responseCode = "403", content = @Content),
-                    @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
-                    @ApiResponse(description = "Conflict", responseCode = "409", content = @Content),
-                    @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content),
+                    @ApiResponse(description = "Not Found", responseCode = "404", content = @Content)
             })
     public ResponseEntity<List<TrainingWithEmployeesInfo>> findInstructorTrainingsByInstructorId(@PathVariable Long id) {
         List<TrainingWithEmployeesInfo> dto = trainingService.findInstructorTrainingsById(id);
@@ -184,14 +166,11 @@ public class TrainingController {
             "está correta, se está encerrada ou se o funcionário já está em um treinamento",
             tags = {"Training"},
             responses = {
-                    @ApiResponse(description = "Success", responseCode = "200", content = @Content()),
                     @ApiResponse(description = "No Content", responseCode = "204", content = @Content),
                     @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
                     @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
                     @ApiResponse(description = "Forbidden", responseCode = "403", content = @Content),
-                    @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
-                    @ApiResponse(description = "Conflict", responseCode = "409", content = @Content),
-                    @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content),
+                    @ApiResponse(description = "Not Found", responseCode = "404", content = @Content)
             })
     public ResponseEntity<Void> confirmPassword(@RequestParam Long userId,@RequestParam String code, @RequestParam String password) {
          trainingService.confirmPassword(userId,code, password);
@@ -201,14 +180,12 @@ public class TrainingController {
    @Operation(summary = "Procura os funcionários de um treinamento", description = "Retorna todos os funcionários que realizaram um treinamento",
            tags = {"Training"},
            responses = {
-                   @ApiResponse(description = "Success", responseCode = "200", content = @Content()),
                    @ApiResponse(description = "No Content", responseCode = "204", content = @Content),
                    @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
                    @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
                    @ApiResponse(description = "Forbidden", responseCode = "403", content = @Content),
                    @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
                    @ApiResponse(description = "Conflict", responseCode = "409", content = @Content),
-                   @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content),
            })
    public ResponseEntity<List<RoomParticipantsDTO>> getAllRoomParticipants(@PathVariable Long roomId) {
         List<RoomParticipantsDTO> roomParticipantsDTOS = trainingService.findAllRoomParticipants(roomId);
@@ -219,7 +196,6 @@ public class TrainingController {
     @Operation(summary = "Adiciona um funcionário em um treinamento", description = "Insere um funcionário em um treinamento",
             tags = {"Training"},
             responses = {
-                    @ApiResponse(description = "Success", responseCode = "200", content = @Content()),
                     @ApiResponse(description = "No Content", responseCode = "204", content = @Content),
                     @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
                     @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
