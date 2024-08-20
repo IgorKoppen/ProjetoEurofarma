@@ -60,9 +60,9 @@ public class SecurityConfig {
                         session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(
                         authorizeHttpRequests -> authorizeHttpRequests
-                                .requestMatchers(
-                                        "/auth/**"
-                                ).permitAll()
+                                .requestMatchers("/auth/**","/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                                .requestMatchers("/admin/**").hasAuthority("admin")
+                                .requestMatchers("/treinador/**").hasAnyAuthority("admin", "treinador")
                                 .requestMatchers("/**").authenticated()
                 )
                 .cors(cors -> {})

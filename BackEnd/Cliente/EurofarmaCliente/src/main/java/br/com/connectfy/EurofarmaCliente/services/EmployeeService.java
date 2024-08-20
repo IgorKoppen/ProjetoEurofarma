@@ -31,8 +31,7 @@ import java.util.stream.Collectors;
 @Service
 public class EmployeeService implements UserDetailsService {
 
-    private final
-    EmployeeRepository employeeRepository;
+    private final EmployeeRepository employeeRepository;
 
     private final MessageService messageService;
     private final PermissionService permissionService;
