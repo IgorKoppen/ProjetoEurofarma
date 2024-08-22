@@ -51,7 +51,7 @@ public class InstructorService {
         List<Instructor> instructors = instructorRepository.findAll();
         List<InstructorIdAndFullNameAndEmployeeRegistrarionDTO> instructorIdAndFullNameDTOS = new ArrayList<>();
         for (Instructor instructor : instructors) {
-            instructorIdAndFullNameDTOS.add(new InstructorIdAndFullNameAndEmployeeRegistrarionDTO(instructor.getId(), (instructor.getEmployee().getName() + " " + instructor.getEmployee().getSurname()), instructor.getEmployee().getEmployeeRegistration()));
+            instructorIdAndFullNameDTOS.add(new InstructorIdAndFullNameAndEmployeeRegistrarionDTO(instructor.getId(), instructor.getEmployee().getName(), instructor.getEmployee().getSurname(), (instructor.getEmployee().getName() + " " + instructor.getEmployee().getSurname()), instructor.getEmployee().getEmployeeRegistration()));
         }
         return instructorIdAndFullNameDTOS;
     }

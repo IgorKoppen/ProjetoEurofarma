@@ -26,6 +26,10 @@ public class InstructorDTO implements Serializable {
         }
     }
 
+    public InstructorDTO(Long id) {
+        this.id = id;
+    }
+
     public InstructorDTO(EmployeeInfoDTO employee, List<TrainingDTO> trainings) {
         this.employee = employee;
     }

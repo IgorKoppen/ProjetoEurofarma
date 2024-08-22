@@ -21,10 +21,9 @@ public class TrainingInsertDTO implements Serializable {
     @NotBlank(message = "O nome é obrigatório e não pode estar em branco.")
     private String name;
 
-    @Future(message = "A data de fechamento deve ser uma data futura.")
+    @NotBlank(message = "Data de fechamento não pode ser vazia!")
     @JsonProperty("closing_date")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yy HH:mm:ss,SSS")
-    private LocalDateTime closingDate;
+    private String closingDate;
 
     @NotBlank(message = "A descrição é obrigatória e não pode estar em branco.")
     private String description;
@@ -37,7 +36,7 @@ public class TrainingInsertDTO implements Serializable {
     @NotEmpty(message = "É necessário incluir ao menos uma tag para criar um treinamento.")
     private final Set<TagDTO> tags;
 
-    public TrainingInsertDTO(Long id, String name, LocalDateTime closingDate, String description, Set<Long> departmentIdsToSendMessage, Set<InstructorDTO> instructor, Set<TagDTO> tags) {
+    public TrainingInsertDTO(Long id, String name, String closingDate, String description, Set<Long> departmentIdsToSendMessage, Set<InstructorDTO> instructor, Set<TagDTO> tags) {
         this.id = id;
         this.name = name;
         this.closingDate = closingDate;
@@ -55,7 +54,7 @@ public class TrainingInsertDTO implements Serializable {
         return name;
     }
 
-    public LocalDateTime getClosingDate() {
+    public String getClosingDate() {
         return closingDate;
     }
 

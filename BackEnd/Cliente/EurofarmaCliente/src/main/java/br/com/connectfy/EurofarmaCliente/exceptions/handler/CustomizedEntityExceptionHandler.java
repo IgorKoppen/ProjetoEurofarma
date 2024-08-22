@@ -27,7 +27,7 @@ public class CustomizedEntityExceptionHandler {
     }
     @ExceptionHandler(DataIntegrityViolationException.class)
     public final ResponseEntity<ExceptionResponseDTO> handleDataIntegrityViolationExceptions(Exception ex, WebRequest request) {
-        ExceptionResponseDTO exceptionResponseDTO = new ExceptionResponseDTO(new Date(), "Falha de inegridade referencial", request.getDescription(false));
+        ExceptionResponseDTO exceptionResponseDTO = new ExceptionResponseDTO(new Date(), "Falha de integridade referencial", request.getDescription(false));
         return new ResponseEntity<>(exceptionResponseDTO, HttpStatus.BAD_REQUEST);
     }
     @ExceptionHandler(BadCredentialsException.class)

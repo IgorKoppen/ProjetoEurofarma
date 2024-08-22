@@ -18,11 +18,11 @@ public class TagDTO implements Serializable {
 
     @NotBlank(message = "O nome é obrigatório e não pode estar em branco.")
     @Size(min = 3, message = "O nome da tag deve ter no mínimo 3 caracteres.")
-    private final String name;
+    private String name;
 
     @NotBlank(message = "A cor é obrigatória e não pode estar em branco.")
     @Size(min = 7, max = 7, message = "A cor deve ter exatamente 7 caracteres (incluindo o #).")
-    private final String color;
+    private String color;
 
     public TagDTO(Tag entity) {
         this.id = entity.getId();
@@ -33,6 +33,10 @@ public class TagDTO implements Serializable {
     public TagDTO(String name, String color) {
         this.name = name;
         this.color = color;
+    }
+
+    public TagDTO(Long id) {
+        this.id = id;
     }
 
     public Long getId() {

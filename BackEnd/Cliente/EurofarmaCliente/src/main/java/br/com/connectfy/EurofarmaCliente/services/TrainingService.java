@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -49,7 +50,8 @@ public class TrainingService {
 
     @Transactional
     public TrainingDTO insert(TrainingInsertDTO trainingDTO) {
-        validateDateOfClose(trainingDTO.getClosingDate(), "Data de fechamento não pode ser no passado!");
+        LocalDateTime parsedDate = parseDate(trainingDTO.getClosingDate());
+        validateDateOfClose(parsedDate, "Data de fechamento não pode ser no passado!");
 
         Set<Tag> tags = trainingDTO.getTags().stream()
                 .map(tagDTO -> getTagById(tagDTO.getId()))
@@ -65,7 +67,7 @@ public class TrainingService {
             code = RandomStringGenerator.generateRoomCode(10);
         } while (trainingRepository.existsByCode(code));
 
-        Training training = buildTraining(trainingDTO,now, trainingDTO.getClosingDate(), tags, instructors, code);
+        Training training = buildTraining(trainingDTO,now, parsedDate, tags, instructors, code);
         Training trainingSaved = trainingRepository.save(training);
 
         if(trainingDTO.getDepartmentIdsToSendMessage() != null){
@@ -88,8 +90,8 @@ public class TrainingService {
        Set<Instructor> instructors = trainingDTO.
                getInstructor().stream().map(instructorDTO -> getInstructorById(instructorDTO.getId())).collect(Collectors.toSet());
 
-
-        validateDateOfClose(training.getClosingDate(), "Lista já encerrada, não pode ser modificada!");
+        LocalDateTime parsedDate = parseDate(trainingDTO.getClosingDate());
+        validateDateOfClose(parsedDate, "Lista já encerrada, não pode ser modificada!");
 
         if(!training.getEmployees().isEmpty()){
             throw new TrainingHasEmployeesException("Não é possível alterar o treinamento com funcionários alocados!");
@@ -103,7 +105,7 @@ public class TrainingService {
 
         training.setName(trainingDTO.getName());
         training.setDescription(trainingDTO.getDescription());
-        training.setClosingDate(trainingDTO.getClosingDate());
+        training.setClosingDate(parsedDate);
         training.setTags(tags);
 
         Training entity = trainingRepository.save(training);
@@ -167,7 +169,7 @@ public class TrainingService {
         List<RoomParticipantsDTO> participants = new ArrayList<>();
         for (EmployeeTraining employeeTraining : training.getEmployees()) {
             String fullName = employeeTraining.getEmployee().getName() + " " + employeeTraining.getEmployee().getSurname();
-            RoomParticipantsDTO participantDTO = new RoomParticipantsDTO(fullName);
+            RoomParticipantsDTO participantDTO = new RoomParticipantsDTO(fullName, employeeTraining.getEmployee().getEmployeeRegistration());
             participants.add(participantDTO);
         }
         return participants;
@@ -220,6 +222,12 @@ public class TrainingService {
             throw new PasswordDoesntMatchException("Senha incorreta!");
         }
     }
+
+    private LocalDateTime parseDate(String date) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yy HH:mm:ss,SSSSSSSSS");
+        return LocalDateTime.parse(date, formatter);
+    }
+
 
     private void validateDateOfClose(LocalDateTime date, String message) {
         if (date.isBefore(LocalDateTime.now())) {

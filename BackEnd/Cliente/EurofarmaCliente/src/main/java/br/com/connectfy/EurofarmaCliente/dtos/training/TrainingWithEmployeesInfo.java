@@ -39,8 +39,6 @@ public class TrainingWithEmployeesInfo implements Serializable {
 
     private Set<InstructorInfo> instructorsInfo = new HashSet<>();
 
-    private Set<EmployeeUserProfileInfoDTO> employeesInfo = new HashSet<>();
-
     private Set<TagDTO> tags = new HashSet<>();
 
     public TrainingWithEmployeesInfo(Training entity) {
@@ -55,11 +53,6 @@ public class TrainingWithEmployeesInfo implements Serializable {
         this.description = entity.getDescription();
         if(entity.getInstructors() != null) {
             this.instructorsInfo = entity.getInstructors().stream().map(InstructorInfo::new).collect(Collectors.toSet());
-        }
-        if(entity.getEmployees() != null){
-            this.employeesInfo = entity.getEmployees().stream().map(employeeTraining ->
-                    new EmployeeUserProfileInfoDTO(employeeTraining.getEmployee())
-            ).collect(Collectors.toSet());
         }
         if(entity.getTags() != null){
             this.tags = entity.getTags().stream().map(TagDTO::new).collect(Collectors.toSet());
@@ -100,10 +93,6 @@ public class TrainingWithEmployeesInfo implements Serializable {
 
     public Set<InstructorInfo> getInstructorsInfo() {
         return instructorsInfo;
-    }
-
-    public Set<EmployeeUserProfileInfoDTO> getEmployeesInfo() {
-        return employeesInfo;
     }
 
     public Set<TagDTO> getTags() {

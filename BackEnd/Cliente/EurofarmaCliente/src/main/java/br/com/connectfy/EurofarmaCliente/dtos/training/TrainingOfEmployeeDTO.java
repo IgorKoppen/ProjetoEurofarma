@@ -24,7 +24,6 @@ public class TrainingOfEmployeeDTO implements Serializable {
 
     private final String name;
 
-
     @JsonProperty("creation_date")
     private String creationDate;
 

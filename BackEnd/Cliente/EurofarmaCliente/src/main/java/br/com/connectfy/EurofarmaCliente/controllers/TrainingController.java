@@ -218,7 +218,7 @@ public class TrainingController {
                     @ApiResponse(description = "Unprocessable Entity", responseCode = "422", content = @Content)
             })
     @PutMapping(value = "/addEmployee", produces = "application/json")
-    public ResponseEntity<Void> addEmployeeIntoTraining(@RequestBody UserConfirmAssinatureDTO userConfirmAssinatureDTO) {
+    public ResponseEntity<Void> addEmployeeIntoTraining(@Valid @RequestBody UserConfirmAssinatureDTO userConfirmAssinatureDTO) {
         trainingService.addEmployeeInTraining(userConfirmAssinatureDTO);
         return ResponseEntity.noContent().build();
     }
