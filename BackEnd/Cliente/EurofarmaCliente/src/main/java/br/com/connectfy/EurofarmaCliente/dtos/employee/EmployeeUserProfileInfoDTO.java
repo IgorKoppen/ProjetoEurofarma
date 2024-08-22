@@ -7,12 +7,14 @@ public class EmployeeUserProfileInfoDTO {
     private final String name;
     private final String surname;
     private final String cellphoneNumber;
+    private final Long employeeRegistration;
 
     public EmployeeUserProfileInfoDTO(Employee entity) {
         this.id = entity.getId();
         this.name = entity.getName();
         this.surname = entity.getSurname();
         this.cellphoneNumber = entity.getCellphoneNumber();
+        this.employeeRegistration = entity.getEmployeeRegistration();
     }
 
     public Long getId() {
@@ -29,5 +31,9 @@ public class EmployeeUserProfileInfoDTO {
 
     public String getCellphoneNumber() {
         return cellphoneNumber;
+    }
+
+    public Long getEmployeeRegistration() {
+        return employeeRegistration;
     }
 }

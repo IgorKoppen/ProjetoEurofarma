@@ -18,8 +18,8 @@ public class EmployeeInfoDTO implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private  Long id;
-    @JsonProperty("user_name")
-    private  String userName;
+    @JsonProperty("employee_registration")
+    private  Long employeeRegistration;
 
     private  String name;
 
@@ -39,7 +39,7 @@ public class EmployeeInfoDTO implements Serializable {
 
     public EmployeeInfoDTO(Employee entity) {
         this.id = entity.getId();
-        this.userName = entity.getUsername();
+        this.employeeRegistration = entity.getEmployeeRegistration();
         this.name = entity.getName();
         this.surname = entity.getSurname();
         this.enabled = entity.isEnabled();
@@ -72,8 +72,8 @@ public class EmployeeInfoDTO implements Serializable {
         return id;
     }
 
-    public String getUserName() {
-        return userName;
+    public Long getEmployeeRegistration() {
+        return employeeRegistration;
     }
 
     public String getName() {

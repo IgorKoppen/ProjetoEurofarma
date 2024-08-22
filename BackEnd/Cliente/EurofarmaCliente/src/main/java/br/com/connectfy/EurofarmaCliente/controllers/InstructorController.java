@@ -1,6 +1,6 @@
 package br.com.connectfy.EurofarmaCliente.controllers;
 import br.com.connectfy.EurofarmaCliente.dtos.instructor.InstructorDTO;
-import br.com.connectfy.EurofarmaCliente.dtos.instructor.InstructorIdAndFullNameDTO;
+import br.com.connectfy.EurofarmaCliente.dtos.instructor.InstructorIdAndFullNameAndEmployeeRegistrarionDTO;
 import br.com.connectfy.EurofarmaCliente.services.InstructorService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -64,16 +64,16 @@ public class InstructorController {
     }
 
 
-    @Operation(summary = "Consulta o nome completo dos instrutores", description = "Retorna todos os nomes completos dos instrutores",
+    @Operation(summary = "Consulta o nome completo dos instrutores e o RE", description = "Retorna todos os nomes completos dos instrutores junto com RE",
             tags = {"Instructor"},
             responses = {
                     @ApiResponse(description = "Success", responseCode = "200", content = @Content()),
                     @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
                     @ApiResponse(description = "Forbidden", responseCode = "403", content = @Content),
             })
-    @GetMapping(value = "/findAllFullName", produces = "application/json")
-    public ResponseEntity<List<InstructorIdAndFullNameDTO>> findAllFullName() {
-        List<InstructorIdAndFullNameDTO> dto  = instructorService.findAllIdAndFullName();
+    @GetMapping(value = "/findAllFullNameEmployeeAndRegistration", produces = "application/json")
+    public ResponseEntity<List<InstructorIdAndFullNameAndEmployeeRegistrarionDTO>> findAllFullNameAndRegistration() {
+        List<InstructorIdAndFullNameAndEmployeeRegistrarionDTO> dto  = instructorService.findAllIdAndFullNameAndRegistration();
         return ResponseEntity.ok(dto);
     }
 

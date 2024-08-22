@@ -12,8 +12,8 @@ import java.util.Optional;
 
 @Repository
 public interface EmployeeRepository extends JpaRepository<Employee, Long> {
-    @Query("SELECT u FROM Employee u where u.userName =:userName")
-    Optional<Employee> findByUsername(@Param("userName") String userName);
+    @Query("SELECT u FROM Employee u where u.employeeRegistration =:employeeRegistration")
+    Optional<Employee> findByEmployeeRegistration(@Param("employeeRegistration") Long employeeRegistration);
 
     @Modifying
     @Query("UPDATE Employee p SET p.enabled =:status WHERE p.id = :id")
@@ -33,7 +33,7 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
 
     boolean existsByCellphoneNumber(@Param("cellphoneNumber") String cellphoneNumber);
 
-    boolean existsByUserName(@Param("userName") String userName);
+    boolean existsByEmployeeRegistration(@Param("employeeRegistration") Long employeeRegistration);
 
 
 }

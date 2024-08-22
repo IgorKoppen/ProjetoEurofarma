@@ -44,7 +44,7 @@ public class AuthController {
                     @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
                     @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content)
             })
-    public ResponseEntity<TokenVO> refreshToken(@PathVariable("userName") String userName, @RequestHeader("Authorization") String refreshToken) {
+    public ResponseEntity<TokenVO> refreshToken(@PathVariable("userName") Long userName, @RequestHeader("Authorization") String refreshToken) {
         TokenVO token = authService.refreshToken(userName, refreshToken);
         return ResponseEntity.ok(token);
     }

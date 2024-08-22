@@ -27,16 +27,16 @@ public class AuthService {
 
     public TokenVO signIn(AccountCredentialsVO data) {
         try {
-            String username = data.getUserName();
+            Long employeeRegistration = Long.parseLong(data.getUserName());
             String password = data.getPassword();
-            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
-            EmployeeInfoDTO user = employeeService.findByUserName(username);
+            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(employeeRegistration, password));
+            EmployeeInfoDTO user = employeeService.findByEmployeeRegistration(employeeRegistration);
             TokenVO tokenResponse;
             Long instructorId = null;
             if (user.getInstructorId() != null) {
                 instructorId = user.getInstructorId();
             }
-            tokenResponse = tokenProvider.createToken(user.getId(), username, user.getName(), user.getPermissionsDescription(), instructorId);
+            tokenResponse = tokenProvider.createToken(user.getId(), employeeRegistration.toString(), user.getName(), user.getPermissionsDescription(), instructorId);
             return tokenResponse;
         }
         catch (Exception e) {
@@ -44,16 +44,16 @@ public class AuthService {
         }
     }
 
-    public TokenVO refreshToken(String username, String refreshToken) {
-        if(username == null || refreshToken == null) {
+    public TokenVO refreshToken(Long employeeRegistration, String refreshToken) {
+        if(employeeRegistration == null || refreshToken == null) {
             throw new BadCredentialsException("RefreshToken ou usuário estão vazios!");
         }
         try {
-            EmployeeInfoDTO user = employeeService.findByUserName(username);
+            EmployeeInfoDTO user = employeeService.findByEmployeeRegistration(employeeRegistration);
             TokenVO tokenResponse;
             tokenResponse = tokenProvider.refreshToken(refreshToken);
             tokenResponse.setId(user.getId());
-            tokenResponse.setName(user.getUserName());
+            tokenResponse.setName(user.getEmployeeRegistration().toString());
             if (user.getInstructorId() != null) {
                 tokenResponse.setInstructorId(user.getInstructorId());
             }

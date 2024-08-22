@@ -67,9 +67,8 @@ public class EmployeeService implements UserDetailsService {
         String formattedCellPhone = removeCellPhoneFormatting(employee.getCellphoneNumber());
         validatePhoneNumber(formattedCellPhone);
         employee.setCellphoneNumber(formattedCellPhone);
-        employee.setUserName(generateUserName(employee.getName(), employee.getSurname(), employee.getCellphoneNumber()));
 
-        if (employeeRepository.existsByUserName(employee.getUsername())) {
+        if (employeeRepository.existsByEmployeeRegistration(employee.getEmployeeRegistration())) {
             throw new AlreadyExistException("Usuário já cadastrado!");
         }
 
@@ -103,7 +102,7 @@ public class EmployeeService implements UserDetailsService {
         }
 
         Employee savedEmployee = employeeRepository.save(employee);
-         sendCreationEmployeeMessage(employee.getName(), employee.getUserName(), randomPassword, employee.getCellphoneNumber());
+         sendCreationEmployeeMessage(employee.getName(), employee.getEmployeeRegistration().toString(), randomPassword, employee.getCellphoneNumber());
 
         return toDTO(savedEmployee);
     }
@@ -128,7 +127,6 @@ public class EmployeeService implements UserDetailsService {
                     .anyMatch(permission -> "treinador".equals(permission.getDescription()));
 
             if (hasTrainerPermission) {
-
                 Instructor instructor = new Instructor();
                 employee.setInstructor(instructor);
                 instructorRepository.save(instructor);
@@ -139,9 +137,15 @@ public class EmployeeService implements UserDetailsService {
     }
 
     @Transactional(readOnly = true)
-    public EmployeeInfoDTO findByUserName(String username) {
-        Employee entity = employeeRepository.findByUsername(username).orElseThrow(() -> new ResourceNotFoundException("Nenhum funcionário encontrado com username: " + username));
+    public EmployeeInfoDTO findByEmployeeRegistration(Long employeeRegistration) {
+        Employee entity = employeeRepository.findByEmployeeRegistration(employeeRegistration).orElseThrow(() -> new ResourceNotFoundException("Nenhum funcionário encontrado com registro de funcionário: " + employeeRegistration));
         return toDTO(entity);
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String employeeRegistration) throws UsernameNotFoundException {
+
+        return employeeRepository.findByEmployeeRegistration(Long.parseLong(employeeRegistration)).orElseThrow(() -> new ResourceNotFoundException("Nenhum funcionário encontrado com registro de funcionário:" + employeeRegistration));
     }
 
     @Transactional
@@ -191,11 +195,6 @@ public class EmployeeService implements UserDetailsService {
     }
 
 
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return employeeRepository.findByUsername(username).orElseThrow(() -> new ResourceNotFoundException("Nenhum funcionário encontrado com username:" + username));
-    }
-
 
     private EmployeeInfoDTO toDTO(Employee employee) {
         return new EmployeeInfoDTO(employee);
@@ -234,19 +233,4 @@ public class EmployeeService implements UserDetailsService {
         );
         messageService.send(message, cellphoneNumber);
     }
-
-    private String generateUserName(String name, String surname, String cellphone) {
-        surname = surname.trim();
-        String[] surnameParts = surname.split(" ");
-        StringBuilder initials = new StringBuilder();
-        for (String part : surnameParts) {
-            if (!part.isEmpty()) {
-                initials.append(Character.toLowerCase(part.charAt(0)));
-            }
-        }
-        String lastFourDigits = cellphone.length() >= 4 ? cellphone.substring(cellphone.length() - 4) : cellphone;
-        return name + initials + lastFourDigits;
-    }
-
-
 }

@@ -12,7 +12,7 @@ public class TokenVO implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private Long id;
-    private String username;
+    private String employeeRegistration;
     private String name;
     private List<String> roles;
     private Boolean authenticated;
@@ -25,9 +25,9 @@ public class TokenVO implements Serializable {
     public TokenVO() {
     }
 
-    public TokenVO(Long id, String username, String name, List<String> roles, Boolean authenticated, Date created, Date expiration, String accessToken, String refreshToken, Long instructorId) {
+    public TokenVO(Long id, String employeeRegistration, String name, List<String> roles, Boolean authenticated, Date created, Date expiration, String accessToken, String refreshToken, Long instructorId) {
         this.id = id;
-        this.username = username;
+        this.employeeRegistration = employeeRegistration;
         this.name = name;
         this.roles = roles;
         this.authenticated = authenticated;
@@ -44,12 +44,12 @@ public class TokenVO implements Serializable {
     public void setId(Long id) {
         this.id = id;
     }
-    public String getUsername() {
-        return username;
+    public String getEmployeeRegistration() {
+        return employeeRegistration;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setEmployeeRegistration(String employeeRegistration) {
+        this.employeeRegistration = employeeRegistration;
     }
 
     public Boolean getAuthenticated() {
@@ -121,12 +121,12 @@ public class TokenVO implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         TokenVO tokenVO = (TokenVO) o;
-        return Objects.equals(username, tokenVO.username) && Objects.equals(authenticated, tokenVO.authenticated) && Objects.equals(created, tokenVO.created) && Objects.equals(expiration, tokenVO.expiration) && Objects.equals(accessToken, tokenVO.accessToken) && Objects.equals(refreshToken, tokenVO.refreshToken);
+        return Objects.equals(employeeRegistration, tokenVO.employeeRegistration) && Objects.equals(authenticated, tokenVO.authenticated) && Objects.equals(created, tokenVO.created) && Objects.equals(expiration, tokenVO.expiration) && Objects.equals(accessToken, tokenVO.accessToken) && Objects.equals(refreshToken, tokenVO.refreshToken);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(username, authenticated, created, expiration, accessToken, refreshToken);
+        return Objects.hash(employeeRegistration, authenticated, created, expiration, accessToken, refreshToken);
     }
 
 }

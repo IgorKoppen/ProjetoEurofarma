@@ -3,7 +3,7 @@ package br.com.connectfy.EurofarmaCliente.dtos.instructor;
 import java.io.Serial;
 import java.io.Serializable;
 
-public record InstructorIdAndFullNameDTO(Long id, String fullName) implements Serializable {
+public record InstructorIdAndFullNameAndEmployeeRegistrarionDTO(Long id, String fullName,Long employeeRegistrarion) implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 }

@@ -17,8 +17,8 @@ public class Employee implements UserDetails, Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "user_name", unique = true, nullable = false)
-    private String userName;
+    @Column(name = "employee_registration", unique = true, nullable = false,length = 6)
+    private Long employeeRegistration;
 
     @Column(nullable = false)
     private String name;
@@ -72,9 +72,9 @@ public class Employee implements UserDetails, Serializable {
 
     }
 
-    public Employee(Long id, String userName, String name, String surname, String password, String cellphoneNumber, boolean accountNonExpired, boolean credentialsNonExpired, boolean accountNonLocked, boolean enabled, Role role, Set<Permission> permissions, Instructor instructor, Set<EmployeeTraining> employeeTrainings) {
+    public Employee(Long id, Long employeeRegistration, String name, String surname, String password, String cellphoneNumber, boolean accountNonExpired, boolean credentialsNonExpired, boolean accountNonLocked, boolean enabled, Role role, Set<Permission> permissions, Instructor instructor, Set<EmployeeTraining> employeeTrainings) {
         this.id = id;
-        this.userName = userName;
+        this.employeeRegistration = employeeRegistration;
         this.name = name;
         this.surname = surname;
         this.password = password;
@@ -89,19 +89,20 @@ public class Employee implements UserDetails, Serializable {
         this.employeeTrainings = employeeTrainings;
     }
 
-
     public Employee(EmployeeInsertDTO dto) {
         this.name = dto.name();
         this.surname = dto.surname();
         this.cellphoneNumber = dto.cellphoneNumber();
+        this.employeeRegistration = dto.employeeRegistration();
     }
 
     public Employee(EmployeeInfoDTO employeeDTO) {
         this.id = employeeDTO.getId();
-        this.userName = employeeDTO.getUserName();
+        this.employeeRegistration = employeeDTO.getEmployeeRegistration();
         this.name = employeeDTO.getName();
         this.surname = employeeDTO.getSurname();
         this.cellphoneNumber = employeeDTO.getCellphoneNumber();
+        this.employeeRegistration = employeeDTO.getEmployeeRegistration();
     }
 
     public Long getId() {
@@ -112,8 +113,8 @@ public class Employee implements UserDetails, Serializable {
         this.id = id;
     }
 
-    public String getUserName() {
-        return userName;
+    public Long getEmployeeRegistration() {
+        return employeeRegistration;
     }
 
     public String getName() {
@@ -221,17 +222,19 @@ public class Employee implements UserDetails, Serializable {
         return this.password;
     }
 
+    @Override
+    public String getUsername() {
+        return this.employeeRegistration.toString();
+    }
+
     public void setPassword(String password) {
         this.password = password;
     }
 
-    @Override
-    public String getUsername() {
-        return this.userName;
-    }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+
+    public void setEmployeeRegistration(Long employeeRegistration) {
+        this.employeeRegistration = employeeRegistration;
     }
 
     @Override
@@ -253,7 +256,7 @@ public class Employee implements UserDetails, Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Employee employee)) return false;
-        return accountNonExpired == employee.accountNonExpired && credentialsNonExpired == employee.credentialsNonExpired && accountNonLocked == employee.accountNonLocked && enabled == employee.enabled && Objects.equals(id, employee.id) && Objects.equals(userName, employee.userName) && Objects.equals(name, employee.name) && Objects.equals(surname, employee.surname) && Objects.equals(password, employee.password) && Objects.equals(cellphoneNumber, employee.cellphoneNumber) && Objects.equals(role, employee.role) && Objects.equals(permissions, employee.permissions) && Objects.equals(instructor, employee.instructor) && Objects.equals(employeeTrainings, employee.employeeTrainings);
+        return accountNonExpired == employee.accountNonExpired && credentialsNonExpired == employee.credentialsNonExpired && accountNonLocked == employee.accountNonLocked && enabled == employee.enabled && Objects.equals(id, employee.id) && Objects.equals(employeeRegistration, employee.employeeRegistration) && Objects.equals(name, employee.name) && Objects.equals(surname, employee.surname) && Objects.equals(password, employee.password) && Objects.equals(cellphoneNumber, employee.cellphoneNumber) && Objects.equals(role, employee.role) && Objects.equals(permissions, employee.permissions) && Objects.equals(instructor, employee.instructor) && Objects.equals(employeeTrainings, employee.employeeTrainings);
     }
 
     @Override
