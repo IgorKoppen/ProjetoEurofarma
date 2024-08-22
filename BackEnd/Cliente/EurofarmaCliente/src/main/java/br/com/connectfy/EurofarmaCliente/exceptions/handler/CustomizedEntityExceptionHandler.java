@@ -1,119 +1,113 @@
 package br.com.connectfy.EurofarmaCliente.exceptions.handler;
 
+import br.com.connectfy.EurofarmaCliente.dtos.ExceptionResponseDTO;
+import br.com.connectfy.EurofarmaCliente.dtos.ValidationErrorDTO;
 import br.com.connectfy.EurofarmaCliente.exceptions.*;
 import com.auth0.jwt.exceptions.TokenExpiredException;
-import org.springframework.context.support.DefaultMessageSourceResolvable;
-import org.springframework.core.Ordered;
-import org.springframework.core.annotation.Order;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
-import org.springframework.web.servlet.NoHandlerFoundException;
 
 import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-@Order(Ordered.HIGHEST_PRECEDENCE)
+
 @RestControllerAdvice
 public class CustomizedEntityExceptionHandler {
 
-    @ExceptionHandler({InvalidJwtAuthenticationException.class})
-    public final ResponseEntity<ExceptionResponse> handleInvalidJwtAuthenticationExceptions(Exception ex, WebRequest request) {
-        ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), ex.getMessage(), request.getDescription(false));
-        return new ResponseEntity<>(exceptionResponse, HttpStatus.UNAUTHORIZED);
+    @ExceptionHandler(InvalidJwtAuthenticationException.class)
+    public final ResponseEntity<ExceptionResponseDTO> handleInvalidJwtAuthenticationExceptions(Exception ex, WebRequest request) {
+        ExceptionResponseDTO exceptionResponseDTO = new ExceptionResponseDTO(new Date(), ex.getMessage(), request.getDescription(false));
+        return new ResponseEntity<>(exceptionResponseDTO, HttpStatus.UNAUTHORIZED);
     }
-    @ExceptionHandler({UsernameNotFoundException.class})
-    public final ResponseEntity<ExceptionResponse> handleUsernameNotFoundException(UsernameNotFoundException ex, WebRequest request) {
-        ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), ex.getMessage(), request.getDescription(false));
-        return new ResponseEntity<>(exceptionResponse, HttpStatus.NOT_FOUND);
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public final ResponseEntity<ExceptionResponseDTO> handleDataIntegrityViolationExceptions(Exception ex, WebRequest request) {
+        ExceptionResponseDTO exceptionResponseDTO = new ExceptionResponseDTO(new Date(), "Falha de inegridade referencial", request.getDescription(false));
+        return new ResponseEntity<>(exceptionResponseDTO, HttpStatus.BAD_REQUEST);
     }
-    @ExceptionHandler({IncorrectPasswordException.class})
-    public final ResponseEntity<ExceptionResponse> handleIncorrectPasswordException(IncorrectPasswordException ex, WebRequest request) {
-        ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), ex.getMessage(), request.getDescription(false));
-        return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler({ResourceNotFoundException.class})
-    public final ResponseEntity<ExceptionResponse> handleNotFoundExceptions(Exception ex, WebRequest request) {
-        ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), ex.getMessage(), request.getDescription(false));
-        return new ResponseEntity<>(exceptionResponse, HttpStatus.NOT_FOUND);
+    @ExceptionHandler(BadCredentialsException.class)
+    public final ResponseEntity<ExceptionResponseDTO> handleBadCredentialsExceptions(Exception ex, WebRequest request) {
+        ExceptionResponseDTO exceptionResponseDTO = new ExceptionResponseDTO(new Date(), ex.getMessage(), request.getDescription(false));
+        return new ResponseEntity<>(exceptionResponseDTO, HttpStatus.UNAUTHORIZED);
     }
 
-    @ExceptionHandler({BadCredentialsException.class})
-    public final ResponseEntity<ExceptionResponse> handleBadCredentialsExceptions(Exception ex, WebRequest request) {
-        ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), ex.getMessage(), request.getDescription(false));
-        return new ResponseEntity<>(exceptionResponse, HttpStatus.UNAUTHORIZED);
+    @ExceptionHandler(TokenExpiredException.class)
+    public final ResponseEntity<ExceptionResponseDTO> handleTokenExpiredException(TokenExpiredException ex, WebRequest request) {
+        ExceptionResponseDTO exceptionResponseDTO = new ExceptionResponseDTO(new Date(), ex.getMessage() + ex.getExpiredOn().toString(), request.getDescription(false));
+        return new ResponseEntity<>(exceptionResponseDTO, HttpStatus.UNAUTHORIZED);
     }
 
-    @ExceptionHandler({TokenExpiredException.class})
-    public final ResponseEntity<ExceptionResponse> handleTokenExpiredException(TokenExpiredException ex, WebRequest request) {
-        ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), ex.getMessage() + ex.getExpiredOn().toString(), request.getDescription(false));
-        return new ResponseEntity<>(exceptionResponse, HttpStatus.UNAUTHORIZED);
-    }
-    @ExceptionHandler({PasswordDoesntMatchException.class})
-    public final ResponseEntity<ExceptionResponse> handlePasswordDontMatchException(PasswordDoesntMatchException ex, WebRequest request) {
-        ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), ex.getMessage() , request.getDescription(false));
-        return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
-    }
-    @ExceptionHandler({EmployeeAlreadyInTrainingException.class})
-    public final ResponseEntity<ExceptionResponse> handleEmployeeAlreadyInTrainingException(EmployeeAlreadyInTrainingException ex, WebRequest request) {
-        ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), ex.getMessage() , request.getDescription(false));
-        return new ResponseEntity<>(exceptionResponse, HttpStatus.CONFLICT);
-    }
-    @ExceptionHandler({InvalidDateException.class})
-    public final ResponseEntity<ExceptionResponse> handleInvalidDateException(InvalidDateException ex, WebRequest request) {
-        ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), ex.getMessage() , request.getDescription(false));
-        return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
-    }
-    @ExceptionHandler({AlreadyExistException.class})
-    public final ResponseEntity<ExceptionResponse> handleAlreadyExistException(AlreadyExistException ex, WebRequest request) {
-        ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), ex.getMessage() , request.getDescription(false));
-        return new ResponseEntity<>(exceptionResponse, HttpStatus.CONFLICT);
-    }
-    @ExceptionHandler({InvalidPhoneNumberException.class})
-    public final ResponseEntity<ExceptionResponse> handleInvalidPhoneNumberException(InvalidPhoneNumberException ex, WebRequest request) {
-        ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), ex.getMessage() , request.getDescription(false));
-        return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public final ResponseEntity<ExceptionResponseDTO> handleResourceNotFoundException(ResourceNotFoundException ex, WebRequest request) {
+        ExceptionResponseDTO exceptionResponseDTO = new ExceptionResponseDTO(new Date(), ex.getMessage(), request.getDescription(false));
+        return new ResponseEntity<>(exceptionResponseDTO, HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler(UsernameNotFoundException.class)
+    public final ResponseEntity<ExceptionResponseDTO> handleUsernameNotFoundException(UsernameNotFoundException ex, WebRequest request) {
+        ExceptionResponseDTO exceptionResponseDTO = new ExceptionResponseDTO(new Date(), ex.getMessage(), request.getDescription(false));
+        return new ResponseEntity<>(exceptionResponseDTO, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(DatabaseException.class)
+    public final ResponseEntity<ExceptionResponseDTO> handleDatabaseException(DatabaseException ex, WebRequest request) {
+        ExceptionResponseDTO exceptionResponseDTO = new ExceptionResponseDTO(new Date(), ex.getMessage(), request.getDescription(false));
+        return new ResponseEntity<>(exceptionResponseDTO, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(EmployeeAlreadyInTrainingException.class)
+    public final ResponseEntity<ExceptionResponseDTO> handleEmployeeAlreadyInTrainingException(EmployeeAlreadyInTrainingException ex, WebRequest request) {
+        ExceptionResponseDTO exceptionResponseDTO = new ExceptionResponseDTO(new Date(), ex.getMessage(), request.getDescription(false));
+        return new ResponseEntity<>(exceptionResponseDTO, HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(AlreadyExistException.class)
+    public final ResponseEntity<ExceptionResponseDTO> handleAlreadyExistException(AlreadyExistException ex, WebRequest request) {
+        ExceptionResponseDTO exceptionResponseDTO = new ExceptionResponseDTO(new Date(), ex.getMessage(), request.getDescription(false));
+        return new ResponseEntity<>(exceptionResponseDTO, HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(TrainingHasEmployeesException.class)
+    public ResponseEntity<ExceptionResponseDTO> TrainingHasEmployeesException(TrainingHasEmployeesException ex, WebRequest request) {
+        ExceptionResponseDTO exceptionResponseDTO = new ExceptionResponseDTO(new Date(), ex.getMessage(), request.getDescription(false));
+        return new ResponseEntity<>(exceptionResponseDTO, HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(InvalidDateException.class)
+    public final ResponseEntity<ExceptionResponseDTO> handleInvalidDateException(InvalidDateException ex, WebRequest request) {
+        ExceptionResponseDTO exceptionResponseDTO = new ExceptionResponseDTO(new Date(), ex.getMessage(), request.getDescription(false));
+        return new ResponseEntity<>(exceptionResponseDTO, HttpStatus.UNPROCESSABLE_ENTITY);
+    }
+
+    @ExceptionHandler(IncorrectPasswordException.class)
+    public final ResponseEntity<ExceptionResponseDTO> handleIncorrectPasswordException(IncorrectPasswordException ex, WebRequest request) {
+        ExceptionResponseDTO exceptionResponseDTO = new ExceptionResponseDTO(new Date(), ex.getMessage(), request.getDescription(false));
+        return new ResponseEntity<>(exceptionResponseDTO, HttpStatus.UNPROCESSABLE_ENTITY);
+    }
+
+    @ExceptionHandler(InvalidPhoneNumberException.class)
+    public final ResponseEntity<ExceptionResponseDTO> handleInvalidPhoneNumberException(InvalidPhoneNumberException ex, WebRequest request) {
+        ExceptionResponseDTO exceptionResponseDTO = new ExceptionResponseDTO(new Date(), ex.getMessage(), request.getDescription(false));
+        return new ResponseEntity<>(exceptionResponseDTO, HttpStatus.UNPROCESSABLE_ENTITY);
+    }
+
+    @ExceptionHandler(PasswordDoesntMatchException.class)
+    public final ResponseEntity<ExceptionResponseDTO> handlePasswordDontMatchException(PasswordDoesntMatchException ex, WebRequest request) {
+        ExceptionResponseDTO exceptionResponseDTO = new ExceptionResponseDTO(new Date(), ex.getMessage(), request.getDescription(false));
+        return new ResponseEntity<>(exceptionResponseDTO, HttpStatus.UNPROCESSABLE_ENTITY);
+    }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public final ResponseEntity<InputExceptionResponse> handleValidationExceptions(MethodArgumentNotValidException ex, WebRequest request) {
-        Map<String, List<String>> errors = ex.getBindingResult()
-                .getFieldErrors()
-                .stream()
-                .collect(Collectors.groupingBy(
-                        FieldError::getField,
-                        Collectors.mapping(
-                                DefaultMessageSourceResolvable::getDefaultMessage,
-                                Collectors.toList()
-                        )
-                ));
-
-        InputExceptionResponse exceptionResponse = new InputExceptionResponse(
-                new Date(),
-                "Validation Failed",
-                request.getDescription(false),
-                errors
-        );
-        return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
-    }
-    @ExceptionHandler(NoHandlerFoundException.class)
-    public ResponseEntity<ExceptionResponse> handleNotFoundExceptions(NoHandlerFoundException ex, WebRequest request) {
-        ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), ex.getMessage() , request.getDescription(false));
-        return new ResponseEntity<>(exceptionResponse, HttpStatus.NOT_FOUND);
-    }
-    @ExceptionHandler(TrainingHasEmployeesException.class)
-    public ResponseEntity<ExceptionResponse> TrainingHasEmployeesException(TrainingHasEmployeesException ex, WebRequest request) {
-        ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), ex.getMessage() , request.getDescription(false));
-        return new ResponseEntity<>(exceptionResponse, HttpStatus.CONFLICT);
+    public final ResponseEntity<ExceptionResponseDTO> handleValidationExceptions(MethodArgumentNotValidException ex, WebRequest request) {
+        ValidationErrorDTO validationError = new ValidationErrorDTO(new Date(), "Dados inválidos", request.getDescription(false));
+        for (FieldError fieldError : ex.getBindingResult().getFieldErrors()) {
+            validationError.addError(fieldError.getField(), fieldError.getDefaultMessage());
+        }
+        return new ResponseEntity<>(validationError, HttpStatus.UNPROCESSABLE_ENTITY);
     }
 }
