@@ -20,10 +20,10 @@ public class RoleDTO implements Serializable {
 
     private final Long id;
 
-    @NotBlank(message = "O campo não pode ser nulo")
+    @NotBlank(message = "O nome do cargo é obrigatório e não pode estar em branco.")
     private final String roleName;
 
-    @NotNull(message = "Deve ter um cargo")
+    @NotNull(message = "O departamento é obrigatório e deve ser especificado.")
     private DepartmentDTO department;
 
 

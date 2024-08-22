@@ -16,8 +16,8 @@ public class InstructorDTO implements Serializable {
 
     private  Long id;
 
-    @NotNull(message = "Campo não pode ser vazio")
-    private  EmployeeInfoDTO employee;
+    @NotNull(message = "O campo de informações do funcionário é obrigatório e não pode ser nulo.")
+    private EmployeeInfoDTO employee;
 
     public InstructorDTO(Instructor entity) {
         this.id = entity.getId();

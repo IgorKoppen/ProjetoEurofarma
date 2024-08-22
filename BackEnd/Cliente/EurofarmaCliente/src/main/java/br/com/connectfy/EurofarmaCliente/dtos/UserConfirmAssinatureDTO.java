@@ -5,12 +5,12 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 public record UserConfirmAssinatureDTO(
-        @NotNull(message = "User ID não pode ser vazio")
+        @NotNull(message = "O ID do usuário é obrigatório e não pode ser nulo.")
         Long userId,
-        @NotBlank(message = "Code não pode ser vazio")
+        @NotBlank(message = "O código de confirmação é obrigatório e não pode estar em branco.")
         String code,
-        @NotBlank(message = "Password não pode ser vazio")
+        @NotBlank(message = "A senha é obrigatória e não pode estar em branco.")
         String password,
-        @NotBlank(message = "Assinatura não pode ser vazio")
+        @NotBlank(message = "A assinatura é obrigatória e não pode estar em branco.")
         String signature) {
 }

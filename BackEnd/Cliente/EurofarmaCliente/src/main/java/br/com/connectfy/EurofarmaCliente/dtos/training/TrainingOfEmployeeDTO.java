@@ -22,8 +22,7 @@ public class TrainingOfEmployeeDTO implements Serializable {
 
     private final Long id;
 
-    @NotBlank(message = "Nome não pode ser vazio!")
-    private String name;
+    private final String name;
 
 
     @JsonProperty("creation_date")

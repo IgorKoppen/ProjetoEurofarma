@@ -62,6 +62,12 @@ public class EmployeeInfoDTO implements Serializable {
         return permission;
     }
 
+    public List<String> getPermissionsDescription() {
+        List<String> permissionsString = new ArrayList<>();
+        this.permission.forEach(permission -> permissionsString.add(permission.getDescription()));
+        return permissionsString;
+    }
+
     public Long getId() {
         return id;
     }

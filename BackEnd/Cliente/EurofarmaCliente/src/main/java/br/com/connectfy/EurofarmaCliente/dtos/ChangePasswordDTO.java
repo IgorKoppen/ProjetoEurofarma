@@ -1,13 +1,13 @@
 package br.com.connectfy.EurofarmaCliente.dtos;
 
-import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
 public record ChangePasswordDTO(
-        @NotEmpty(message = "Deve ter a senha antiga!")
+        @NotBlank(message = "A senha antiga é obrigatória.")
         String oldPassword,
-        @NotEmpty(message = "Deve ter a senha nova!")
-        @Size(min = 8,message = "O mínimo para senha é 8 dígitos")
+        @NotBlank(message = "A nova senha é obrigatória.")
+        @Size(min = 8, message = "A nova senha deve ter no mínimo 8 caracteres.")
         String newPassword
 ) {
 

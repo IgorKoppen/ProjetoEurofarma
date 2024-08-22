@@ -14,8 +14,8 @@ public class DepartmentDTO implements Serializable {
 
     private final Long id;
 
-    @Size(min = 3, message = "Um departamento deve ter no mínimo 3 dígitos")
-    @NotBlank(message = "Campo nome departamento não pode ser vazio")
+    @Size(min = 3, message = "O nome do departamento deve ter no mínimo 3 caracteres.")
+    @NotBlank(message = "O nome do departamento é obrigatório e não pode estar em branco.")
     private final String departName;
 
     public DepartmentDTO(Department entity) {
