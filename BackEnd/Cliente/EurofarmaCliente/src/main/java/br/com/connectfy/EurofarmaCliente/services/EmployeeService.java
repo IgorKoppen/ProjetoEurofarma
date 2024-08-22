@@ -5,10 +5,7 @@ import br.com.connectfy.EurofarmaCliente.dtos.PhoneNumberUpdateDTO;
 import br.com.connectfy.EurofarmaCliente.dtos.employee.EmployeeInfoDTO;
 import br.com.connectfy.EurofarmaCliente.dtos.employee.EmployeeInsertDTO;
 import br.com.connectfy.EurofarmaCliente.dtos.employee.EmployeeUpdateDTO;
-import br.com.connectfy.EurofarmaCliente.exceptions.AlreadyExistException;
-import br.com.connectfy.EurofarmaCliente.exceptions.InvalidPhoneNumberException;
-import br.com.connectfy.EurofarmaCliente.exceptions.PasswordDoesntMatchException;
-import br.com.connectfy.EurofarmaCliente.exceptions.ResourceNotFoundException;
+import br.com.connectfy.EurofarmaCliente.exceptions.*;
 import br.com.connectfy.EurofarmaCliente.models.Employee;
 import br.com.connectfy.EurofarmaCliente.models.Instructor;
 import br.com.connectfy.EurofarmaCliente.models.Permission;
@@ -18,6 +15,7 @@ import br.com.connectfy.EurofarmaCliente.repositories.InstructorRepository;
 import br.com.connectfy.EurofarmaCliente.util.EncryptedPassword;
 import br.com.connectfy.EurofarmaCliente.util.PhoneNumberValidator;
 import br.com.connectfy.EurofarmaCliente.util.RandomStringGenerator;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.*;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -55,7 +53,7 @@ public class EmployeeService implements UserDetailsService {
 
     @Transactional(readOnly = true)
     public EmployeeInfoDTO findById(Long id) {
-        Employee employee = employeeRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("No records found with id: " + id));
+        Employee employee = employeeRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Nenhum funcionário encontrado com id: " + id));
         return toDTO(employee);
     }
 
@@ -84,7 +82,7 @@ public class EmployeeService implements UserDetailsService {
         if (dto.permissionsIds().isEmpty()) {
             Permission defaultPermission = new Permission();
             defaultPermission.setId(3L);
-            defaultPermission.setDescription("funcionário");
+            defaultPermission.setDescription("funcionario");
             employee.addPermission(defaultPermission);
         } else {
             Set<Permission> permissions = dto.permissionsIds().stream()
@@ -105,7 +103,7 @@ public class EmployeeService implements UserDetailsService {
         }
 
         Employee savedEmployee = employeeRepository.save(employee);
-        // sendCreationEmployeeMessage(employee.getName(), employee.getUserName(), randomPassword, employee.getCellphoneNumber());
+         sendCreationEmployeeMessage(employee.getName(), employee.getUserName(), randomPassword, employee.getCellphoneNumber());
 
         return toDTO(savedEmployee);
     }
@@ -113,7 +111,7 @@ public class EmployeeService implements UserDetailsService {
     @Transactional
     public EmployeeInfoDTO update(Long id, EmployeeUpdateDTO dto) {
         Employee employee = employeeRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("No records found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Nenhum funcionário encontrado com id: " + id));
         String formattedCellPhone = removeCellPhoneFormatting(dto.cellphoneNumber());
         validatePhoneNumber(formattedCellPhone);
         employee.setCellphoneNumber(formattedCellPhone);
@@ -140,22 +138,28 @@ public class EmployeeService implements UserDetailsService {
         return toDTO(savedEmployee);
     }
 
+    @Transactional(readOnly = true)
+    public EmployeeInfoDTO findByUserName(String username) {
+        Employee entity = employeeRepository.findByUsername(username).orElseThrow(() -> new ResourceNotFoundException("Nenhum funcionário encontrado com username: " + username));
+        return toDTO(entity);
+    }
+
     @Transactional
     public void delete(Long id) {
         if (!employeeRepository.existsById(id)) {
-            throw new ResourceNotFoundException("No records found with id: " + id);
+            throw new ResourceNotFoundException("Nenhum funcionário encontrado com id: " + id);
         }
         try {
             employeeRepository.deleteById(id);
-        } catch (ResourceNotFoundException e) {
-            throw new ResourceNotFoundException("No records found with id: " + id);
+        } catch (DataIntegrityViolationException e) {
+            throw new DatabaseException("Falha de inegridade referencial");
         }
     }
 
 
     @Transactional
     public void updatePassword(Long id, ChangePasswordDTO dto) {
-        Employee employee = employeeRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("No records found with id: " + id));
+        Employee employee = employeeRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Nenhum funcionário encontrado com id: " + id));
         if (!EncryptedPassword.matchesPassword(dto.oldPassword(), employee.getPassword())) {
             throw new PasswordDoesntMatchException("Senha incorreta!");
         }
@@ -169,7 +173,7 @@ public class EmployeeService implements UserDetailsService {
         if (employeeRepository.existsByCellphoneNumber(formatedCellPhone)) {
             throw new AlreadyExistException("O número de celular já está vinculado a uma conta!");
         }
-        Employee employee = employeeRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("No records found with id: " + id));
+        Employee employee = employeeRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Nenhum funcionário encontrado com id: " + id));
         if (!EncryptedPassword.matchesPassword(dto.password(), employee.getPassword())) {
             throw new PasswordDoesntMatchException("Senha incorreta!");
         }
@@ -181,7 +185,7 @@ public class EmployeeService implements UserDetailsService {
     @Transactional
     public void toggleEmployeeStatus(Long id) {
         Employee entity = employeeRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("No records found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Nenhum funcionário encontrado com id: " + id));
         boolean newStatus = !entity.isEnabled();
         employeeRepository.toggleEmployeeStatus(id, newStatus);
     }
@@ -189,7 +193,7 @@ public class EmployeeService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return employeeRepository.findByUsername(username).orElseThrow(() -> new ResourceNotFoundException("No records found with username: " + username));
+        return employeeRepository.findByUsername(username).orElseThrow(() -> new ResourceNotFoundException("Nenhum funcionário encontrado com username:" + username));
     }
 
 
@@ -213,7 +217,7 @@ public class EmployeeService implements UserDetailsService {
                 """
                         Olá %s!
 
-                        Bem-vindo(a) à Eurofarma Treinamentos! Sua conta foi criada com sucesso. \
+                        Bem-vindo(a) à Eurofarma Treinamentos! Sua conta foi criada. \
                         Seu nome de usuário é: %s
                         E sua senha temporária é: %s
 
@@ -231,7 +235,7 @@ public class EmployeeService implements UserDetailsService {
         messageService.send(message, cellphoneNumber);
     }
 
-    private String generateUserName(String name, String surname, String telefone) {
+    private String generateUserName(String name, String surname, String cellphone) {
         surname = surname.trim();
         String[] surnameParts = surname.split(" ");
         StringBuilder initials = new StringBuilder();
@@ -240,7 +244,9 @@ public class EmployeeService implements UserDetailsService {
                 initials.append(Character.toLowerCase(part.charAt(0)));
             }
         }
-        String lastFourDigits = telefone.length() >= 4 ? telefone.substring(telefone.length() - 4) : telefone;
+        String lastFourDigits = cellphone.length() >= 4 ? cellphone.substring(cellphone.length() - 4) : cellphone;
         return name + initials + lastFourDigits;
     }
+
+
 }

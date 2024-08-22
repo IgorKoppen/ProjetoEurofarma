@@ -3,7 +3,6 @@ package br.com.connectfy.EurofarmaCliente.models;
 import br.com.connectfy.EurofarmaCliente.dtos.department.DepartmentDTO;
 import jakarta.persistence.*;
 
-import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 

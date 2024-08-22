@@ -50,6 +50,7 @@ public class TrainingService {
     @Transactional
     public TrainingDTO insert(TrainingInsertDTO trainingDTO) {
         validateDateOfClose(trainingDTO.getClosingDate(), "Data de fechamento não pode ser no passado!");
+
         Set<Tag> tags = trainingDTO.getTags().stream()
                 .map(tagDTO -> getTagById(tagDTO.getId()))
                 .collect(Collectors.toSet());
@@ -78,7 +79,7 @@ public class TrainingService {
     public TrainingDTO update(Long id, TrainingInsertDTO trainingDTO) {
 
         Training training = trainingRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("No records found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Treinamento não encontrada com id: " + id));
 
         Set<Tag> tags = trainingDTO.getTags().stream()
                 .map(tagDTO -> getTagById(tagDTO.getId()))
@@ -88,7 +89,7 @@ public class TrainingService {
                getInstructor().stream().map(instructorDTO -> getInstructorById(instructorDTO.getId())).collect(Collectors.toSet());
 
 
-        validateDateOfClose(training.getClosingDate(), "Sala já encerrada, não pode ser modificada!");
+        validateDateOfClose(training.getClosingDate(), "Lista já encerrada, não pode ser modificada!");
 
         if(!training.getEmployees().isEmpty()){
             throw new TrainingHasEmployeesException("Não é possível alterar o treinamento com funcionários alocados!");
@@ -126,9 +127,9 @@ public class TrainingService {
     public void addEmployeeInTraining(UserConfirmAssinatureDTO userConfirmAssinatureDTO) {
         try {
             Training training = getTrainingByCode(userConfirmAssinatureDTO.code());
-            validateDateOfClose(training.getClosingDate(), "Sala já encerrada!");
+            validateDateOfClose(training.getClosingDate(), "Lista já encerrada!");
             validatePassword(training, userConfirmAssinatureDTO.password());
-            Employee employee = employeeRepository.findById(userConfirmAssinatureDTO.userId()).orElseThrow(() -> new ResourceNotFoundException("No records found with id: " + userConfirmAssinatureDTO.userId()));
+            Employee employee = employeeRepository.findById(userConfirmAssinatureDTO.userId()).orElseThrow(() -> new ResourceNotFoundException("Treinamento não encontrada com id: " + userConfirmAssinatureDTO.userId()));
 
             addEmployeeToTraining(training, employee, userConfirmAssinatureDTO.signature());
             trainingRepository.save(training);
@@ -140,8 +141,8 @@ public class TrainingService {
 
     @Transactional
     public void cancelTraining(Long id) {
-      Training training = trainingRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("No records found with id: " + id));
-        validateDateOfClose(training.getClosingDate(), "Sala já encerrada!");
+      Training training = trainingRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Treinamento não encontrada com id: " + id));
+        validateDateOfClose(training.getClosingDate(), "Lista já encerrada!");
         if(!training.getEmployees().isEmpty()){
             throw new TrainingHasEmployeesException("Não é possível cancelar o treinamento com funcionários alocados!");
         }
@@ -156,13 +157,13 @@ public class TrainingService {
     @Transactional(readOnly = true)
     public TrainingDTO findByCode(String code) {
         Training training = getTrainingByCode(code);
-        validateDateOfClose(training.getClosingDate(), "Sala já encerrada!");
+        validateDateOfClose(training.getClosingDate(), "Lista já encerrada!");
         return toDTO(training);
     }
 
     @Transactional(readOnly = true)
     public List<RoomParticipantsDTO> findAllRoomParticipants(Long trainingId) {
-        Training training = trainingRepository.findById(trainingId).orElseThrow(() -> new ResourceNotFoundException("No records found with id: " + trainingId));
+        Training training = trainingRepository.findById(trainingId).orElseThrow(() -> new ResourceNotFoundException("Treinamento não encontrada com id: " + trainingId));
         List<RoomParticipantsDTO> participants = new ArrayList<>();
         for (EmployeeTraining employeeTraining : training.getEmployees()) {
             String fullName = employeeTraining.getEmployee().getName() + " " + employeeTraining.getEmployee().getSurname();
@@ -175,7 +176,7 @@ public class TrainingService {
     @Transactional(readOnly = true)
     public List<TrainingOfEmployeeDTO> findEmployeeTrainingsById(Long idEmployee) {
         List<EmployeeTraining> trainings = trainingRepository.findEmployeeTrainingSortedByRegistrationDateById(idEmployee)
-                .orElseThrow(() -> new ResourceNotFoundException("Não foi encontrado funcionário com id: " + idEmployee));
+                .orElseThrow(() -> new ResourceNotFoundException("Funcionário não encontrada com id: " + idEmployee));
         if(trainings.isEmpty()){
             return new ArrayList<>();
         }
@@ -187,7 +188,7 @@ public class TrainingService {
     @Transactional(readOnly = true)
     public List<TrainingWithEmployeesInfo> findInstructorTrainingsById(Long id) {
         List<Training> trainings = trainingRepository.findByIdInstructorTrainingsSortedByCreationDate(id)
-                .orElseThrow(() -> new ResourceNotFoundException("No records found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Treinador não encontrada com id: " + id));
         if (trainings.isEmpty()) {
             return new ArrayList<>();
         }

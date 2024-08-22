@@ -11,21 +11,21 @@ import org.springframework.stereotype.Service;
 @Service
 public class MessageService implements SmsSender {
 
-    private final MessageConfig messagerieConfig;
+    private final MessageConfig messageConfig;
 
 
-    public MessageService(MessageConfig messagerieConfig) {
-        this.messagerieConfig = messagerieConfig;
+    public MessageService(MessageConfig messageConfig) {
+        this.messageConfig = messageConfig;
     }
 
     @Override
    public void send(String messageToUser,
                     String toPhone){
         try {
-            Twilio.init(messagerieConfig.getAccountSid(), messagerieConfig.getAuthToken());
+            Twilio.init(messageConfig.getAccountSid(), messageConfig.getAuthToken());
             Message.creator(
                             new PhoneNumber(toPhone),
-                            new PhoneNumber(messagerieConfig.getPhoneNumberToUse()),
+                            new PhoneNumber(messageConfig.getPhoneNumberToUse()),
                             messageToUser
                     )
                     .create();

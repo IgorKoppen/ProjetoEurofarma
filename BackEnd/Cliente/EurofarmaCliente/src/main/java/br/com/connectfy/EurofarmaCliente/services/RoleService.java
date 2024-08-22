@@ -2,10 +2,12 @@ package br.com.connectfy.EurofarmaCliente.services;
 
 import br.com.connectfy.EurofarmaCliente.dtos.department.DepartmentDTO;
 import br.com.connectfy.EurofarmaCliente.dtos.role.RoleDTO;
+import br.com.connectfy.EurofarmaCliente.exceptions.DatabaseException;
 import br.com.connectfy.EurofarmaCliente.exceptions.ResourceNotFoundException;
 import br.com.connectfy.EurofarmaCliente.models.Department;
 import br.com.connectfy.EurofarmaCliente.models.Role;
 import br.com.connectfy.EurofarmaCliente.repositories.RoleRepository;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -42,7 +44,7 @@ public class RoleService {
 
    @Transactional(readOnly = true)
     public RoleDTO findById(Long id) {
-        Role role = roleRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Role não encontrada com id: " + id));;
+        Role role = roleRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Cargo não encontrada com id: " + id));;
         return toDTO(role);
    }
 
@@ -50,12 +52,12 @@ public class RoleService {
     @Transactional
     public void delete(Long id) {
         if (!roleRepository.existsById(id)) {
-            throw new ResourceNotFoundException("No records found with id: " + id);
+            throw new ResourceNotFoundException("Cargo não encontrada com id: " + id);
         }
         try {
             roleRepository.deleteById(id);
-        } catch (ResourceNotFoundException e) {
-            throw new ResourceNotFoundException("No records found with id: " + id);
+        } catch (DataIntegrityViolationException  e) {
+            throw new DatabaseException("Falha de inegridade referencial");
         }
     }
     private RoleDTO toDTO(Role entity){

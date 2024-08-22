@@ -54,6 +54,7 @@ public class Training {
 
     public Training(){}
 
+
     public Training(TrainingDTO dto) {
         this.id = dto.getId();
         this.name = dto.getName();

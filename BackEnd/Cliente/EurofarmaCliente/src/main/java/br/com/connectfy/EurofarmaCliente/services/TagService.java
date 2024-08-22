@@ -1,12 +1,12 @@
 package br.com.connectfy.EurofarmaCliente.services;
 
-import br.com.connectfy.EurofarmaCliente.dtos.instructor.InstructorDTO;
 import br.com.connectfy.EurofarmaCliente.dtos.tag.TagDTO;
 import br.com.connectfy.EurofarmaCliente.exceptions.AlreadyExistException;
+import br.com.connectfy.EurofarmaCliente.exceptions.DatabaseException;
 import br.com.connectfy.EurofarmaCliente.exceptions.ResourceNotFoundException;
-import br.com.connectfy.EurofarmaCliente.models.Instructor;
 import br.com.connectfy.EurofarmaCliente.models.Tag;
 import br.com.connectfy.EurofarmaCliente.repositories.TagsRepository;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -37,7 +37,7 @@ public class TagService {
 
     @Transactional(readOnly = true)
     public TagDTO getById(Long id) {
-        Tag tag = tagsRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("No records found with id: " + id));
+        Tag tag = tagsRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Tag não encontrada com id: " + id));
         return new TagDTO(tag);
     }
 
@@ -55,7 +55,7 @@ public class TagService {
 
     @Transactional
     public TagDTO update(Long id, TagDTO tagDTO) {
-        Tag updateTag = tagsRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("No records found with id: " + id));
+        Tag updateTag = tagsRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Tag não encontrada com id: " + id));
         updateTag.setName(tagDTO.getName());
         updateTag.setColor(tagDTO.getColor());
 
@@ -65,16 +65,16 @@ public class TagService {
     @Transactional
     public void delete(Long id) {
         if (!tagsRepository.existsById(id)) {
-            throw new ResourceNotFoundException("No records found with id: " + id);
+            throw new ResourceNotFoundException("Tag não encontrada com id: " + id);
         }
         try {
             tagsRepository.deleteById(id);
-        } catch (ResourceNotFoundException e) {
-            throw new ResourceNotFoundException("No records found with id: " + id);
+        } catch (DataIntegrityViolationException e) {
+            throw new DatabaseException("Falha de inegridade referencial");
         }
     }
-    private TagDTO toDTO(Tag etity) {
-        return new TagDTO(etity);
+    private TagDTO toDTO(Tag entity) {
+        return new TagDTO(entity);
     }
 
 }
