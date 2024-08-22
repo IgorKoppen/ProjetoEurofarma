@@ -21,8 +21,7 @@ public class TrainingWithEmployeesInfo implements Serializable {
 
     private final Long id;
 
-    @NotBlank(message = "Nome não pode ser vazio!")
-    private String name;
+    private final String name;
 
     private final String code;
 
@@ -34,11 +33,9 @@ public class TrainingWithEmployeesInfo implements Serializable {
 
     private final boolean isOpened;
 
-    @NotBlank(message = "Password não pode ser vazio!")
-    private String password;
+    private final String password;
 
-    @NotBlank(message = "Descrição não pode ser vazia!")
-    private String description;
+    private final String description;
 
     private Set<InstructorInfo> instructorsInfo = new HashSet<>();
 
