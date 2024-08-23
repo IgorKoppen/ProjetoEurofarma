@@ -162,8 +162,16 @@ public class Employee implements UserDetails, Serializable {
         this.enabled = enabled;
     }
 
-    public Role getRole() {
+    public Role getRoleEntity() {
         return role;
+    }
+
+    public List<String> getRoles() {
+        List<String> roles = new ArrayList<>();
+        for (Permission permission : permissions) {
+            roles.add(permission.getDescription());
+        }
+        return roles;
     }
 
     public void setRole(Role role) {

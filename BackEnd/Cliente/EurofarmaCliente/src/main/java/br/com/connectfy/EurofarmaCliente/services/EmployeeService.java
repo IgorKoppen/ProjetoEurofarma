@@ -78,6 +78,7 @@ public class EmployeeService implements UserDetailsService {
         employee.setEnabled(true);
         employee.setAccountNonExpired(true);
         employee.setCredentialsNonExpired(true);
+        employee.setAccountNonLocked(true);
 
         if (dto.permissionsIds().isEmpty()) {
             Permission defaultPermission = new Permission();
@@ -145,7 +146,6 @@ public class EmployeeService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String employeeRegistration) throws UsernameNotFoundException {
-
         return employeeRepository.findByEmployeeRegistration(Long.parseLong(employeeRegistration)).orElseThrow(() -> new ResourceNotFoundException("Nenhum funcionário encontrado com registro de funcionário:" + employeeRegistration));
     }
 

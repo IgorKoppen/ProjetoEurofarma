@@ -25,11 +25,13 @@ public class CustomizedEntityExceptionHandler {
         ExceptionResponseDTO exceptionResponseDTO = new ExceptionResponseDTO(new Date(), ex.getMessage(), request.getDescription(false));
         return new ResponseEntity<>(exceptionResponseDTO, HttpStatus.UNAUTHORIZED);
     }
+
     @ExceptionHandler(DataIntegrityViolationException.class)
     public final ResponseEntity<ExceptionResponseDTO> handleDataIntegrityViolationExceptions(Exception ex, WebRequest request) {
         ExceptionResponseDTO exceptionResponseDTO = new ExceptionResponseDTO(new Date(), "Falha de integridade referencial", request.getDescription(false));
         return new ResponseEntity<>(exceptionResponseDTO, HttpStatus.BAD_REQUEST);
     }
+
     @ExceptionHandler(BadCredentialsException.class)
     public final ResponseEntity<ExceptionResponseDTO> handleBadCredentialsExceptions(Exception ex, WebRequest request) {
         ExceptionResponseDTO exceptionResponseDTO = new ExceptionResponseDTO(new Date(), ex.getMessage(), request.getDescription(false));
@@ -76,6 +78,12 @@ public class CustomizedEntityExceptionHandler {
     public ResponseEntity<ExceptionResponseDTO> TrainingHasEmployeesException(TrainingHasEmployeesException ex, WebRequest request) {
         ExceptionResponseDTO exceptionResponseDTO = new ExceptionResponseDTO(new Date(), ex.getMessage(), request.getDescription(false));
         return new ResponseEntity<>(exceptionResponseDTO, HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(EmployeeNotInDepartmentException.class)
+    public ResponseEntity<ExceptionResponseDTO> EmployeeNotInDepartmentException(EmployeeNotInDepartmentException ex, WebRequest request) {
+        ExceptionResponseDTO exceptionResponseDTO = new ExceptionResponseDTO(new Date(), ex.getMessage(), request.getDescription(false));
+        return new ResponseEntity<>(exceptionResponseDTO, HttpStatus.FORBIDDEN);
     }
 
     @ExceptionHandler(InvalidDateException.class)

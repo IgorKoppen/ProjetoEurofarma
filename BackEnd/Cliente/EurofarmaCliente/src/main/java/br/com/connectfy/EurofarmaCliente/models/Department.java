@@ -21,14 +21,18 @@ public class Department {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "department", cascade = CascadeType.ALL)
     private Set<Role> roles;
 
+    @ManyToMany(mappedBy = "departments", fetch = FetchType.LAZY)
+    private Set<Training> trainings;
+
 
     public Department() {
     }
 
-    public Department(Long id, String departName, Set<Role> roles) {
+    public Department(Long id, String departName, Set<Role> roles, Set<Training> trainings) {
         this.id = id;
         this.departName = departName;
         this.roles = roles;
+        this.trainings = trainings;
     }
 
     public Department(DepartmentDTO departmentDTO) {
@@ -58,11 +62,19 @@ public class Department {
         this.roles = roles;
     }
 
+    public Set<Training> getTrainings() {
+        return trainings;
+    }
+
+    public void setTrainings(Set<Training> trainings) {
+        this.trainings = trainings;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Department that)) return false;
-        return Objects.equals(id, that.id) && Objects.equals(departName, that.departName) && Objects.equals(roles, that.roles);
+        return Objects.equals(id, that.id) && Objects.equals(departName, that.departName) && Objects.equals(roles, that.roles) && Objects.equals(trainings, that.trainings);
     }
 
     @Override

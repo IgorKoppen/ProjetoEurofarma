@@ -1,5 +1,6 @@
 package br.com.connectfy.EurofarmaCliente.dtos.training;
 
+import br.com.connectfy.EurofarmaCliente.dtos.department.DepartmentDTO;
 import br.com.connectfy.EurofarmaCliente.dtos.instructor.InstructorInfo;
 import br.com.connectfy.EurofarmaCliente.dtos.tag.TagDTO;
 import br.com.connectfy.EurofarmaCliente.models.Training;
@@ -42,6 +43,8 @@ public class TrainingDTO implements Serializable {
 
     private final List<TagDTO> tags;
 
+    private final List<DepartmentDTO> departments;
+
     public TrainingDTO(Training entity) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yy HH:mm:ss,SSS");
         this.id = entity.getId();
@@ -54,6 +57,7 @@ public class TrainingDTO implements Serializable {
         this.description = entity.getDescription();
         this.instructorsInfo = entity.getInstructors().stream().map(InstructorInfo::new).toList();
         this.tags = entity.getTags().stream().map(TagDTO::new).toList();
+        this.departments = entity.getDepartments().stream().map(DepartmentDTO::new).toList();
     }
 
     public Long getId() {
@@ -96,4 +100,7 @@ public class TrainingDTO implements Serializable {
         return tags;
     }
 
+    public List<DepartmentDTO> getDepartments() {
+        return departments;
+    }
 }

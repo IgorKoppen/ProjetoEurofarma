@@ -1,11 +1,10 @@
 package br.com.connectfy.EurofarmaCliente.dtos.training;
 
-import br.com.connectfy.EurofarmaCliente.dtos.employee.EmployeeUserProfileInfoDTO;
+import br.com.connectfy.EurofarmaCliente.dtos.department.DepartmentDTO;
 import br.com.connectfy.EurofarmaCliente.dtos.instructor.InstructorInfo;
 import br.com.connectfy.EurofarmaCliente.dtos.tag.TagDTO;
 import br.com.connectfy.EurofarmaCliente.models.Training;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.validation.constraints.NotBlank;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -41,6 +40,8 @@ public class TrainingWithEmployeesInfo implements Serializable {
 
     private Set<TagDTO> tags = new HashSet<>();
 
+    private Set<DepartmentDTO> departments = new HashSet<>();
+
     public TrainingWithEmployeesInfo(Training entity) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yy HH:mm:ss,SSS");
         this.id = entity.getId();
@@ -56,6 +57,9 @@ public class TrainingWithEmployeesInfo implements Serializable {
         }
         if(entity.getTags() != null){
             this.tags = entity.getTags().stream().map(TagDTO::new).collect(Collectors.toSet());
+        }
+        if(entity.getDepartments() != null){
+            this.departments = entity.getDepartments().stream().map(DepartmentDTO::new).collect(Collectors.toSet());
         }
     }
 
@@ -97,5 +101,9 @@ public class TrainingWithEmployeesInfo implements Serializable {
 
     public Set<TagDTO> getTags() {
         return tags;
+    }
+
+    public Set<DepartmentDTO> getDepartments() {
+        return departments;
     }
 }

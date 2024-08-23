@@ -17,8 +17,8 @@ public class EmployeeUserProfileInfoDTO {
         this.surname = entity.getSurname();
         this.cellphoneNumber = entity.getCellphoneNumber();
         this.employeeRegistration = entity.getEmployeeRegistration();
-        this.departmentName = entity.getRole().getDepartment().getDepartName();
-        this.roleName = entity.getRole().getRoleName();
+        this.departmentName = entity.getRoleEntity().getDepartment().getDepartName();
+        this.roleName = entity.getRoleEntity().getRoleName();
     }
 
     public Long getId() {

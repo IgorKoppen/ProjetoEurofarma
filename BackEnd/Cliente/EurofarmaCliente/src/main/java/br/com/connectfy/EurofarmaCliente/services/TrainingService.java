@@ -1,6 +1,7 @@
 package br.com.connectfy.EurofarmaCliente.services;
 
 import br.com.connectfy.EurofarmaCliente.dtos.*;
+import br.com.connectfy.EurofarmaCliente.dtos.department.DepartmentDTO;
 import br.com.connectfy.EurofarmaCliente.dtos.employee.EmployeeInfoDTO;
 import br.com.connectfy.EurofarmaCliente.dtos.instructor.InstructorDTO;
 import br.com.connectfy.EurofarmaCliente.dtos.tag.TagDTO;
@@ -20,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -62,17 +64,22 @@ public class TrainingService {
                 .collect(Collectors.toSet());
         LocalDateTime now = LocalDateTime.now();
 
+        Set<Department> departments = trainingDTO.getDepartment().stream()
+                .map(departmentDTO -> getDepartmentById(departmentDTO.getId()))
+                .collect(Collectors.toSet());
+
         String code;
         do {
             code = RandomStringGenerator.generateRoomCode(10);
         } while (trainingRepository.existsByCode(code));
 
-        Training training = buildTraining(trainingDTO,now, parsedDate, tags, instructors, code);
+        Training training = buildTraining(trainingDTO, now, parsedDate, tags, instructors, code, departments);
         Training trainingSaved = trainingRepository.save(training);
 
-        if(trainingDTO.getDepartmentIdsToSendMessage() != null){
-            Set<String> employeePhoneNumbersByDepartmentIds = departmentService.findAllEmployeePhoneNumbersByDepartmentIds(trainingDTO.getDepartmentIdsToSendMessage());
-            messageToAllEmployeesOfDepartaments("Eurofarma: Participe do treinamento '" + trainingDTO.getName() + "' usando o código: " + code, employeePhoneNumbersByDepartmentIds);
+        if (trainingDTO.getToSendMessage()) {
+            Set<Long> departmentIds = trainingDTO.getDepartment().stream().map(DepartmentDTO::getId).collect(Collectors.toSet());
+            Set<String> employeePhoneNumbersByDepartmentIds = departmentService.findAllEmployeePhoneNumbersByDepartmentIds(departmentIds);
+            messageToAllEmployeesOfDepartments("Eurofarma: Participe do treinamento '" + trainingDTO.getName() + "' usando o código: " + code, employeePhoneNumbersByDepartmentIds);
         }
         return toDTO(trainingSaved);
     }
@@ -87,27 +94,37 @@ public class TrainingService {
                 .map(tagDTO -> getTagById(tagDTO.getId()))
                 .collect(Collectors.toSet());
 
-       Set<Instructor> instructors = trainingDTO.
-               getInstructor().stream().map(instructorDTO -> getInstructorById(instructorDTO.getId())).collect(Collectors.toSet());
+        Set<Instructor> instructors = trainingDTO.
+                getInstructor().stream().map(instructorDTO -> getInstructorById(instructorDTO.getId())).collect(Collectors.toSet());
+
+        Set<Department> departments = trainingDTO.getDepartment().stream()
+                .map(departmentDTO -> getDepartmentById(departmentDTO.getId()))
+                .collect(Collectors.toSet());
 
         LocalDateTime parsedDate = parseDate(trainingDTO.getClosingDate());
         validateDateOfClose(parsedDate, "Lista já encerrada, não pode ser modificada!");
 
-        if(!training.getEmployees().isEmpty()){
+        if (!training.getEmployees().isEmpty()) {
             throw new TrainingHasEmployeesException("Não é possível alterar o treinamento com funcionários alocados!");
         }
 
         instructors.forEach(instructor -> {
-            if(training.getEmployees().stream().anyMatch(employee -> employee.getEmployee().equals(instructor.getEmployee()))){
-                throw new TrainingHasEmployeesException("Você é um instrutor do treino" + instructor.getEmployee().getName() + " " +  instructor.getEmployee().getSurname());
+            if (training.getEmployees().stream().anyMatch(employee -> employee.getEmployee().equals(instructor.getEmployee()))) {
+                throw new TrainingHasEmployeesException("Você é um instrutor do treino" + instructor.getEmployee().getName() + " " + instructor.getEmployee().getSurname());
             }
         });
+
+        if (trainingDTO.getToSendMessage()) {
+            Set<Long> departmentIds = trainingDTO.getDepartment().stream().map(DepartmentDTO::getId).collect(Collectors.toSet());
+            Set<String> employeePhoneNumbersByDepartmentIds = departmentService.findAllEmployeePhoneNumbersByDepartmentIds(departmentIds);
+            messageToAllEmployeesOfDepartments("Eurofarma: Participe do treinamento '" + trainingDTO.getName() + "' usando o código: " + training.getCode(), employeePhoneNumbersByDepartmentIds);
+        }
 
         training.setName(trainingDTO.getName());
         training.setDescription(trainingDTO.getDescription());
         training.setClosingDate(parsedDate);
         training.setTags(tags);
-
+        training.setDepartments(departments);
         Training entity = trainingRepository.save(training);
         return toDTO(entity);
     }
@@ -131,7 +148,9 @@ public class TrainingService {
             Training training = getTrainingByCode(userConfirmAssinatureDTO.code());
             validateDateOfClose(training.getClosingDate(), "Lista já encerrada!");
             validatePassword(training, userConfirmAssinatureDTO.password());
+
             Employee employee = employeeRepository.findById(userConfirmAssinatureDTO.userId()).orElseThrow(() -> new ResourceNotFoundException("Treinamento não encontrada com id: " + userConfirmAssinatureDTO.userId()));
+
 
             addEmployeeToTraining(training, employee, userConfirmAssinatureDTO.signature());
             trainingRepository.save(training);
@@ -141,11 +160,13 @@ public class TrainingService {
     }
 
 
+
+
     @Transactional
     public void cancelTraining(Long id) {
-      Training training = trainingRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Treinamento não encontrada com id: " + id));
+        Training training = trainingRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Treinamento não encontrada com id: " + id));
         validateDateOfClose(training.getClosingDate(), "Lista já encerrada!");
-        if(!training.getEmployees().isEmpty()){
+        if (!training.getEmployees().isEmpty()) {
             throw new TrainingHasEmployeesException("Não é possível cancelar o treinamento com funcionários alocados!");
         }
 
@@ -157,8 +178,12 @@ public class TrainingService {
     }
 
     @Transactional(readOnly = true)
-    public TrainingDTO findByCode(String code) {
+    public TrainingDTO findByCode(Long employeeId,String code) {
+        Employee employee = getEmployeeById(employeeId);
         Training training = getTrainingByCode(code);
+        if(!isEmployeeInDepartment(employee,training)){
+            throw new EmployeeNotInDepartmentException("Seu departamento não tem acesso a esse treinamento!");
+        }
         validateDateOfClose(training.getClosingDate(), "Lista já encerrada!");
         return toDTO(training);
     }
@@ -179,7 +204,7 @@ public class TrainingService {
     public List<TrainingOfEmployeeDTO> findEmployeeTrainingsById(Long idEmployee) {
         List<EmployeeTraining> trainings = trainingRepository.findEmployeeTrainingSortedByRegistrationDateById(idEmployee)
                 .orElseThrow(() -> new ResourceNotFoundException("Funcionário não encontrada com id: " + idEmployee));
-        if(trainings.isEmpty()){
+        if (trainings.isEmpty()) {
             return new ArrayList<>();
         }
         return trainings.stream()
@@ -212,10 +237,7 @@ public class TrainingService {
         }
     }
 
-    private Training getTrainingByCode(String code) {
-        return trainingRepository.findTrainingByCode(code)
-                .orElseThrow(() -> new ResourceNotFoundException("Sala não encontrada: " + code));
-    }
+
 
     private void validatePassword(Training training, String password) {
         if (!training.getPassword().equals(password)) {
@@ -224,8 +246,12 @@ public class TrainingService {
     }
 
     private LocalDateTime parseDate(String date) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yy HH:mm:ss,SSSSSSSSS");
-        return LocalDateTime.parse(date, formatter);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss,SSSSSSSSS");
+        try {
+            return LocalDateTime.parse(date, formatter);
+        } catch (DateTimeParseException e) {
+            throw new InvalidDateException("Formato incorreto da data: " + date + " Formato correto: dd/MM/yyyy HH:mm:ss,SSSSSSSSS");
+        }
     }
 
 
@@ -236,12 +262,16 @@ public class TrainingService {
     }
 
     private void addEmployeeToTraining(Training training, Employee employee, String signature) {
+        if(!isEmployeeInDepartment(employee,training)){
+            throw new EmployeeNotInDepartmentException("Seu departamento não tem acesso a esse treinamento!");
+        }
         if (isEmployeeInTraining(employee, training)) {
             throw new EmployeeAlreadyInTrainingException("Você já está no treinamento!");
         }
-        if(IsEmployeeAnInstructor(employee,training)){
+        if (isEmployeeAnInstructor(employee, training)) {
             throw new EmployeeAlreadyInTrainingException("Você é um instrutor da sala!");
         }
+
         EmployeeTrainingKey key = new EmployeeTrainingKey(employee.getId(), training.getId());
         EmployeeTraining employeeTraining = new EmployeeTraining(key, employee, training, signature);
 
@@ -254,7 +284,8 @@ public class TrainingService {
         return training.getEmployees().stream()
                 .anyMatch(et -> et.getEmployee().equals(employee));
     }
-    private boolean IsEmployeeAnInstructor(Employee employee, Training training){
+
+    private boolean isEmployeeAnInstructor(Employee employee, Training training) {
         return training.getInstructors()
                 .stream()
                 .anyMatch(
@@ -262,7 +293,11 @@ public class TrainingService {
                                 .equals(employee));
     }
 
-    private void messageToAllEmployeesOfDepartaments(String message,Set<String> phoneNumbers) {
+    private boolean isEmployeeInDepartment(Employee employee,Training training) {
+        return training.getDepartments().stream().anyMatch(department -> department.getRoles().stream().anyMatch(role -> role.getEmployees().contains(employee)));
+    }
+
+    private void messageToAllEmployeesOfDepartments(String message, Set<String> phoneNumbers) {
         for (String phoneNumber : phoneNumbers) {
             messageService.send(message, phoneNumber);
         }
@@ -278,11 +313,21 @@ public class TrainingService {
         return new Instructor(instructorDTO);
     }
 
-    private TrainingDTO toDTO(Training training) {
-        return new TrainingDTO(training);
+    private Department getDepartmentById(Long id) {
+        DepartmentDTO departmentDTO = departmentService.findById(id);
+        return new Department(departmentDTO);
     }
 
-    private Training buildTraining(TrainingInsertDTO trainingDTO, LocalDateTime nowDate, LocalDateTime parsedDate, Set<Tag> tags, Set<Instructor> instructors, String code) {
+    private Training getTrainingByCode(String code) {
+        return trainingRepository.findTrainingByCode(code)
+                .orElseThrow(() -> new ResourceNotFoundException("Sala não encontrada: " + code));
+    }
+    private Employee getEmployeeById(Long id){
+        return employeeRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Funcionário não encontrado com id: " + id));
+    }
+
+
+    private Training buildTraining(TrainingInsertDTO trainingDTO, LocalDateTime nowDate, LocalDateTime parsedDate, Set<Tag> tags, Set<Instructor> instructors, String code, Set<Department> departments) {
         Training training = new Training();
         training.setName(trainingDTO.getName());
         training.setCode(code);
@@ -293,6 +338,11 @@ public class TrainingService {
         training.setPassword(RandomStringGenerator.generatePassword(10));
         training.setInstructors(instructors);
         training.setTags(tags);
+        training.setDepartments(departments);
         return training;
+    }
+
+    private TrainingDTO toDTO(Training training) {
+        return new TrainingDTO(training);
     }
 }

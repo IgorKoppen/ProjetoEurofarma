@@ -81,7 +81,7 @@ public class EmployeeController {
                     @ApiResponse(description = "Forbidden", responseCode = "403", content = @Content),
                     @ApiResponse(description = "Not Found", responseCode = "404", content = @Content)
             })
-    @GetMapping(value = "/employeeProfile/{id}", produces ="application/json")
+    @GetMapping(value = "/profile/{id}", produces ="application/json")
     public ResponseEntity<EmployeeUserProfileInfoDTO> findEmployeeUserProfileInfo(@PathVariable Long id) {
         EmployeeUserProfileInfoDTO employeeUserInfo = employeeService.findEmployeeUserProfileInfoById(id);
         return ResponseEntity.ok(employeeUserInfo);
@@ -151,8 +151,6 @@ public class EmployeeController {
        employeeService.updatePassword(id,changePasswordDTO);
         return ResponseEntity.noContent().build();
     }
-
-
     @Operation(summary = "Atualiza o telefone de um funcionário", description = "Atualiza o número de telefone de um funcionário",
             tags = {"Employee"},
             responses = {

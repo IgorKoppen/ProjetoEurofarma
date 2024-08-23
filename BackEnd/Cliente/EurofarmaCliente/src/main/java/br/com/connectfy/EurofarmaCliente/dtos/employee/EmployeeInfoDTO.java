@@ -50,8 +50,8 @@ public class EmployeeInfoDTO implements Serializable {
         if(entity.getPermissions() != null) {
             entity.getPermissions().forEach(permission -> this.permission.add(new PermissionDTO(permission)));
         }
-        if(entity.getRole() != null){
-           this.role = new RoleDTO(entity.getRole());
+        if(entity.getRoleEntity() != null){
+           this.role = new RoleDTO(entity.getRoleEntity());
         }
     }
 

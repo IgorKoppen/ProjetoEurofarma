@@ -134,9 +134,9 @@ public class TrainingController {
                     @ApiResponse(description = "Forbidden", responseCode = "403", content = @Content),
                     @ApiResponse(description = "Not Found", responseCode = "404", content = @Content)
             })
-    @GetMapping(value = "/getRoomByCode/{code}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<TrainingDTO> findByCode(@PathVariable  String code) {
-        TrainingDTO trainingDTO = trainingService.findByCode(code);
+    @GetMapping(value = "/getRoomByCode/{employeeId}/{code}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<TrainingDTO> findByCode(@PathVariable Long employeeId, @PathVariable String code) {
+        TrainingDTO trainingDTO = trainingService.findByCode(employeeId, code);
         return ResponseEntity.ok(trainingDTO);
     }
 
