@@ -1,6 +1,6 @@
 package br.com.connectfy.EurofarmaCliente.controllers;
 import br.com.connectfy.EurofarmaCliente.dtos.instructor.InstructorDTO;
-import br.com.connectfy.EurofarmaCliente.dtos.instructor.InstructorIdAndFullNameAndEmployeeRegistrarionDTO;
+import br.com.connectfy.EurofarmaCliente.dtos.instructor.InstructorIdAndFullNameAndEmployeeRegistrationDTO;
 import br.com.connectfy.EurofarmaCliente.services.InstructorService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -72,8 +72,8 @@ public class InstructorController {
                     @ApiResponse(description = "Forbidden", responseCode = "403", content = @Content),
             })
     @GetMapping(value = "/findAllFullNameEmployeeAndRegistration", produces = "application/json")
-    public ResponseEntity<List<InstructorIdAndFullNameAndEmployeeRegistrarionDTO>> findAllFullNameAndRegistration() {
-        List<InstructorIdAndFullNameAndEmployeeRegistrarionDTO> dto  = instructorService.findAllIdAndFullNameAndRegistration();
+    public ResponseEntity<List<InstructorIdAndFullNameAndEmployeeRegistrationDTO>> findAllFullNameAndRegistration() {
+        List<InstructorIdAndFullNameAndEmployeeRegistrationDTO> dto  = instructorService.findAllIdAndFullNameAndRegistration();
         return ResponseEntity.ok(dto);
     }
 

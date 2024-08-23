@@ -5,6 +5,7 @@ import br.com.connectfy.EurofarmaCliente.dtos.PhoneNumberUpdateDTO;
 import br.com.connectfy.EurofarmaCliente.dtos.employee.EmployeeInfoDTO;
 import br.com.connectfy.EurofarmaCliente.dtos.employee.EmployeeInsertDTO;
 import br.com.connectfy.EurofarmaCliente.dtos.employee.EmployeeUpdateDTO;
+import br.com.connectfy.EurofarmaCliente.dtos.employee.EmployeeUserProfileInfoDTO;
 import br.com.connectfy.EurofarmaCliente.exceptions.*;
 import br.com.connectfy.EurofarmaCliente.models.Employee;
 import br.com.connectfy.EurofarmaCliente.models.Instructor;
@@ -138,7 +139,7 @@ public class EmployeeService implements UserDetailsService {
 
     @Transactional(readOnly = true)
     public EmployeeInfoDTO findByEmployeeRegistration(Long employeeRegistration) {
-        Employee entity = employeeRepository.findByEmployeeRegistration(employeeRegistration).orElseThrow(() -> new ResourceNotFoundException("Nenhum funcionário encontrado com registro de funcionário: " + employeeRegistration));
+        Employee entity = employeeRepository.findByEmployeeRegistration(employeeRegistration ).orElseThrow(() -> new ResourceNotFoundException("Nenhum funcionário encontrado com registro de funcionário: " + employeeRegistration));
         return toDTO(entity);
     }
 
@@ -146,6 +147,12 @@ public class EmployeeService implements UserDetailsService {
     public UserDetails loadUserByUsername(String employeeRegistration) throws UsernameNotFoundException {
 
         return employeeRepository.findByEmployeeRegistration(Long.parseLong(employeeRegistration)).orElseThrow(() -> new ResourceNotFoundException("Nenhum funcionário encontrado com registro de funcionário:" + employeeRegistration));
+    }
+
+    @Transactional(readOnly = true)
+    public EmployeeUserProfileInfoDTO findEmployeeUserProfileInfoById(Long id) {
+      Employee employee =  employeeRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Nenhum funcionário encontrado com id: " + id));
+      return new EmployeeUserProfileInfoDTO(employee);
     }
 
     @Transactional
@@ -211,24 +218,26 @@ public class EmployeeService implements UserDetailsService {
         }
     }
 
-    private void sendCreationEmployeeMessage(String employeeName, String employeeUsername, String password, String cellphoneNumber) {
+    private void sendCreationEmployeeMessage(String employeeName, String registerOfEmployee, String password, String cellphoneNumber) {
         String message = String.format(
                 """
                         Olá %s!
 
-                        Bem-vindo(a) à Eurofarma Treinamentos! Sua conta foi criada. \
-                        Seu nome de usuário é: %s
-                        E sua senha temporária é: %s
-
-                        Recomendamos que você faça o login imediatamente e altere sua senha. \
-                        Caso tenha alguma dúvida, não hesite em entrar em contato conosco.
-
+                       
+                        Bem-vindo(a) à Eurofarma Treinamentos! Sua conta foi criada com sucesso.
+                         Use o seu Registro de Funcionário como nome de usuário: %s.
+                         Sua senha temporária é: %s.
+                        
+                        Recomendamos que você faça login imediatamente e altere sua senha
+                        para garantir a segurança da sua conta. Se tiver alguma dúvida,
+                        não hesite em entrar em contato conosco.
+                        
                         Estamos felizes em tê-lo(a) conosco!
 
                         Atenciosamente,
-                        Equipe Eurofarma Treinamentos""",
+                        Equipe Eurofarma""",
                 employeeName,
-                employeeUsername,
+                registerOfEmployee,
                 password
         );
         messageService.send(message, cellphoneNumber);

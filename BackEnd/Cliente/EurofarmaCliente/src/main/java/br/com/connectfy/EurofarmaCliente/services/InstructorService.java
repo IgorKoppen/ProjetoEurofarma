@@ -1,7 +1,7 @@
 package br.com.connectfy.EurofarmaCliente.services;
 
 import br.com.connectfy.EurofarmaCliente.dtos.instructor.InstructorDTO;
-import br.com.connectfy.EurofarmaCliente.dtos.instructor.InstructorIdAndFullNameAndEmployeeRegistrarionDTO;
+import br.com.connectfy.EurofarmaCliente.dtos.instructor.InstructorIdAndFullNameAndEmployeeRegistrationDTO;
 import br.com.connectfy.EurofarmaCliente.exceptions.ResourceNotFoundException;
 import br.com.connectfy.EurofarmaCliente.models.Instructor;
 import br.com.connectfy.EurofarmaCliente.repositories.InstructorRepository;
@@ -47,11 +47,11 @@ public class InstructorService {
     }
 
     @Transactional(readOnly = true)
-    public List<InstructorIdAndFullNameAndEmployeeRegistrarionDTO> findAllIdAndFullNameAndRegistration() {
+    public List<InstructorIdAndFullNameAndEmployeeRegistrationDTO> findAllIdAndFullNameAndRegistration() {
         List<Instructor> instructors = instructorRepository.findAll();
-        List<InstructorIdAndFullNameAndEmployeeRegistrarionDTO> instructorIdAndFullNameDTOS = new ArrayList<>();
+        List<InstructorIdAndFullNameAndEmployeeRegistrationDTO> instructorIdAndFullNameDTOS = new ArrayList<>();
         for (Instructor instructor : instructors) {
-            instructorIdAndFullNameDTOS.add(new InstructorIdAndFullNameAndEmployeeRegistrarionDTO(instructor.getId(), instructor.getEmployee().getName(), instructor.getEmployee().getSurname(), (instructor.getEmployee().getName() + " " + instructor.getEmployee().getSurname()), instructor.getEmployee().getEmployeeRegistration()));
+            instructorIdAndFullNameDTOS.add(new InstructorIdAndFullNameAndEmployeeRegistrationDTO(instructor.getId(), instructor.getEmployee().getName(), instructor.getEmployee().getSurname(), (instructor.getEmployee().getName() + " " + instructor.getEmployee().getSurname() + ". RE: " + instructor.getEmployee().getEmployeeRegistration()), instructor.getEmployee().getEmployeeRegistration()));
         }
         return instructorIdAndFullNameDTOS;
     }
