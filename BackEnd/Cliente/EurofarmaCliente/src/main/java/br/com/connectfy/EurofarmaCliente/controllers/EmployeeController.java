@@ -5,6 +5,7 @@ import br.com.connectfy.EurofarmaCliente.dtos.PhoneNumberUpdateDTO;
 import br.com.connectfy.EurofarmaCliente.dtos.employee.EmployeeInfoDTO;
 import br.com.connectfy.EurofarmaCliente.dtos.employee.EmployeeInsertDTO;
 import br.com.connectfy.EurofarmaCliente.dtos.employee.EmployeeUpdateDTO;
+import br.com.connectfy.EurofarmaCliente.dtos.employee.EmployeeUserProfileInfoDTO;
 import br.com.connectfy.EurofarmaCliente.services.EmployeeService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -71,6 +72,20 @@ public class EmployeeController {
         return ResponseEntity.ok(dto);
     }
 
+    @Operation(summary = "Retorna informações parciais de funcionário", description = "Retorna informações paciais de um funcionário",
+            tags = {"Employee"},
+            responses = {
+                    @ApiResponse(description = "Success", responseCode = "200", content = @Content()),
+                    @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
+                    @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
+                    @ApiResponse(description = "Forbidden", responseCode = "403", content = @Content),
+                    @ApiResponse(description = "Not Found", responseCode = "404", content = @Content)
+            })
+    @GetMapping(value = "/employeeProfile/{id}", produces ="application/json")
+    public ResponseEntity<EmployeeUserProfileInfoDTO> findEmployeeUserProfileInfo(@PathVariable Long id) {
+        EmployeeUserProfileInfoDTO employeeUserInfo = employeeService.findEmployeeUserProfileInfoById(id);
+        return ResponseEntity.ok(employeeUserInfo);
+    }
 
     @Operation(summary = "Consulta funcionários com paginação", description = "Retorna funcionários com paginação",
             tags = {"Employee"},
@@ -170,4 +185,6 @@ public class EmployeeController {
        employeeService.toggleEmployeeStatus(id);
         return ResponseEntity.noContent().build();
     }
+
+
 }
