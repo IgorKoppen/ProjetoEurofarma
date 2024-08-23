@@ -8,6 +8,8 @@ public class EmployeeUserProfileInfoDTO {
     private final String surname;
     private final String cellphoneNumber;
     private final Long employeeRegistration;
+    private final String departmentName;
+    private final String roleName;
 
     public EmployeeUserProfileInfoDTO(Employee entity) {
         this.id = entity.getId();
@@ -15,6 +17,8 @@ public class EmployeeUserProfileInfoDTO {
         this.surname = entity.getSurname();
         this.cellphoneNumber = entity.getCellphoneNumber();
         this.employeeRegistration = entity.getEmployeeRegistration();
+        this.departmentName = entity.getRole().getDepartment().getDepartName();
+        this.roleName = entity.getRole().getRoleName();
     }
 
     public Long getId() {
@@ -36,4 +40,8 @@ public class EmployeeUserProfileInfoDTO {
     public Long getEmployeeRegistration() {
         return employeeRegistration;
     }
+
+    public String getDepartmentName() { return departmentName; }
+
+    public String getRoleName() { return roleName; }
 }
