@@ -31,7 +31,7 @@ public class TrainingInsertDTO implements Serializable {
     @NotEmpty(message = "É necessário incluir ao menos uma tag para criar um treinamento.")
     private final Set<TagDTO> tags;
 
-    @NotEmpty(message = "É necessário incluir ao menos uma departamento para criar um treinamento.")
+    @NotEmpty(message = "É necessário incluir ao menos um departamento para criar um treinamento.")
     private Set<DepartmentDTO> department;
 
     @NotNull(message = "É necessário definir se é para mandar messagem para os funcionários dos departamentos.")

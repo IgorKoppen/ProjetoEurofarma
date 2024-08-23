@@ -22,5 +22,13 @@ public interface TrainingRepository extends JpaRepository<Training, Long> {
     @Query("SELECT t FROM Training t JOIN t.instructors et WHERE et.id = :id ORDER BY t.creationDate ASC")
     Optional<List<Training>> findByIdInstructorTrainingsSortedByCreationDate(@Param("id") Long id);
 
+    @Query("SELECT t FROM Training t " +
+            "JOIN t.instructors et " +
+            "JOIN t.tags tag " +
+            "WHERE et.id = :id AND LOWER(tag.name) = LOWER(:tagName) " +
+            "ORDER BY t.creationDate ASC")
+    Optional<List<Training>> findByIdInstructorTrainingsByTagSortedByCreationDate(@Param("id") Long id, @Param("tagName") String tagName);
+
+
     boolean existsByCode(String code);
 }

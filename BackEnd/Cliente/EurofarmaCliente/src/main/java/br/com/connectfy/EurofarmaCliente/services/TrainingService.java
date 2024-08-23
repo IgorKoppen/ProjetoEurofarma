@@ -194,7 +194,9 @@ public class TrainingService {
         List<RoomParticipantsDTO> participants = new ArrayList<>();
         for (EmployeeTraining employeeTraining : training.getEmployees()) {
             String fullName = employeeTraining.getEmployee().getName() + " " + employeeTraining.getEmployee().getSurname();
-            RoomParticipantsDTO participantDTO = new RoomParticipantsDTO(fullName, employeeTraining.getEmployee().getEmployeeRegistration());
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yy HH:mm:ss,SSS");
+            String registrationFormat = formatter.format(employeeTraining.getRegistrationDate());
+            RoomParticipantsDTO participantDTO = new RoomParticipantsDTO(fullName, employeeTraining.getEmployee().getEmployeeRegistration(), registrationFormat);
             participants.add(participantDTO);
         }
         return participants;
@@ -226,6 +228,21 @@ public class TrainingService {
     }
 
     @Transactional(readOnly = true)
+    public List<TrainingWithEmployeesInfo> findTrainingByIdAndTag(Long id, String tagName) {
+        List<Training> trainings = trainingRepository.findByIdInstructorTrainingsByTagSortedByCreationDate(id, tagName)
+                .orElseThrow(() -> new ResourceNotFoundException("Treinador não encontrada com id: " + id));
+
+        if (trainings.isEmpty()) {
+            return new ArrayList<>();
+        }
+        return trainings.stream()
+                .map(TrainingWithEmployeesInfo::new
+                ).sorted(Comparator.comparing(TrainingWithEmployeesInfo::getClosingDate).reversed())
+                .collect(Collectors.toList());
+    }
+
+
+    @Transactional(readOnly = true)
     public void confirmPassword(Long idUser, String code, String password) {
         Training training = getTrainingByCode(code);
         validatePassword(training, password);
@@ -236,8 +253,6 @@ public class TrainingService {
             throw new EmployeeAlreadyInTrainingException("Você já está no treinamento!");
         }
     }
-
-
 
     private void validatePassword(Training training, String password) {
         if (!training.getPassword().equals(password)) {
@@ -345,4 +360,6 @@ public class TrainingService {
     private TrainingDTO toDTO(Training training) {
         return new TrainingDTO(training);
     }
+
+
 }

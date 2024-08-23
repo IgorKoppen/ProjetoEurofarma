@@ -172,6 +172,12 @@ public class TrainingController {
         return ResponseEntity.ok(dto);
     }
 
+    @GetMapping("/findTrainingByInstructorAndTag/{id}")
+    public ResponseEntity<List<TrainingWithEmployeesInfo>> findInstructorTrainings(@PathVariable Long id, @RequestParam String tag) {
+        List<TrainingWithEmployeesInfo> dto = trainingService.findTrainingByIdAndTag(id, tag);
+        return ResponseEntity.ok(dto);
+    }
+
 
     @Operation(summary = "Verifica a senha do treinamento", description = "Verifica se a senha informada pelo funcionário" +
             "está correta, se está encerrada ou se o funcionário já está em um treinamento",
@@ -222,4 +228,7 @@ public class TrainingController {
         trainingService.addEmployeeInTraining(userConfirmAssinatureDTO);
         return ResponseEntity.noContent().build();
     }
+
+
+
 }
