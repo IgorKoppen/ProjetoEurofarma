@@ -65,7 +65,7 @@ public class SecurityConfig {
                                 .requestMatchers("/eurofarma/admin/**").hasAuthority("admin")
                                 .requestMatchers(HttpMethod.POST, "/eurofarma/department/**").hasAuthority("admin")
                                 .requestMatchers("/eurofarma/treinador/**").hasAnyAuthority("admin", "treinador")
-                                .requestMatchers("/**").authenticated()
+                                .requestMatchers("/**").hasAnyAuthority("admin", "treinador","funcionario")
                 )
                 .cors(cors -> {})
                 .build();    }
