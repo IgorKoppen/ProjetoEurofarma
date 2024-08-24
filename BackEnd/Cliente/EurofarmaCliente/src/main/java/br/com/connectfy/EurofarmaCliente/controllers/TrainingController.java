@@ -172,8 +172,17 @@ public class TrainingController {
         return ResponseEntity.ok(dto);
     }
 
+    @Operation(summary = "Procura um treinamento de instrutor por tag", description = "Retorna todos treinamentos a partir de um id de um instrutor e uma tag",
+            tags = {"Training"},
+            responses = {
+                    @ApiResponse(description = "Success", responseCode = "200", content = @Content()),
+                    @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
+                    @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
+                    @ApiResponse(description = "Forbidden", responseCode = "403", content = @Content),
+                    @ApiResponse(description = "Not Found", responseCode = "404", content = @Content)
+            })
     @GetMapping("/findTrainingByInstructorAndTag/{id}")
-    public ResponseEntity<List<TrainingWithEmployeesInfo>> findInstructorTrainings(@PathVariable Long id, @RequestParam String tag) {
+    public ResponseEntity<List<TrainingWithEmployeesInfo>> findInstructorTrainingsByTag(@PathVariable Long id, @RequestParam String tag) {
         List<TrainingWithEmployeesInfo> dto = trainingService.findTrainingByIdAndTag(id, tag);
         return ResponseEntity.ok(dto);
     }
