@@ -1,8 +1,10 @@
 package br.com.connectfy.EurofarmaCliente.models;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import br.com.connectfy.EurofarmaCliente.dtos.role.RoleDTO;
+import br.com.connectfy.EurofarmaCliente.dtos.role.RoleWithEmployeeDTO;
 import jakarta.persistence.*;
 
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -15,17 +17,31 @@ public class Role {
     @Column(name = "role_name", nullable = false)
     private String roleName;
 
-    @JsonBackReference
-    @ManyToOne(fetch = FetchType.EAGER)
-    private Employee employee;
+
+    @OneToMany(mappedBy = "role", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Employee> employees;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "department_id", nullable = false)
+    private Department department;
 
     public Role() {
     }
+    public Role(RoleDTO roleDTO){
+        this.id = roleDTO.getId();
+        this.roleName = roleDTO.getRoleName();
+    }
 
-    public Role(Long id, String roleName, Employee employee) {
+
+    public Role(Long id, String roleName, List<Employee> employees) {
         this.id = id;
         this.roleName = roleName;
-        this.employee = employee;
+        this.employees = employees;
+    }
+
+    public Role(RoleWithEmployeeDTO dto) {
+        this.id = dto.getId();
+        this.roleName = dto.getRoleName();
     }
 
     public Role(String s) {
@@ -48,24 +64,31 @@ public class Role {
         this.roleName = roleName;
     }
 
-    public Employee getEmployee() {
-        return employee;
+    public List<Employee> getEmployees() {
+        return employees;
     }
 
-    public void setEmployee(Employee employee) {
-        this.employee = employee;
+    public void setEmployees(List<Employee> employees) {
+        this.employees = employees;
+    }
+
+    public Department getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(Department department) {
+        this.department = department;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Role role = (Role) o;
-        return Objects.equals(id, role.id) && Objects.equals(roleName, role.roleName) && Objects.equals(employee, role.employee);
+        if (!(o instanceof Role role)) return false;
+        return Objects.equals(id, role.id) && Objects.equals(roleName, role.roleName) && Objects.equals(employees, role.employees) && Objects.equals(department, role.department);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, roleName, employee);
+        return Objects.hashCode(id);
     }
 }

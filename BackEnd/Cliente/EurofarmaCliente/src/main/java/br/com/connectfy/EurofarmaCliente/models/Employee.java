@@ -1,10 +1,7 @@
 package br.com.connectfy.EurofarmaCliente.models;
 
-import br.com.connectfy.EurofarmaCliente.dtos.EmployeeCreateDTO;
-import br.com.connectfy.EurofarmaCliente.dtos.EmployeeInfoDTO;
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import br.com.connectfy.EurofarmaCliente.dtos.employee.EmployeeInfoDTO;
+import br.com.connectfy.EurofarmaCliente.dtos.employee.EmployeeInsertDTO;
 import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -20,8 +17,8 @@ public class Employee implements UserDetails, Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "user_name", unique = true, nullable = false)
-    private String userName;
+    @Column(name = "employee_registration", unique = true, nullable = false,length = 6)
+    private Long employeeRegistration;
 
     @Column(nullable = false)
     private String name;
@@ -29,62 +26,55 @@ public class Employee implements UserDetails, Serializable {
     @Column(nullable = false)
     private String surname;
 
-    @JsonIgnore
+
     @Column(nullable = false)
     private String password;
 
-    @Column(name = "cellphone_number",nullable = false)
+    @Column(name = "cellphone_number", nullable = false, unique = true)
     private String cellphoneNumber;
 
-    @JsonIgnore
+
     @Column(name = "account_non_expired", nullable = false)
     private boolean accountNonExpired;
 
-    @JsonIgnore
+
     @Column(name = "credentials_non_expired", nullable = false)
     private boolean credentialsNonExpired;
 
-    @JsonIgnore
+
     @Column(name = "account_non_locked", nullable = false)
     private boolean accountNonLocked;
 
     @Column(nullable = false)
     private boolean enabled;
 
-    @JsonBackReference
-    @OneToMany(fetch = FetchType.EAGER,mappedBy = "employee")
-    private List<Role> roles;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "role_id", nullable = false)
+    private Role role;
 
-    @JsonManagedReference
-    @ManyToOne(fetch = FetchType.EAGER)
-    private Department department;
 
-    @JsonManagedReference
     @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "employee_permission", joinColumns = {@JoinColumn(name = "id_employee")},
+    @JoinTable(name = "employee_permission", joinColumns = {@JoinColumn(name = "id_employee", nullable = false)},
             inverseJoinColumns = {@JoinColumn(name = "id_permission")}
     )
-    private List<Permission> permissions;
+    private Set<Permission> permissions = new HashSet<>();
 
-    @JsonManagedReference
+
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "instructor_id", referencedColumnName = "id")
     private Instructor instructor;
 
-    @JsonBackReference
+
     @OneToMany(mappedBy = "employee")
-    private Set<EmployeeTraining> employeeTrainings;
+    private Set<EmployeeTraining> employeeTrainings = new HashSet<>();
 
     public Employee() {
 
     }
 
-    public Employee(Long id, String userName, String name, String surname, String password,
-                    String cellphoneNumber, boolean accountNonExpired, boolean credentialsNonExpired,
-                    boolean accountNonLocked, boolean enabled, List<Role> roles, Department department,
-                    List<Permission> permissions, Instructor instructor) {
+    public Employee(Long id, Long employeeRegistration, String name, String surname, String password, String cellphoneNumber, boolean accountNonExpired, boolean credentialsNonExpired, boolean accountNonLocked, boolean enabled, Role role, Set<Permission> permissions, Instructor instructor, Set<EmployeeTraining> employeeTrainings) {
         this.id = id;
-        this.userName = userName;
+        this.employeeRegistration = employeeRegistration;
         this.name = name;
         this.surname = surname;
         this.password = password;
@@ -93,32 +83,26 @@ public class Employee implements UserDetails, Serializable {
         this.credentialsNonExpired = credentialsNonExpired;
         this.accountNonLocked = accountNonLocked;
         this.enabled = enabled;
-        this.roles = roles;
-        this.department = department;
+        this.role = role;
         this.permissions = permissions;
         this.instructor = instructor;
+        this.employeeTrainings = employeeTrainings;
     }
 
-    public Employee(EmployeeCreateDTO employeeDTO) {
-        this.id = employeeDTO.id();
-        this.userName = employeeDTO.userName();
-        this.name = employeeDTO.name();
-        this.surname = employeeDTO.surname();
-        this.password = employeeDTO.password();
-        this.cellphoneNumber = employeeDTO.cellphoneNumber();
-        this.roles = employeeDTO.roles();
-        this.department = employeeDTO.department();
+    public Employee(EmployeeInsertDTO dto) {
+        this.name = dto.name();
+        this.surname = dto.surname();
+        this.cellphoneNumber = dto.cellphoneNumber();
+        this.employeeRegistration = dto.employeeRegistration();
     }
 
     public Employee(EmployeeInfoDTO employeeDTO) {
-        this.id = employeeDTO.id();
-        this.userName = employeeDTO.userName();
-        this.name = employeeDTO.name();
-        this.surname = employeeDTO.surname();
-        this.cellphoneNumber = employeeDTO.cellphoneNumber();
-        this.roles = employeeDTO.roles();
-        this.department = employeeDTO.department();
-        this.employeeTrainings = employeeDTO.trainings();
+        this.id = employeeDTO.getId();
+        this.employeeRegistration = employeeDTO.getEmployeeRegistration();
+        this.name = employeeDTO.getName();
+        this.surname = employeeDTO.getSurname();
+        this.cellphoneNumber = employeeDTO.getCellphoneNumber();
+        this.employeeRegistration = employeeDTO.getEmployeeRegistration();
     }
 
     public Long getId() {
@@ -127,6 +111,10 @@ public class Employee implements UserDetails, Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Long getEmployeeRegistration() {
+        return employeeRegistration;
     }
 
     public String getName() {
@@ -153,36 +141,16 @@ public class Employee implements UserDetails, Serializable {
         this.cellphoneNumber = cellphoneNumber;
     }
 
-    public List<Role> getList() {
-        return roles;
+    public void setAccountNonExpired(boolean accountNonExpired) {
+        this.accountNonExpired = accountNonExpired;
     }
 
-    public void setList(List<Role> roles) {
-        this.roles = roles;
+    public void setCredentialsNonExpired(boolean credentialsNonExpired) {
+        this.credentialsNonExpired = credentialsNonExpired;
     }
 
-    public Department  getDepartments() {
-        return department;
-    }
-
-    public void setDepartments(Department  department) {
-        this.department = department;
-    }
-
-    public Set<EmployeeTraining> getEmployeeTrainings() {
-        return employeeTrainings;
-    }
-
-    public void setEmployeeTrainings(Set<EmployeeTraining> trainnings) {
-        this.employeeTrainings = trainnings;
-    }
-
-    public Instructor getInstructor() {
-        return instructor;
-    }
-
-    public void setInstructor(Instructor instructor) {
-        this.instructor = instructor;
+    public void setAccountNonLocked(boolean accountNonLocked) {
+        this.accountNonLocked = accountNonLocked;
     }
 
     @Override
@@ -194,12 +162,62 @@ public class Employee implements UserDetails, Serializable {
         this.enabled = enabled;
     }
 
+    public Role getRoleEntity() {
+        return role;
+    }
+
     public List<String> getRoles() {
         List<String> roles = new ArrayList<>();
         for (Permission permission : permissions) {
             roles.add(permission.getDescription());
         }
         return roles;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
+
+
+
+    public Instructor getInstructor() {
+        return instructor;
+    }
+
+    public void setInstructor(Instructor instructor) {
+        this.instructor = instructor;
+    }
+
+
+
+
+    public void addPermission(Permission permission) {
+        this.permissions.add(permission);
+    }
+
+
+    public List<String> getPermissionRoles() {
+        List<String> roles = new ArrayList<>();
+        for (Permission permission : permissions) {
+            roles.add(permission.getDescription());
+        }
+        return roles;
+    }
+
+    public Set<Permission> getPermissions() {
+        return permissions;
+    }
+
+    public void setPermissions(Set<Permission> permissions) {
+        this.permissions = permissions;
+    }
+
+    public Set<EmployeeTraining> getEmployeeTrainings() {
+        return employeeTrainings;
+    }
+
+    public void setEmployeeTrainings(Set<EmployeeTraining> employeeTrainings) {
+        this.employeeTrainings = employeeTrainings;
     }
 
     @Override
@@ -212,17 +230,19 @@ public class Employee implements UserDetails, Serializable {
         return this.password;
     }
 
+    @Override
+    public String getUsername() {
+        return this.employeeRegistration.toString();
+    }
+
     public void setPassword(String password) {
         this.password = password;
     }
 
-    @Override
-    public String getUsername() {
-        return this.userName;
-    }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+
+    public void setEmployeeRegistration(Long employeeRegistration) {
+        this.employeeRegistration = employeeRegistration;
     }
 
     @Override
@@ -243,9 +263,8 @@ public class Employee implements UserDetails, Serializable {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Employee employee = (Employee) o;
-        return Objects.equals(id, employee.id);
+        if (!(o instanceof Employee employee)) return false;
+        return accountNonExpired == employee.accountNonExpired && credentialsNonExpired == employee.credentialsNonExpired && accountNonLocked == employee.accountNonLocked && enabled == employee.enabled && Objects.equals(id, employee.id) && Objects.equals(employeeRegistration, employee.employeeRegistration) && Objects.equals(name, employee.name) && Objects.equals(surname, employee.surname) && Objects.equals(password, employee.password) && Objects.equals(cellphoneNumber, employee.cellphoneNumber) && Objects.equals(role, employee.role) && Objects.equals(permissions, employee.permissions) && Objects.equals(instructor, employee.instructor) && Objects.equals(employeeTrainings, employee.employeeTrainings);
     }
 
     @Override
@@ -253,23 +272,5 @@ public class Employee implements UserDetails, Serializable {
         return Objects.hashCode(id);
     }
 
-    @Override
-    public String toString() {
-        return "Employee{" +
-                "id=" + id +
-                ", userName='" + userName + '\'' +
-                ", name='" + name + '\'' +
-                ", surname='" + surname + '\'' +
-                ", password='" + password + '\'' +
-                ", cellphoneNumber='" + cellphoneNumber + '\'' +
-                ", accountNonExpired=" + accountNonExpired +
-                ", credentialsNonExpired=" + credentialsNonExpired +
-                ", accountNonLocked=" + accountNonLocked +
-                ", enabled=" + enabled +
-                ", roles=" + roles +
-                ", department=" + department +
-                ", permissions=" + permissions +
-                ", instructor=" + instructor +
-                '}';
-    }
+
 }

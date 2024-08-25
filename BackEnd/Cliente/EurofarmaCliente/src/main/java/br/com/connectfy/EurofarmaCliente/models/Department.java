@@ -1,17 +1,15 @@
 package br.com.connectfy.EurofarmaCliente.models;
 
-import br.com.connectfy.EurofarmaCliente.dtos.DepartmentDTO;
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import br.com.connectfy.EurofarmaCliente.dtos.department.DepartmentDTO;
 import jakarta.persistence.*;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
-@Table(name = "tb_department")
+@Table(name = "tb_departments")
 public class Department {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -19,21 +17,27 @@ public class Department {
     @Column(name = "depart_name", nullable = false)
     private String departName;
 
-    @JsonBackReference
-    @OneToMany(fetch = FetchType.EAGER,mappedBy = "department")
-    private List<Employee> employees = new ArrayList<>();
 
-    public Department(){
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "department", cascade = CascadeType.ALL)
+    private Set<Role> roles;
 
+    @ManyToMany(mappedBy = "departments", fetch = FetchType.LAZY)
+    private Set<Training> trainings;
+
+
+    public Department() {
     }
-    public Department(String departName){
+
+    public Department(Long id, String departName, Set<Role> roles, Set<Training> trainings) {
+        this.id = id;
         this.departName = departName;
+        this.roles = roles;
+        this.trainings = trainings;
     }
 
     public Department(DepartmentDTO departmentDTO) {
-        this.id = departmentDTO.id();
-        this.departName = departmentDTO.departName();
-        this.employees = departmentDTO.employees();
+        this.id = departmentDTO.getId();
+        this.departName = departmentDTO.getDepartName();
     }
 
     public Long getId() {
@@ -49,20 +53,28 @@ public class Department {
         this.departName = departName;
     }
 
-    public List<Employee> getEmployees() {
-        return employees;
+
+    public Set<Role> getRoles() {
+        return roles;
     }
 
-    public void setEmployees(List<Employee> employees) {
-        this.employees = employees;
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
+    }
+
+    public Set<Training> getTrainings() {
+        return trainings;
+    }
+
+    public void setTrainings(Set<Training> trainings) {
+        this.trainings = trainings;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Department that = (Department) o;
-        return Objects.equals(id, that.id);
+        if (!(o instanceof Department that)) return false;
+        return Objects.equals(id, that.id) && Objects.equals(departName, that.departName) && Objects.equals(roles, that.roles) && Objects.equals(trainings, that.trainings);
     }
 
     @Override

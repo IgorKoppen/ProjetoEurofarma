@@ -42,8 +42,7 @@ public class EmployeeTrainingKey implements Serializable {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        EmployeeTrainingKey that = (EmployeeTrainingKey) o;
+        if (!(o instanceof EmployeeTrainingKey that)) return false;
         return Objects.equals(employeeId, that.employeeId) && Objects.equals(trainingId, that.trainingId);
     }
 

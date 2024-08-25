@@ -1,16 +1,16 @@
 package br.com.connectfy.EurofarmaCliente.models;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import br.com.connectfy.EurofarmaCliente.dtos.permission.PermissionDTO;
 import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
-@Table(name = "tb_permission")
+@Table(name = "tb_permissions")
 public class Permission implements GrantedAuthority, Serializable {
 
     @Serial
@@ -23,15 +23,20 @@ public class Permission implements GrantedAuthority, Serializable {
     @Column(nullable = false)
     private String description;
 
-    @JsonBackReference
     @ManyToMany(mappedBy = "permissions")
-    private List<Employee> employees;
+    private Set<Employee> employees;
 
     public Permission() {}
 
-    public Permission(Long id, String description) {
+    public Permission(Long id, String description, Set<Employee> employees) {
         this.id = id;
         this.description = description;
+        this.employees = employees;
+    }
+
+    public Permission(PermissionDTO dto){
+        this.id = dto.getId();
+        this.description = dto.getDescription();
     }
 
     public Long getId() {
@@ -50,21 +55,37 @@ public class Permission implements GrantedAuthority, Serializable {
         this.description = description;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Permission that = (Permission) o;
-        return Objects.equals(id, that.id) && Objects.equals(description, that.description);
+    public void setEmployees(Set<Employee> employees) {
+        this.employees = employees;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, description);
+    public Set<Employee> getEmployees() {
+        return employees;
     }
 
     @Override
     public String getAuthority() {
         return this.description;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Permission that)) return false;
+        return Objects.equals(id, that.id) && Objects.equals(description, that.description) && Objects.equals(employees, that.employees);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
+    }
+
+    @Override
+    public String toString() {
+        return "Permission{" +
+                "id=" + id +
+                ", description='" + description + '\'' +
+                ", employees=" + employees +
+                '}';
     }
 }

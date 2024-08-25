@@ -1,39 +1,34 @@
 package br.com.connectfy.EurofarmaCliente.models;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import br.com.connectfy.EurofarmaCliente.dtos.instructor.InstructorDTO;
 import jakarta.persistence.*;
 
-import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
-@Table(name = "tb_instructor")
+@Table(name = "tb_instructors")
 public class Instructor {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @JsonBackReference
-    @OneToOne(mappedBy = "instructor")
+
+    @OneToOne(mappedBy = "instructor", cascade = CascadeType.ALL,optional = false)
     private Employee employee;
 
-    @JsonBackReference
+
     @ManyToMany(mappedBy = "instructors")
-    private List<Training> trainnings;
+    private Set<Training> trainings;
 
 
 
     public Instructor() {
     }
 
-    public Instructor(Employee employee, List<Training> trainnings) {
-        this.employee = employee;
-        this.trainnings = trainnings;
-    }
 
-    public Instructor(Long id, Employee employee, List<Training> trainnings) {
-        this.id = id;
-        this.employee = employee;
-        this.trainnings = trainnings;
+    public Instructor(InstructorDTO dto) {
+      this.id = dto.getId();
+      this.employee = new Employee(dto.getEmployee());
     }
 
     public Long getId() {
@@ -52,20 +47,23 @@ public class Instructor {
         this.employee = employee;
     }
 
-    public List<Training> getTrainnings() {
-        return trainnings;
+    public Set<Training> getTrainings() {
+        return trainings;
     }
 
-    public void setTrainnings(List<Training> transactions) {
-        this.trainnings = transactions;
+    public void setTrainings(Set<Training> transactions) {
+        this.trainings = transactions;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Instructor that = (Instructor) o;
-        return Objects.equals(id, that.id) && Objects.equals(employee, that.employee) && Objects.equals(trainnings, that.trainnings);
+        if (!(o instanceof Instructor that)) return false;
+        return Objects.equals(id, that.id) && Objects.equals(employee, that.employee) && Objects.equals(trainings, that.trainings);
     }
 
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
+    }
 }

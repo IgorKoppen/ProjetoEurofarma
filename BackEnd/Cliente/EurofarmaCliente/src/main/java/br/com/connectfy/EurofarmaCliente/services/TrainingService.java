@@ -1,259 +1,382 @@
 package br.com.connectfy.EurofarmaCliente.services;
 
 import br.com.connectfy.EurofarmaCliente.dtos.*;
-import br.com.connectfy.EurofarmaCliente.exceptions.EmployeeAlreadyInTrainingException;
-import br.com.connectfy.EurofarmaCliente.exceptions.InvalidDateException;
-import br.com.connectfy.EurofarmaCliente.exceptions.PasswordDoesntMatchException;
-import br.com.connectfy.EurofarmaCliente.exceptions.ResourceNotFoundException;
+import br.com.connectfy.EurofarmaCliente.dtos.department.DepartmentDTO;
+import br.com.connectfy.EurofarmaCliente.dtos.employee.EmployeeInfoDTO;
+import br.com.connectfy.EurofarmaCliente.dtos.instructor.InstructorDTO;
+import br.com.connectfy.EurofarmaCliente.dtos.tag.TagDTO;
+import br.com.connectfy.EurofarmaCliente.dtos.training.TrainingDTO;
+import br.com.connectfy.EurofarmaCliente.dtos.training.TrainingInsertDTO;
+import br.com.connectfy.EurofarmaCliente.dtos.training.TrainingOfEmployeeDTO;
+import br.com.connectfy.EurofarmaCliente.dtos.training.TrainingWithEmployeesInfo;
+import br.com.connectfy.EurofarmaCliente.exceptions.*;
 import br.com.connectfy.EurofarmaCliente.models.*;
+import br.com.connectfy.EurofarmaCliente.repositories.EmployeeRepository;
 import br.com.connectfy.EurofarmaCliente.repositories.TrainingRepository;
+import br.com.connectfy.EurofarmaCliente.specification.SearchCriteria;
+import br.com.connectfy.EurofarmaCliente.specification.TrainingSpecification;
 import br.com.connectfy.EurofarmaCliente.util.RandomStringGenerator;
-import org.springframework.http.ResponseEntity;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
 public class TrainingService {
 
 
-        private final TrainingRepository trainingRepository;
-        private final TagsService tagsService;
-        private final InstructorService instructorService;
-        private final EmployeeService employeeService;
-        private final MessageService messageService;
-        private final DepartmentService departmentService;
+    private final TrainingRepository trainingRepository;
+    private final TagService tagsService;
+    private final InstructorService instructorService;
+    private final EmployeeService employeeService;
+    private final MessageService messageService;
+    private final EmployeeRepository employeeRepository;
+    private final DepartmentService departmentService;
 
-        public TrainingService(TrainingRepository trainingRepository,
-                               TagsService tagsService,
-                               InstructorService instructorService,
-                               EmployeeService employeeService,
-                               MessageService messageService,
-                               DepartmentService departmentService) {
-            this.trainingRepository = trainingRepository;
-            this.tagsService = tagsService;
-            this.instructorService = instructorService;
-            this.employeeService = employeeService;
-            this.messageService = messageService;
-            this.departmentService = departmentService;
+    public TrainingService(TrainingRepository trainingRepository, TagService tagsService, InstructorService instructorService, EmployeeService employeeService, MessageService messageService, EmployeeRepository employeeRepository, DepartmentService departmentService) {
+        this.trainingRepository = trainingRepository;
+        this.tagsService = tagsService;
+        this.instructorService = instructorService;
+        this.employeeService = employeeService;
+        this.messageService = messageService;
+        this.employeeRepository = employeeRepository;
+        this.departmentService = departmentService;
+    }
+
+    @Transactional
+    public TrainingDTO insert(TrainingInsertDTO trainingDTO) {
+        LocalDateTime parsedDate = parseDate(trainingDTO.getClosingDate());
+        validateDateOfClose(parsedDate, "Data de fechamento não pode ser no passado!");
+
+        Set<Tag> tags = trainingDTO.getTags().stream()
+                .map(tagDTO -> getTagById(tagDTO.getId()))
+                .collect(Collectors.toSet());
+
+        Set<Instructor> instructors = trainingDTO.getInstructor().stream()
+                .map(instructorDTO -> getInstructorById(instructorDTO.getId()))
+                .collect(Collectors.toSet());
+        LocalDateTime now = LocalDateTime.now();
+
+        Set<Department> departments = trainingDTO.getDepartment().stream()
+                .map(departmentDTO -> getDepartmentById(departmentDTO.getId()))
+                .collect(Collectors.toSet());
+
+        String code;
+        do {
+            code = RandomStringGenerator.generateRoomCode(10);
+        } while (trainingRepository.existsByCode(code));
+
+        Training training = buildTraining(trainingDTO, now, parsedDate, tags, instructors, code, departments);
+        Training trainingSaved = trainingRepository.save(training);
+
+        if (trainingDTO.getToSendMessage()) {
+            Set<Long> departmentIds = trainingDTO.getDepartment().stream().map(DepartmentDTO::getId).collect(Collectors.toSet());
+            Set<String> employeePhoneNumbersByDepartmentIds = departmentService.findAllEmployeePhoneNumbersByDepartmentIds(departmentIds);
+            messageToAllEmployeesOfDepartments("Eurofarma: Participe do treinamento '" + trainingDTO.getName() + "' usando o código: " + code, employeePhoneNumbersByDepartmentIds);
+        }
+        return toDTO(trainingSaved);
+    }
+
+    @Transactional
+    public TrainingDTO update(Long id, TrainingInsertDTO trainingDTO) {
+
+        Training training = trainingRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Treinamento não encontrada com id: " + id));
+
+        Set<Tag> tags = trainingDTO.getTags().stream()
+                .map(tagDTO -> getTagById(tagDTO.getId()))
+                .collect(Collectors.toSet());
+
+        Set<Instructor> instructors = trainingDTO.
+                getInstructor().stream().map(instructorDTO -> getInstructorById(instructorDTO.getId())).collect(Collectors.toSet());
+
+        Set<Department> departments = trainingDTO.getDepartment().stream()
+                .map(departmentDTO -> getDepartmentById(departmentDTO.getId()))
+                .collect(Collectors.toSet());
+
+        LocalDateTime parsedDate = parseDate(trainingDTO.getClosingDate());
+        validateDateOfClose(parsedDate, "Lista já encerrada, não pode ser modificada!");
+
+        if (!training.getEmployees().isEmpty()) {
+            throw new TrainingHasEmployeesException("Não é possível alterar o treinamento com funcionários alocados!");
         }
 
-        @Transactional
-        public ResponseEntity<String> create(TrainingCreationDTO trainingDTO) {
-            LocalDateTime parsedDate = parseDate(trainingDTO.closingDate());
-            validateDateOfClose(parsedDate,"Data de fechamento não pode ser no passado!");
-            List<Tag> tags = trainingDTO.tags().stream()
-                    .map(this::getTagById)
-                    .collect(Collectors.toList());
+        instructors.forEach(instructor -> {
+            if (training.getEmployees().stream().anyMatch(employee -> employee.getEmployee().equals(instructor.getEmployee()))) {
+                throw new TrainingHasEmployeesException("Você é um instrutor do treino" + instructor.getEmployee().getName() + " " + instructor.getEmployee().getSurname());
+            }
+        });
 
-            List<Instructor> instructors = trainingDTO.instructor().stream()
-                    .map(this::getInstructorById)
-                    .collect(Collectors.toList());
+        if (trainingDTO.getToSendMessage()) {
+            Set<Long> departmentIds = trainingDTO.getDepartment().stream().map(DepartmentDTO::getId).collect(Collectors.toSet());
+            Set<String> employeePhoneNumbersByDepartmentIds = departmentService.findAllEmployeePhoneNumbersByDepartmentIds(departmentIds);
+            messageToAllEmployeesOfDepartments("Eurofarma: Participe do treinamento '" + trainingDTO.getName() + "' usando o código: " + training.getCode(), employeePhoneNumbersByDepartmentIds);
+        }
 
-            LocalDateTime now = LocalDateTime.now();
-            String code;
-            do {
-                code = RandomStringGenerator.generateRoomCode(10);
-            } while (trainingRepository.existsByCode(code));
-            Training training = buildTraining(trainingDTO, parsedDate, tags, instructors, code);
+        training.setName(trainingDTO.getName());
+        training.setDescription(trainingDTO.getDescription());
+        training.setClosingDate(parsedDate);
+        training.setTags(tags);
+        training.setDepartments(departments);
+        Training entity = trainingRepository.save(training);
+        return toDTO(entity);
+    }
+
+    @Transactional(readOnly = true)
+    public TrainingDTO findById(Long id) {
+        Training training = trainingRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("No records found with id: " + id));
+        return toDTO(training);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<TrainingDTO> findWithPagination(Pageable pageable) {
+        Page<Training> trainingPage = trainingRepository.findAll(pageable);
+        return trainingPage.map(this::toDTO);
+    }
+
+    @Transactional
+    public void addEmployeeInTraining(UserConfirmAssinatureDTO userConfirmAssinatureDTO) {
+        try {
+            Training training = getTrainingByCode(userConfirmAssinatureDTO.code());
+            validateDateOfClose(training.getClosingDate(), "Lista já encerrada!");
+            validatePassword(training, userConfirmAssinatureDTO.password());
+
+            Employee employee = employeeRepository.findById(userConfirmAssinatureDTO.userId()).orElseThrow(() -> new ResourceNotFoundException("Treinamento não encontrada com id: " + userConfirmAssinatureDTO.userId()));
+
+
+            addEmployeeToTraining(training, employee, userConfirmAssinatureDTO.signature());
             trainingRepository.save(training);
-            messageToAllEmployeesOfDepartaments("Eurofarma: Código para participar da sala "+ trainingDTO.name() + ". Código: " + code,trainingDTO.departments());
-            return ResponseEntity.ok("Treinamento inserido com sucesso!");
+        } catch (Exception e) {
+            throw new ResourceNotFoundException(e.getMessage());
+        }
+    }
+
+
+
+
+    @Transactional
+    public void cancelTraining(Long id) {
+        Training training = trainingRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Treinamento não encontrada com id: " + id));
+        validateDateOfClose(training.getClosingDate(), "Lista já encerrada!");
+        if (!training.getEmployees().isEmpty()) {
+            throw new TrainingHasEmployeesException("Não é possível cancelar o treinamento com funcionários alocados!");
         }
 
-        @Transactional(readOnly = true)
-        public TrainingHistoricDTO getById(Long id) {
-            Training training = trainingRepository.findById(id)
-                    .orElseThrow(() -> new ResourceNotFoundException("No records found with id: " + id));
-            return convertToTrainingHistoricDTO(training);
+        try {
+            trainingRepository.deleteById(id);
+        } catch (ResourceNotFoundException e) {
+            throw new ResourceNotFoundException("No records found with id: " + id);
         }
+    }
 
-        @Transactional(readOnly = true)
-        public List<TrainingHistoricDTO> findAll() {
-            List<Training> trainings = trainingRepository.findAll();
-            return trainings.stream()
-                    .map(this::convertToTrainingHistoricDTO)
-                    .collect(Collectors.toList());
-        }
+    @Transactional(readOnly = true)
+    public TrainingDTO findByCode(Long employeeId,String code) {
+        Employee employee = getEmployeeById(employeeId);
+        Training training = getTrainingByCode(code);
+        validateEmployeeForTraining(employee,training);
+        validateDateOfClose(training.getClosingDate(), "Lista já encerrada!");
+        return toDTO(training);
+    }
 
-        @Transactional
-        public ResponseEntity<String> update(Long id, TrainingCreationDTO trainingDTO) {
-            Training training = trainingRepository.findById(id)
-                    .orElseThrow(() -> new ResourceNotFoundException("No records found with id: " + id));
-
-            List<Tag> tags = trainingDTO.tags().stream()
-                    .map(this::getTagById)
-                    .collect(Collectors.toList());
-
-            List<Instructor> instructors = trainingDTO.instructor().stream()
-                    .map(this::getInstructorById)
-                    .collect(Collectors.toList());
-
-            LocalDateTime parsedDate = parseDate(trainingDTO.closingDate());
-            validateDateOfClose(training.getClosingDate(),"Data de fechamento não pode ser no passado!");
-            training.setName(trainingDTO.name());
-            training.setDescription(trainingDTO.description());
-            training.setClosingDate(parsedDate);
-            training.setInstructors(instructors);
-            training.setTags(tags);
-
-            trainingRepository.save(training);
-            return ResponseEntity.ok("Treinamento atualizado com sucesso!");
-        }
-
-        @Transactional
-        public ResponseEntity<String> addEmployee(UserConfirmAssinatureDTO userConfirmAssinatureDTO) {
-            try {
-                Training training = getTrainingByCode(userConfirmAssinatureDTO.code());
-                validateDateOfClose(training.getClosingDate(),"Sala já encerrada!");
-                validatePassword(training, userConfirmAssinatureDTO.password());
-                EmployeeInfoDTO employeeDTO = employeeService.findById(userConfirmAssinatureDTO.userId());
-                Employee employee = new Employee(employeeDTO);
-
-                addEmployeeToTraining(training, employee, userConfirmAssinatureDTO.assinatura());
-
-                return ResponseEntity.ok("empregado adicionado com sucesso!");
-            } catch (Exception e) {
-                throw new ResourceNotFoundException(e.getMessage());
-            }
-        }
-
-        @Transactional(readOnly = true)
-        public TrainingHistoricDTO findByCode(String code) {
-            Training training = getTrainingByCode(code);
-            validateDateOfClose(training.getClosingDate(),"Sala já encerrada!");
-            return convertToTrainingHistoricDTO(training);
-        }
-        @Transactional(readOnly = true)
-        public List<RoomParticipantsDTO> findAllRoomParticipants(Long trainingId) {
-             Training training = trainingRepository.findById(trainingId) .orElseThrow(() -> new ResourceNotFoundException("No records found with id: " + trainingId));;
-             List<RoomParticipantsDTO> participants  = new ArrayList<>();
-             for (EmployeeTraining employeeTraining  : training.getEmployees()) {
-                 String fullName = employeeTraining.getEmployee().getName() + " " + employeeTraining.getEmployee().getSurname();
-                 RoomParticipantsDTO participantDTO = new RoomParticipantsDTO(fullName);
-                 participants.add(participantDTO);
-             }
-             return participants ;
-        }
-
-        @Transactional(readOnly = true)
-        public ResponseEntity<String> confirmPassword(Long idUser, String code, String password) {
-            Training training = getTrainingByCode(code);
-            validatePassword(training, password);
-            EmployeeInfoDTO employeeDTO = employeeService.findById(idUser);
-            Employee employee = new Employee(employeeDTO);
-            validateDateOfClose(training.getClosingDate(),"Sala já encerrada!");
-            if (isEmployeeInTraining(employee,training)) {
-                throw new EmployeeAlreadyInTrainingException("Você já está no treinamento!");
-            }
-            return ResponseEntity.ok("Senha correta!");
-        }
-
-        @Transactional
-        public void delete(Long id) {
-            if (!trainingRepository.existsById(id)) {
-                throw new ResourceNotFoundException("No records found with id: " + id);
-            }
-            try {
-                trainingRepository.deleteById(id);
-            } catch (ResourceNotFoundException e) {
-                throw new ResourceNotFoundException("No records found with id: " + id);
-            }
-        }
-
-        private Training getTrainingByCode(String code) {
-            return trainingRepository.findTrainingByCode(code)
-                    .orElseThrow(() -> new ResourceNotFoundException("Sala não encontrada: " + code));
-        }
-
-        private void validatePassword(Training training, String password) {
-            if (!training.getPassword().equals(password)) {
-                throw new PasswordDoesntMatchException("Senha incorreta!");
-            }
-        }
-        private void validateDateOfClose(LocalDateTime date, String message) {
-        if(date.isBefore(LocalDateTime.now())) {
-            throw  new InvalidDateException(message);
-        }
-        }
-        private void addEmployeeToTraining(Training training, Employee employee, String assinatura) {
-            if (isEmployeeInTraining(employee,training)) {
-                throw new EmployeeAlreadyInTrainingException("Você já está no treinamento!");
-            }
-            EmployeeTrainingKey key = new EmployeeTrainingKey(employee.getId(), training.getId());
-            EmployeeTraining employeeTraining = new EmployeeTraining(key, employee, training, assinatura);
-
-            training.getEmployees().add(employeeTraining);
-            employee.getEmployeeTrainings().add(employeeTraining);
-
-            trainingRepository.save(training);
-        }
-
-
-
-        private boolean isEmployeeInTraining(Employee employee, Training training) {
-            return training.getEmployees().stream()
-                    .anyMatch(et -> et.getEmployee().equals(employee));
-        }
-
-        private TrainingHistoricDTO convertToTrainingHistoricDTO(Training training) {
-            return new TrainingHistoricDTO(
-                    training.getId(),
-                    training.getName(),
-                    training.getCode(),
-                    training.getCreationDate(),
-                    training.getClosingDate(),
-                    training.getStatus(),
-                    training.getPassword(),
-                    training.getDescription(),
-                    training.getInstructors().stream()
-                            .map(instructor -> new InstructorNameAndIdDTO(
-                                    instructor.getId(),
-                                    instructor.getEmployee().getName(),
-                                    instructor.getEmployee().getSurname(),
-                                    instructor.getEmployee().getName() + " " + instructor.getEmployee().getSurname()))
-                            .collect(Collectors.toList()),
-                    training.getTags(),
-                    training.getEmployees()
-            );
-        }
-        private void messageToAllEmployeesOfDepartaments(String message,List<Long> departamentsIds){
-          List<String> phoneNumbers =  departmentService.getAllEmployeesPhoneNumberByDepartment(departamentsIds);
-          for (String phoneNumber : phoneNumbers) {
-              messageService.send(message,phoneNumber);
-          }
-        }
-
-        private LocalDateTime parseDate(String date) {
+    @Transactional(readOnly = true)
+    public List<RoomParticipantsDTO> findAllRoomParticipants(Long trainingId) {
+        Training training = trainingRepository.findById(trainingId).orElseThrow(() -> new ResourceNotFoundException("Treinamento não encontrada com id: " + trainingId));
+        List<RoomParticipantsDTO> participants = new ArrayList<>();
+        for (EmployeeTraining employeeTraining : training.getEmployees()) {
+            String fullName = employeeTraining.getEmployee().getName() + " " + employeeTraining.getEmployee().getSurname();
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yy HH:mm:ss,SSS");
+            String registrationFormat = formatter.format(employeeTraining.getRegistrationDate());
+            RoomParticipantsDTO participantDTO = new RoomParticipantsDTO(fullName, employeeTraining.getEmployee().getEmployeeRegistration(), registrationFormat);
+            participants.add(participantDTO);
+        }
+        return participants;
+    }
+
+
+
+    @Transactional(readOnly = true)
+    public List<TrainingOfEmployeeDTO> findEmployeeTrainingsById(Long idEmployee) {
+        List<EmployeeTraining> trainings = trainingRepository.findEmployeeTrainingSortedByRegistrationDateById(idEmployee)
+                .orElseThrow(() -> new ResourceNotFoundException("Funcionário não encontrada com id: " + idEmployee));
+        if (trainings.isEmpty()) {
+            return new ArrayList<>();
+        }
+        return trainings.stream()
+                .map(TrainingOfEmployeeDTO::new)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public List<TrainingWithEmployeesInfo> findInstructorTrainingsById(Long id) {
+        List<Training> trainings = trainingRepository.findByIdInstructorTrainingsSortedByCreationDate(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Treinador não encontrada com id: " + id));
+        if (trainings.isEmpty()) {
+            return new ArrayList<>();
+        }
+        return trainings.stream()
+                .map(TrainingWithEmployeesInfo::new
+                ).sorted(Comparator.comparing(TrainingWithEmployeesInfo::getClosingDate).reversed())
+                .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public List<TrainingWithEmployeesInfo> findTrainingByIdAndTag(Long id, String tagName) {
+        List<Training> trainings = trainingRepository.findByIdInstructorTrainingsByTagSortedByCreationDate(id, tagName)
+                .orElseThrow(() -> new ResourceNotFoundException("Treinador não encontrada com id: " + id));
+
+        if (trainings.isEmpty()) {
+            return new ArrayList<>();
+        }
+        return trainings.stream()
+                .map(TrainingWithEmployeesInfo::new
+                ).sorted(Comparator.comparing(TrainingWithEmployeesInfo::getClosingDate).reversed())
+                .collect(Collectors.toList());
+    }
+
+
+    @Transactional(readOnly = true)
+    public void confirmPassword(Long idUser, String code, String password) {
+        Training training = getTrainingByCode(code);
+        validatePassword(training, password);
+        EmployeeInfoDTO employeeDTO = employeeService.findById(idUser);
+        Employee employee = new Employee(employeeDTO);
+        validateDateOfClose(training.getClosingDate(), "Sala já encerrada!");
+        if (isEmployeeInTraining(employee, training)) {
+            throw new EmployeeAlreadyInTrainingException("Você já está no treinamento!");
+        }
+    }
+
+    @Transactional(readOnly = true)
+    public Page<TrainingDTO> search(List<SearchCriteria> params, Pageable pageable) {
+        Specification<Training> specification = Specification.where(null);
+
+        for (SearchCriteria criteria : params) {
+            specification = specification.and(new TrainingSpecification(criteria));
+        }
+        Page<Training> trainingPage = trainingRepository.findAll(specification, pageable);
+        return trainingPage.map(this::toDTO);
+    }
+
+    private void validatePassword(Training training, String password) {
+        if (!training.getPassword().equals(password)) {
+            throw new PasswordDoesntMatchException("Senha incorreta!");
+        }
+    }
+
+    private LocalDateTime parseDate(String date) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss,SSSSSSSSS");
+        try {
             return LocalDateTime.parse(date, formatter);
+        } catch (DateTimeParseException e) {
+            throw new InvalidDateException("Formato incorreto da data: " + date + " Formato correto: dd/MM/yyyy HH:mm:ss,SSSSSSSSS");
         }
+    }
 
-        private Tag getTagById(Long id) {
-            TagDTO tagDTO = tagsService.getById(id);
-            return new Tag(tagDTO.id(), tagDTO.name(), tagDTO.color(), tagDTO.trainings());
-        }
 
-        private Instructor getInstructorById(Long id) {
-            InstructorDTO instructorDTO = instructorService.getById(id);
-            return new Instructor(instructorDTO.id(), instructorDTO.employee(), instructorDTO.trainnings());
+    private void validateDateOfClose(LocalDateTime date, String message) {
+        if (date.isBefore(LocalDateTime.now())) {
+            throw new InvalidDateException(message);
         }
-    private Training buildTraining(TrainingCreationDTO trainingDTO, LocalDateTime parsedDate, List<Tag> tags, List<Instructor> instructors, String code) {
+    }
+
+    private void addEmployeeToTraining(Training training, Employee employee, String signature) {
+        validateEmployeeForTraining(employee,training);
+        EmployeeTrainingKey key = new EmployeeTrainingKey(employee.getId(), training.getId());
+        EmployeeTraining employeeTraining = new EmployeeTraining(key, employee, training, signature);
+
+        training.getEmployees().add(employeeTraining);
+        employee.getEmployeeTrainings().add(employeeTraining);
+    }
+
+    private void validateEmployeeForTraining(Employee employee, Training training) {
+        if(isNotEmployeeInDepartment(employee, training)){
+            throw new EmployeeNotInDepartmentException("Seu departamento não tem acesso a esse treinamento!");
+        }
+        if (isEmployeeInTraining(employee, training)) {
+            throw new EmployeeAlreadyInTrainingException("Você já está no treinamento!");
+        }
+        if (isEmployeeAnInstructor(employee, training)) {
+            throw new EmployeeAlreadyInTrainingException("Você é um instrutor da sala!");
+        }
+    }
+
+
+    private boolean isEmployeeInTraining(Employee employee, Training training) {
+        return training.getEmployees().stream()
+                .anyMatch(et -> et.getEmployee().equals(employee));
+    }
+
+    private boolean isEmployeeAnInstructor(Employee employee, Training training) {
+        return training.getInstructors()
+                .stream()
+                .anyMatch(
+                        instructor -> instructor.getEmployee()
+                                .equals(employee));
+    }
+
+    private boolean isNotEmployeeInDepartment(Employee employee, Training training) {
+        return training.getDepartments().stream().noneMatch(department -> department.getRoles().stream().anyMatch(role -> role.getEmployees().contains(employee)));
+    }
+
+    private void messageToAllEmployeesOfDepartments(String message, Set<String> phoneNumbers) {
+        for (String phoneNumber : phoneNumbers) {
+            messageService.send(message, phoneNumber);
+        }
+    }
+
+    private Tag getTagById(Long id) {
+        TagDTO tagDTO = tagsService.getById(id);
+        return new Tag(tagDTO);
+    }
+
+    private Instructor getInstructorById(Long id) {
+        InstructorDTO instructorDTO = instructorService.findById(id);
+        return new Instructor(instructorDTO);
+    }
+
+    private Department getDepartmentById(Long id) {
+        DepartmentDTO departmentDTO = departmentService.findById(id);
+        return new Department(departmentDTO);
+    }
+
+    private Training getTrainingByCode(String code) {
+        return trainingRepository.findTrainingByCode(code)
+                .orElseThrow(() -> new ResourceNotFoundException("Sala não encontrada: " + code));
+    }
+    private Employee getEmployeeById(Long id){
+        return employeeRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Funcionário não encontrado com id: " + id));
+    }
+
+
+    private Training buildTraining(TrainingInsertDTO trainingDTO, LocalDateTime nowDate, LocalDateTime parsedDate, Set<Tag> tags, Set<Instructor> instructors, String code, Set<Department> departments) {
         Training training = new Training();
-        training.setName(trainingDTO.name());
+        training.setName(trainingDTO.getName());
         training.setCode(code);
-        training.setDescription(trainingDTO.description());
+        training.setCreationDate(nowDate);
+        training.setDescription(trainingDTO.getDescription());
         training.setCreationDate(LocalDateTime.now());
         training.setClosingDate(parsedDate);
         training.setPassword(RandomStringGenerator.generatePassword(10));
-        training.setStatus(true);
         training.setInstructors(instructors);
         training.setTags(tags);
+        training.setDepartments(departments);
         return training;
     }
+
+    private TrainingDTO toDTO(Training training) {
+        return new TrainingDTO(training);
     }
+
+
+}

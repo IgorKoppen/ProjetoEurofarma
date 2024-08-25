@@ -1,17 +1,15 @@
 package br.com.connectfy.EurofarmaCliente.models;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import br.com.connectfy.EurofarmaCliente.dtos.training.TrainingDTO;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 
 @Entity
-@Table(name = "tb_trainning")
+@Table(name = "tb_trainings")
 public class Training {
 
     @Id
@@ -31,35 +29,53 @@ public class Training {
     private LocalDateTime closingDate;
 
     @Column(nullable = false)
-    private Boolean  status;
-
-    @Column(nullable = false)
     private String password;
 
     @Column(nullable = false)
     private String description;
 
-    @JsonManagedReference
+
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "training_instructors",
             joinColumns = {@JoinColumn(name = "id_training")},
             inverseJoinColumns = {@JoinColumn(name = "id_instructor")}
     )
-    private List<Instructor> instructors;
+    private Set<Instructor> instructors;
 
-    @JsonManagedReference
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "training_tags",
             joinColumns = {@JoinColumn(name = "id_training")},
             inverseJoinColumns = {@JoinColumn(name = "id_tag")}
     )
-    private List<Tag> tags;
+    private Set<Tag> tags;
 
-    @JsonBackReference
     @OneToMany(mappedBy = "training", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private Set<EmployeeTraining> employeeTrainings;
 
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "training_departments",
+            joinColumns = {@JoinColumn(name = "id_training")},
+            inverseJoinColumns = {@JoinColumn(name = "id_department")}
+    )
+    private Set<Department> departments;
+
+
     public Training(){}
+
+
+    public Training(TrainingDTO dto) {
+        this.id = dto.getId();
+        this.name = dto.getName();
+        this.code = dto.getCode();
+        this.creationDate = LocalDateTime.parse(dto.getCreationDate());
+        this.closingDate = LocalDateTime.parse(dto.getClosingDate());
+        this.password = dto.getPassword();
+        this.description = dto.getDescription();
+        this.tags = dto.getTags().stream().map(Tag::new).collect(Collectors.toSet());
+        this.departments = dto.getDepartments().stream().map(Department::new).collect(Collectors.toSet());
+    }
+
 
 
     public Long getId() {
@@ -102,13 +118,6 @@ public class Training {
         this.closingDate = closingDate;
     }
 
-    public Boolean isStatus() {
-        return status;
-    }
-
-    public void setStatus(Boolean status) {
-        this.status = status;
-    }
 
     public String getPassword() {
         return password;
@@ -126,23 +135,20 @@ public class Training {
         this.description = description;
     }
 
-    public Boolean getStatus() {
-        return status;
-    }
 
-    public List<Instructor> getInstructors() {
+    public Set<Instructor> getInstructors() {
         return instructors;
     }
 
-    public void setInstructors(List<Instructor> instructors) {
+    public void setInstructors(Set<Instructor> instructors) {
         this.instructors = instructors;
     }
 
-    public List<Tag> getTags() {
+    public Set<Tag> getTags() {
         return tags;
     }
 
-    public void setTags(List<Tag> tags) {
+    public void setTags(Set<Tag> tags) {
         this.tags = tags;
     }
 
@@ -154,29 +160,27 @@ public class Training {
         this.employeeTrainings = employeeTrainings;
     }
 
-    @Override
-    public String toString() {
-        return "Training{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", code='" + code + '\'' +
-                ", creationDate=" + creationDate +
-                ", closingDate=" + closingDate +
-                ", status=" + status +
-                ", password='" + password + '\'' +
-                ", description='" + description + '\'' +
-                ", instructors=" + instructors +
-                ", tags=" + tags +
-                ", employees=" + employeeTrainings +
-                '}';
+    public Set<Department> getDepartments() {
+        return departments;
+    }
+
+    public void setDepartments(Set<Department> departments) {
+        this.departments = departments;
+    }
+
+    public Set<EmployeeTraining> getEmployeeTrainings() {
+        return employeeTrainings;
+    }
+
+    public void setEmployeeTrainings(Set<EmployeeTraining> employeeTrainings) {
+        this.employeeTrainings = employeeTrainings;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Training training = (Training) o;
-        return Objects.equals(id, training.id);
+        if (!(o instanceof Training training)) return false;
+        return Objects.equals(id, training.id) && Objects.equals(name, training.name) && Objects.equals(code, training.code) && Objects.equals(creationDate, training.creationDate) && Objects.equals(closingDate, training.closingDate) && Objects.equals(password, training.password) && Objects.equals(description, training.description) && Objects.equals(instructors, training.instructors) && Objects.equals(tags, training.tags) && Objects.equals(employeeTrainings, training.employeeTrainings) && Objects.equals(departments, training.departments);
     }
 
     @Override

@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -29,13 +30,14 @@ public class SecurityConfig {
     private JwtTokenProvider tokenProvider;
 
     @Value("${secretOfEncoder}")
-    private String secretOfEnconder;
+    private String secretOfEncoder;
+
 
     @Bean
     PasswordEncoder passwordEncoder() {
         Map<String, PasswordEncoder> encoders = new HashMap<>();
 
-        Pbkdf2PasswordEncoder pbkdf2Encoder = new Pbkdf2PasswordEncoder(secretOfEnconder, 16, 310000, Pbkdf2PasswordEncoder.SecretKeyFactoryAlgorithm.PBKDF2WithHmacSHA256);
+        Pbkdf2PasswordEncoder pbkdf2Encoder = new Pbkdf2PasswordEncoder(secretOfEncoder, 16, 310000, Pbkdf2PasswordEncoder.SecretKeyFactoryAlgorithm.PBKDF2WithHmacSHA256);
         encoders.put("pbkdf2", pbkdf2Encoder);
         DelegatingPasswordEncoder passwordEncoder = new DelegatingPasswordEncoder("pbkdf2", encoders);
         passwordEncoder.setDefaultPasswordEncoderForMatches(pbkdf2Encoder);
@@ -59,14 +61,13 @@ public class SecurityConfig {
                         session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(
                         authorizeHttpRequests -> authorizeHttpRequests
-                                .requestMatchers(
-                                        "/auth/signin",
-                                        "/auth/refresh/**"
-                                ).permitAll()
-                                .requestMatchers("/eurofarma/**").authenticated()
+                                .requestMatchers("/auth/**","/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                                .requestMatchers("/eurofarma/admin/**").hasAuthority("admin")
+                                .requestMatchers(HttpMethod.POST, "/eurofarma/department/**").hasAuthority("admin")
+                                .requestMatchers("/eurofarma/treinador/**").hasAnyAuthority("admin", "treinador")
+                                .requestMatchers("/**").hasAnyAuthority("admin", "treinador","funcionario")
                 )
                 .cors(cors -> {})
-                .build();
-    }
+                .build();    }
 
 }

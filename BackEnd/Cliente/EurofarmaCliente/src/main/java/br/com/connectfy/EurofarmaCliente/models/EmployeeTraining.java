@@ -1,25 +1,23 @@
 package br.com.connectfy.EurofarmaCliente.models;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
-import java.sql.Clob;
+import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Entity
+@Table(name = "tb_employee_trainings")
 public class EmployeeTraining {
 
     @EmbeddedId
     EmployeeTrainingKey id;
 
-    @JsonManagedReference
     @ManyToOne
     @MapsId("employeeId")
     @JoinColumn(name = "employee_id")
     Employee employee;
 
 
-    @JsonBackReference
     @ManyToOne
     @MapsId("trainingId")
     @JoinColumn(name = "training_id")
@@ -29,6 +27,9 @@ public class EmployeeTraining {
     @Lob
     String signature;
 
+    @Column(nullable = false)
+    LocalDateTime registrationDate;
+
     public EmployeeTraining() {
     }
 
@@ -37,6 +38,7 @@ public class EmployeeTraining {
         this.employee = employee;
         this.training = training;
         this.signature = signature;
+        this.registrationDate = LocalDateTime.now();
     }
 
     public EmployeeTrainingKey getId() {
@@ -69,5 +71,25 @@ public class EmployeeTraining {
 
     public void setSignature(String signature) {
         this.signature = signature;
+    }
+
+    public LocalDateTime getRegistrationDate() {
+        return registrationDate;
+    }
+
+    public void setRegistrationDate(LocalDateTime registrationDate) {
+        this.registrationDate = registrationDate;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof EmployeeTraining that)) return false;
+        return Objects.equals(id, that.id) && Objects.equals(employee, that.employee) && Objects.equals(training, that.training) && Objects.equals(signature, that.signature);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
     }
 }

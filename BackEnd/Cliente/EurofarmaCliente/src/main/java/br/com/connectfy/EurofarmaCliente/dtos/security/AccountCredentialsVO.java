@@ -1,5 +1,7 @@
 package br.com.connectfy.EurofarmaCliente.dtos.security;
 
+import jakarta.validation.constraints.NotBlank;
+
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.Objects;
@@ -9,7 +11,9 @@ public class AccountCredentialsVO implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
+    @NotBlank(message = "O campo 'username' é obrigatório. Por favor, informe um nome de usuário válido.")
     private String userName;
+    @NotBlank(message = "O campo 'senha' é obrigatório. Por favor, insira uma senha válida.")
     private String password;
 
 
@@ -45,5 +49,13 @@ public class AccountCredentialsVO implements Serializable {
     @Override
     public int hashCode() {
         return Objects.hash(userName, password);
+    }
+
+    @Override
+    public String toString() {
+        return "AccountCredentialsVO{" +
+                "userName='" + userName + '\'' +
+                ", password='" + password + '\'' +
+                '}';
     }
 }

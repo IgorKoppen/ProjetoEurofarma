@@ -1,5 +1,4 @@
 package br.com.connectfy.EurofarmaCliente.exceptions;
-
 import java.io.Serial;
 
 public class InvalidPhoneNumberException extends RuntimeException{
