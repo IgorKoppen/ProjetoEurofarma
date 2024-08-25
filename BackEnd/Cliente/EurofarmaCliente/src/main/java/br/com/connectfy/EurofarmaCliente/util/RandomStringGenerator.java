@@ -7,22 +7,20 @@ public class RandomStringGenerator {
     private static final SecureRandom random = new SecureRandom();
 
     public static String generatePassword(int numberOfCharacters) {
-        return generateRandomString(numberOfCharacters, CHARACTERS);
+        return generateRandomString(numberOfCharacters);
     }
 
     public static String generateRoomCode(int numberOfCharacters) {
-        String specialCharacters = "!@^()_+[]{}|;,";
-        String allCharacters = CHARACTERS + specialCharacters;
-        return generateRandomString(numberOfCharacters, allCharacters);
+        return generateRandomString(numberOfCharacters);
     }
 
-    private static String generateRandomString(int numberOfCharacters, String characters) {
+    private static String generateRandomString(int numberOfCharacters) {
         if (numberOfCharacters < 1) {
             return "";
         }
         StringBuilder stringBuilder = new StringBuilder(numberOfCharacters);
         for (int i = 0; i < numberOfCharacters; i++) {
-            stringBuilder.append(characters.charAt(random.nextInt(characters.length())));
+            stringBuilder.append(RandomStringGenerator.CHARACTERS.charAt(random.nextInt(RandomStringGenerator.CHARACTERS.length())));
         }
         return stringBuilder.toString();
     }
