@@ -13,9 +13,12 @@ import br.com.connectfy.EurofarmaCliente.exceptions.*;
 import br.com.connectfy.EurofarmaCliente.models.*;
 import br.com.connectfy.EurofarmaCliente.repositories.EmployeeRepository;
 import br.com.connectfy.EurofarmaCliente.repositories.TrainingRepository;
+import br.com.connectfy.EurofarmaCliente.specification.SearchCriteria;
+import br.com.connectfy.EurofarmaCliente.specification.TrainingSpecification;
 import br.com.connectfy.EurofarmaCliente.util.RandomStringGenerator;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -181,7 +184,7 @@ public class TrainingService {
     public TrainingDTO findByCode(Long employeeId,String code) {
         Employee employee = getEmployeeById(employeeId);
         Training training = getTrainingByCode(code);
-        if(!isEmployeeInDepartment(employee,training)){
+        if(isNotEmployeeInDepartment(employee, training)){
             throw new EmployeeNotInDepartmentException("Seu departamento não tem acesso a esse treinamento!");
         }
         validateDateOfClose(training.getClosingDate(), "Lista já encerrada!");
@@ -254,6 +257,17 @@ public class TrainingService {
         }
     }
 
+    @Transactional(readOnly = true)
+    public Page<TrainingDTO> search(List<SearchCriteria> params, Pageable pageable) {
+        Specification<Training> specification = Specification.where(null);
+
+        for (SearchCriteria criteria : params) {
+            specification = specification.and(new TrainingSpecification(criteria));
+        }
+        Page<Training> trainingPage = trainingRepository.findAll(specification, pageable);
+        return trainingPage.map(this::toDTO);
+    }
+
     private void validatePassword(Training training, String password) {
         if (!training.getPassword().equals(password)) {
             throw new PasswordDoesntMatchException("Senha incorreta!");
@@ -277,7 +291,7 @@ public class TrainingService {
     }
 
     private void addEmployeeToTraining(Training training, Employee employee, String signature) {
-        if(!isEmployeeInDepartment(employee,training)){
+        if(isNotEmployeeInDepartment(employee, training)){
             throw new EmployeeNotInDepartmentException("Seu departamento não tem acesso a esse treinamento!");
         }
         if (isEmployeeInTraining(employee, training)) {
@@ -308,8 +322,8 @@ public class TrainingService {
                                 .equals(employee));
     }
 
-    private boolean isEmployeeInDepartment(Employee employee,Training training) {
-        return training.getDepartments().stream().anyMatch(department -> department.getRoles().stream().anyMatch(role -> role.getEmployees().contains(employee)));
+    private boolean isNotEmployeeInDepartment(Employee employee, Training training) {
+        return training.getDepartments().stream().noneMatch(department -> department.getRoles().stream().anyMatch(role -> role.getEmployees().contains(employee)));
     }
 
     private void messageToAllEmployeesOfDepartments(String message, Set<String> phoneNumbers) {

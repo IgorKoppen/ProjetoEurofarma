@@ -6,8 +6,11 @@ import br.com.connectfy.EurofarmaCliente.dtos.training.TrainingInsertDTO;
 import br.com.connectfy.EurofarmaCliente.dtos.training.TrainingOfEmployeeDTO;
 import br.com.connectfy.EurofarmaCliente.dtos.training.TrainingWithEmployeesInfo;
 import br.com.connectfy.EurofarmaCliente.services.TrainingService;
+import br.com.connectfy.EurofarmaCliente.specification.SearchCriteria;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -26,6 +29,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -68,7 +72,7 @@ public class TrainingController {
     @GetMapping(value = "/pagination", produces = "application/json")
     public ResponseEntity<PagedModel<EntityModel<TrainingDTO>>> findWithPagination(
             @PageableDefault(size = 10, direction = Sort.Direction.ASC)
-            Pageable pageable, PagedResourcesAssembler<TrainingDTO> assembler) {
+            Pageable pageable,@Parameter(hidden = true) PagedResourcesAssembler<TrainingDTO> assembler) {
         Page<TrainingDTO> trainingDTOPage = trainingService.findWithPagination(pageable);
         PagedModel<EntityModel<TrainingDTO>> pagedModel = assembler.toModel(trainingDTOPage);
         return ResponseEntity.ok(pagedModel);
@@ -238,6 +242,59 @@ public class TrainingController {
         return ResponseEntity.noContent().build();
     }
 
+    @Operation(summary = "Busca treinamentos com base em critérios específicos",
+            description = "Realiza a busca de treinamentos utilizando diversos parâmetros opcionais," +
+                    " como nome, data de fechamento, tags, departamento," +
+                    " e registro de funcionários ou instrutores." +
+                    " Retorna uma lista paginada de treinamentos que correspondem aos critérios fornecidos.",
+            tags = {"Training"},
+            responses = {
+                    @ApiResponse(description = "No Content", responseCode = "204", content = @Content),
+                    @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
+                    @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
+                    @ApiResponse(description = "Forbidden", responseCode = "403", content = @Content)
+            })
+    @GetMapping(value = "/search", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<PagedModel<EntityModel<TrainingDTO>>> searchTrainings(
+                                          @RequestParam(value = "name", required = false) String name,
+                                          @RequestParam(value = "tagId", required = false) Long tagId,
+                                          @RequestParam(value = "tagName", required = false) String tagName,
+                                          @RequestParam(value = "departmentId", required = false) Long departmentId,
+                                          @RequestParam(value = "departmentName", required = false) String departmentName,
+                                          @RequestParam(value = "instructorRegistration", required = false) Long instructorRegistration,
+                                          @RequestParam(value = "employeeRegistration", required = false) Long employeeRegistration,
+                                             @PageableDefault(direction = Sort.Direction.ASC)
+                                                 Pageable pageable,
+                                          @Parameter(hidden = true)   PagedResourcesAssembler<TrainingDTO> assembler) {
 
+        List<SearchCriteria> params = new ArrayList<>();
+
+
+        if (name != null) {
+            params.add(new SearchCriteria("name", ":", name));
+        }
+        if (tagId != null) {
+            params.add(new SearchCriteria("tags.id", "=", tagId));
+        }
+        if (tagName != null) {
+            params.add(new SearchCriteria("tagName", "=", tagName));
+        }
+        if (departmentId != null) {
+            params.add(new SearchCriteria("departments.id", "=", departmentId));
+        }
+        if (departmentName != null) {
+            params.add(new SearchCriteria("departmentName", "=", departmentName));
+        }
+        if (instructorRegistration != null) {
+            params.add(new SearchCriteria("instructorRegistration", "=", instructorRegistration));
+        }
+        if (employeeRegistration != null) {
+            params.add(new SearchCriteria("employeeRegistration", "=", employeeRegistration));
+        }
+        Page<TrainingDTO> trainingDTOPage =  trainingService.search(params, pageable);
+        PagedModel<EntityModel<TrainingDTO>> pagedModel = assembler.toModel(trainingDTOPage);
+
+        return ResponseEntity.ok(pagedModel);
+    }
 
 }
