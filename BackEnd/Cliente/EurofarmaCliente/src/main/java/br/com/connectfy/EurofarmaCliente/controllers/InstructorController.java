@@ -3,6 +3,7 @@ import br.com.connectfy.EurofarmaCliente.dtos.instructor.InstructorDTO;
 import br.com.connectfy.EurofarmaCliente.dtos.instructor.InstructorIdAndFullNameAndEmployeeRegistrationDTO;
 import br.com.connectfy.EurofarmaCliente.services.InstructorService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -57,7 +58,7 @@ public class InstructorController {
     @GetMapping(value = "/pagination", produces = "application/json")
     public ResponseEntity<PagedModel<EntityModel<InstructorDTO>>> findWithPagination(
             @PageableDefault(size = 10, direction = Sort.Direction.ASC)
-            Pageable pageable, PagedResourcesAssembler<InstructorDTO> assembler) {
+            Pageable pageable,@Parameter(hidden = true) PagedResourcesAssembler<InstructorDTO> assembler) {
         Page<InstructorDTO> instructorDTOPage = instructorService.findWithPagination(pageable);
         PagedModel<EntityModel<InstructorDTO>> pagedModel = assembler.toModel(instructorDTOPage);
         return ResponseEntity.ok(pagedModel);

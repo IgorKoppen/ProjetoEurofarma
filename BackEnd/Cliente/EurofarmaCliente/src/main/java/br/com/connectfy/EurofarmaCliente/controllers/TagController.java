@@ -3,6 +3,7 @@ package br.com.connectfy.EurofarmaCliente.controllers;
 import br.com.connectfy.EurofarmaCliente.dtos.tag.TagDTO;
 import br.com.connectfy.EurofarmaCliente.services.TagService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -76,7 +77,7 @@ public class TagController {
     @GetMapping(value = "/pagination", produces = "application/json")
     public ResponseEntity<PagedModel<EntityModel<TagDTO>>> findWithPagination(
             @PageableDefault(size = 10, direction = Sort.Direction.ASC)
-            Pageable pageable, PagedResourcesAssembler<TagDTO> assembler) {
+            Pageable pageable,@Parameter(hidden = true) PagedResourcesAssembler<TagDTO> assembler) {
         Page<TagDTO> tagDTOPage = tagsService.findWithPagination(pageable);
         PagedModel<EntityModel<TagDTO>> pagedModel = assembler.toModel(tagDTOPage);
         return ResponseEntity.ok(pagedModel);
