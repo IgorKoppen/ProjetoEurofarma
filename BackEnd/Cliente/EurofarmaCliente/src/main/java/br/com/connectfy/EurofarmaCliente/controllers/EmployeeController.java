@@ -6,8 +6,11 @@ import br.com.connectfy.EurofarmaCliente.dtos.employee.EmployeeInfoDTO;
 import br.com.connectfy.EurofarmaCliente.dtos.employee.EmployeeInsertDTO;
 import br.com.connectfy.EurofarmaCliente.dtos.employee.EmployeeUpdateDTO;
 import br.com.connectfy.EurofarmaCliente.dtos.employee.EmployeeUserProfileInfoDTO;
+import br.com.connectfy.EurofarmaCliente.dtos.training.TrainingDTO;
 import br.com.connectfy.EurofarmaCliente.services.EmployeeService;
+import br.com.connectfy.EurofarmaCliente.specification.SearchCriteria;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -27,6 +30,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequestMapping("/eurofarma/employee")
@@ -96,7 +101,7 @@ public class EmployeeController {
                     @ApiResponse(description = "Forbidden", responseCode = "403", content = @Content)
             })
     @GetMapping(value = "/pagination", produces = "application/json")
-    public ResponseEntity<PagedModel<EntityModel<EmployeeInfoDTO>>> findWithPagination(@PageableDefault(size = 10, direction = Sort.Direction.ASC, sort = "name") Pageable pageable, PagedResourcesAssembler<EmployeeInfoDTO> assembler) {
+    public ResponseEntity<PagedModel<EntityModel<EmployeeInfoDTO>>> findWithPagination(@PageableDefault(size = 10, direction = Sort.Direction.ASC, sort = "name") Pageable pageable,@Parameter(hidden = true) PagedResourcesAssembler<EmployeeInfoDTO> assembler) {
         Page<EmployeeInfoDTO> employeePage = employeeService.findWithPagination(pageable);
         PagedModel<EntityModel<EmployeeInfoDTO>> pagedModel = assembler.toModel(employeePage);
         return ResponseEntity.ok(pagedModel);
@@ -184,5 +189,70 @@ public class EmployeeController {
         return ResponseEntity.noContent().build();
     }
 
+
+    @Operation(summary = "Realiza uma busca avançada de funcionários",
+            description = "Retorna uma lista paginada de funcionários com base em vários " +
+                    " parâmetros opcionais de busca, como nome, sobrenome, registro de funcionário, status de ativação, função, permissão e departamento.",
+            tags = {"Employee"},
+            responses = {
+                    @ApiResponse(description = "Ok", responseCode = "200", content = @Content()),
+                    @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
+                    @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
+                    @ApiResponse(description = "Forbidden", responseCode = "403", content = @Content),
+            })
+    @GetMapping(value = "/search", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<PagedModel<EntityModel<EmployeeInfoDTO>>> searchEmployee(
+            @RequestParam(value = "name", required = false) String name,
+            @RequestParam(value = "surname", required = false) String surname,
+            @RequestParam(value = "employeeRegistration", required = false) Long employeeRegistration,
+            @RequestParam(value = "enabled", required = false) Boolean enabled,
+            @RequestParam(value = "roleId", required = false) Long roleId,
+            @RequestParam(value = "roleName", required = false) String roleName,
+            @RequestParam(value = "permissionId", required = false) String permissionId,
+            @RequestParam(value = "permissionDescription", required = false) String permissionDescription,
+            @RequestParam(value = "departmentId", required = false) Long departmentId,
+            @RequestParam(value = "departmentName", required = false) String departmentName,
+
+            @PageableDefault(direction = Sort.Direction.ASC)
+            Pageable pageable,
+            @Parameter(hidden = true)   PagedResourcesAssembler<EmployeeInfoDTO> assembler) {
+
+        List<SearchCriteria> params = new ArrayList<>();
+
+
+        if (name != null) {
+            params.add(new SearchCriteria("name", ":", name));
+        }
+        if (surname != null) {
+            params.add(new SearchCriteria("surname", ":", surname));
+        }
+        if (employeeRegistration != null) {
+            params.add(new SearchCriteria("employeeRegistration", ":", employeeRegistration));
+        }
+        if (enabled != null) {
+            params.add(new SearchCriteria("enabled", ":", enabled));
+        }
+        if (roleId != null) {
+            params.add(new SearchCriteria("roleId", "=", roleId));
+        }
+        if (roleName != null) {
+            params.add(new SearchCriteria("roleName", "=", roleName));
+        }
+        if (permissionId != null) {
+            params.add(new SearchCriteria("permissionId", "=", permissionId));
+        }
+        if (permissionDescription != null) {
+            params.add(new SearchCriteria("permissionDescription", "=", permissionDescription));
+        }
+        if (departmentId != null) {
+            params.add(new SearchCriteria("departmentId", "=", departmentId));
+        }
+        if (departmentName != null) {
+            params.add(new SearchCriteria("departmentName", "=", departmentName));
+        }
+        Page<EmployeeInfoDTO> employeeInfoDTOPage =  employeeService.search(params, pageable);
+        PagedModel<EntityModel<EmployeeInfoDTO>> pagedModel = assembler.toModel(employeeInfoDTOPage);
+        return ResponseEntity.ok(pagedModel);
+    }
 
 }

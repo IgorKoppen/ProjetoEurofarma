@@ -3,6 +3,7 @@ package br.com.connectfy.EurofarmaCliente.repositories;
 import br.com.connectfy.EurofarmaCliente.models.Employee;
 import br.com.connectfy.EurofarmaCliente.models.Instructor;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -11,7 +12,7 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface EmployeeRepository extends JpaRepository<Employee, Long> {
+public interface EmployeeRepository extends JpaRepository<Employee, Long>, JpaSpecificationExecutor<Employee> {
     @Query("SELECT u FROM Employee u where u.employeeRegistration =:employeeRegistration")
     Optional<Employee> findByEmployeeRegistration(@Param("employeeRegistration") Long employeeRegistration);
 

@@ -6,24 +6,27 @@ import br.com.connectfy.EurofarmaCliente.dtos.employee.EmployeeInfoDTO;
 import br.com.connectfy.EurofarmaCliente.dtos.employee.EmployeeInsertDTO;
 import br.com.connectfy.EurofarmaCliente.dtos.employee.EmployeeUpdateDTO;
 import br.com.connectfy.EurofarmaCliente.dtos.employee.EmployeeUserProfileInfoDTO;
+import br.com.connectfy.EurofarmaCliente.dtos.training.TrainingDTO;
 import br.com.connectfy.EurofarmaCliente.exceptions.*;
-import br.com.connectfy.EurofarmaCliente.models.Employee;
-import br.com.connectfy.EurofarmaCliente.models.Instructor;
-import br.com.connectfy.EurofarmaCliente.models.Permission;
-import br.com.connectfy.EurofarmaCliente.models.Role;
+import br.com.connectfy.EurofarmaCliente.models.*;
 import br.com.connectfy.EurofarmaCliente.repositories.EmployeeRepository;
 import br.com.connectfy.EurofarmaCliente.repositories.InstructorRepository;
+import br.com.connectfy.EurofarmaCliente.specification.EmployeeSpecification;
+import br.com.connectfy.EurofarmaCliente.specification.SearchCriteria;
+import br.com.connectfy.EurofarmaCliente.specification.TrainingSpecification;
 import br.com.connectfy.EurofarmaCliente.util.EncryptedPassword;
 import br.com.connectfy.EurofarmaCliente.util.PhoneNumberValidator;
 import br.com.connectfy.EurofarmaCliente.util.RandomStringGenerator;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.*;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -142,6 +145,16 @@ public class EmployeeService implements UserDetailsService {
     public EmployeeInfoDTO findByEmployeeRegistration(Long employeeRegistration) {
         Employee entity = employeeRepository.findByEmployeeRegistration(employeeRegistration ).orElseThrow(() -> new ResourceNotFoundException("Nenhum funcionário encontrado com registro de funcionário: " + employeeRegistration));
         return toDTO(entity);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<EmployeeInfoDTO> search(List<SearchCriteria> params, Pageable pageable) {
+        Specification<Employee> specification = Specification.where(null);
+        for (SearchCriteria criteria : params) {
+            specification = specification.and(new EmployeeSpecification(criteria));
+        }
+        Page<Employee> trainingPage = employeeRepository.findAll(specification, pageable);
+        return trainingPage.map(this::toDTO);
     }
 
     @Override
