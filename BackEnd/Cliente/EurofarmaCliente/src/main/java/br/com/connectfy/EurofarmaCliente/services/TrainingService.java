@@ -184,9 +184,7 @@ public class TrainingService {
     public TrainingDTO findByCode(Long employeeId,String code) {
         Employee employee = getEmployeeById(employeeId);
         Training training = getTrainingByCode(code);
-        if(isNotEmployeeInDepartment(employee, training)){
-            throw new EmployeeNotInDepartmentException("Seu departamento não tem acesso a esse treinamento!");
-        }
+        validateEmployeeForTraining(employee,training);
         validateDateOfClose(training.getClosingDate(), "Lista já encerrada!");
         return toDTO(training);
     }
@@ -204,6 +202,8 @@ public class TrainingService {
         }
         return participants;
     }
+
+
 
     @Transactional(readOnly = true)
     public List<TrainingOfEmployeeDTO> findEmployeeTrainingsById(Long idEmployee) {
@@ -291,6 +291,15 @@ public class TrainingService {
     }
 
     private void addEmployeeToTraining(Training training, Employee employee, String signature) {
+        validateEmployeeForTraining(employee,training);
+        EmployeeTrainingKey key = new EmployeeTrainingKey(employee.getId(), training.getId());
+        EmployeeTraining employeeTraining = new EmployeeTraining(key, employee, training, signature);
+
+        training.getEmployees().add(employeeTraining);
+        employee.getEmployeeTrainings().add(employeeTraining);
+    }
+
+    private void validateEmployeeForTraining(Employee employee, Training training) {
         if(isNotEmployeeInDepartment(employee, training)){
             throw new EmployeeNotInDepartmentException("Seu departamento não tem acesso a esse treinamento!");
         }
@@ -300,12 +309,6 @@ public class TrainingService {
         if (isEmployeeAnInstructor(employee, training)) {
             throw new EmployeeAlreadyInTrainingException("Você é um instrutor da sala!");
         }
-
-        EmployeeTrainingKey key = new EmployeeTrainingKey(employee.getId(), training.getId());
-        EmployeeTraining employeeTraining = new EmployeeTraining(key, employee, training, signature);
-
-        training.getEmployees().add(employeeTraining);
-        employee.getEmployeeTrainings().add(employeeTraining);
     }
 
 
