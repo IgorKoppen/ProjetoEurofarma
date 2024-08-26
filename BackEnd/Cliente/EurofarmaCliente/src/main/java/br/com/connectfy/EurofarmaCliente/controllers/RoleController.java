@@ -11,6 +11,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -26,7 +27,7 @@ public class RoleController {
     @Autowired
     private RoleService roleService;
 
-
+    @PreAuthorize("hasAnyAuthority('admin')")
     @Operation(summary = "Cria um cargo", description = "Cria um novo cargo",
             tags = {"Role"},
             responses = {
@@ -43,7 +44,7 @@ public class RoleController {
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(roleDTO.getId()).toUri();
         return ResponseEntity.created(uri).body(roleDTO);
     }
-
+    @PreAuthorize("hasAnyAuthority('admin')")
     @Operation(summary = "Consulta todos os cargos", description = "Retorna todos os cargos",
             tags = {"Role"},
             responses = {
@@ -57,7 +58,7 @@ public class RoleController {
         return ResponseEntity.ok(rolesDTO);
     }
 
-
+    @PreAuthorize("hasAnyAuthority('admin')")
     @Operation(summary = "Consulta um cargo", description = "Retorna um cargo pelo id",
             tags = {"Role"},
             responses = {
@@ -73,7 +74,7 @@ public class RoleController {
         return ResponseEntity.ok(rolesDTO);
     }
 
-
+    @PreAuthorize("hasAnyAuthority('admin')")
     @Operation(summary = "Exclui um cargos", description = "Exclui um cargos a partir de um id",
             tags = {"Role"},
             responses = {

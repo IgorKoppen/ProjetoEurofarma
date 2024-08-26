@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -26,6 +27,7 @@ public class DepartmentController {
     @Autowired
     private DepartmentService departmentService;
 
+    @PreAuthorize("hasAnyAuthority('admin')")
     @Operation(summary = "Cria um departamento", description = "Cria um novo departamento",
             tags = {"Department"},
             responses = {
@@ -42,7 +44,7 @@ public class DepartmentController {
         return ResponseEntity.created(uri).body(departmentDTO);
     }
 
-
+    @PreAuthorize("hasAnyAuthority('admin','treinador')")
     @Operation(summary = "Lista departamentos", description = "Retorna todos os departamentos",
             tags = {"Department"},
             responses = {
@@ -56,7 +58,7 @@ public class DepartmentController {
         return ResponseEntity.ok(departmentDTOS);
     }
 
-
+    @PreAuthorize("hasAnyAuthority('admin','treinador')")
     @Operation(summary = "Consulta um departamento", description = "Retorna um departamento a partir de um id",
             tags = {"Department"},
             responses = {
@@ -72,7 +74,7 @@ public class DepartmentController {
         return ResponseEntity.ok(departmentDTO);
     }
 
-
+    @PreAuthorize("hasAnyAuthority('admin')")
     @Operation(summary = "Atualiza um departamento", description = "Atualiza um departamento a partir de um id",
             tags = {"Department"},
             responses = {
@@ -91,6 +93,7 @@ public class DepartmentController {
         return ResponseEntity.ok(departmentDTO);
     }
 
+    @PreAuthorize("hasAnyAuthority('admin')")
     @Operation(summary = "Exclui um departamento", description = "Exclui um departamento a partir de um id",
             tags = {"Department"},
             responses = {

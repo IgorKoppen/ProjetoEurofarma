@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,7 +27,7 @@ public class PermissionController {
     @Autowired
     private PermissionService permissionService;
 
-
+    @PreAuthorize("hasAnyAuthority('admin')")
     @Operation(summary = "Consulta todas permições", description = "Retorna todas as permições",
             tags = {"Permission"},
             responses = {
@@ -40,7 +41,7 @@ public class PermissionController {
         return ResponseEntity.ok(permissionDTOS);
     }
 
-
+    @PreAuthorize("hasAnyAuthority('admin')")
     @Operation(summary = "Consulta uma permição", description = "Retorna uma permição a partir de um id",
             tags = {"Permission"},
             responses = {
