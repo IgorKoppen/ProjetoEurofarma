@@ -26,6 +26,7 @@ import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -43,6 +44,7 @@ public class EmployeeController {
     private EmployeeService employeeService;
 
 
+    @PreAuthorize("hasAnyAuthority('admin')")
     @Operation(summary = "Cria um funcionário", description = "Cria um novo funcionário",
             tags = {"Employee"},
             responses = {
@@ -61,7 +63,7 @@ public class EmployeeController {
         return ResponseEntity.created(uri).body(employeeDTO);
     }
 
-
+    @PreAuthorize("hasAnyAuthority('admin')")
     @Operation(summary = "Consulta um funcionário", description = "Retorna um funcionário a partir de um id",
             tags = {"Employee"},
             responses = {
@@ -77,6 +79,7 @@ public class EmployeeController {
         return ResponseEntity.ok(dto);
     }
 
+    @PreAuthorize("hasAnyAuthority('admin','treinador','funcionario')")
     @Operation(summary = "Retorna informações parciais de funcionário", description = "Retorna informações paciais de um funcionário",
             tags = {"Employee"},
             responses = {
@@ -92,6 +95,7 @@ public class EmployeeController {
         return ResponseEntity.ok(employeeUserInfo);
     }
 
+    @PreAuthorize("hasAnyAuthority('admin')")
     @Operation(summary = "Consulta funcionários com paginação", description = "Retorna funcionários com paginação",
             tags = {"Employee"},
             responses = {
@@ -107,6 +111,7 @@ public class EmployeeController {
         return ResponseEntity.ok(pagedModel);
     }
 
+    @PreAuthorize("hasAnyAuthority('admin')")
     @Operation(summary = "Atualiza um funcionário", description = "Atualiza um funcionário a partir de um id",
             tags = {"Employee"},
             responses = {
@@ -125,6 +130,7 @@ public class EmployeeController {
         return ResponseEntity.ok(employee);
     }
 
+    @PreAuthorize("hasAnyAuthority('admin')")
     @Operation(summary = "Exclui um funcionário", description = "Exclui um funcionário a partir de um id",
             tags = {"Employee"},
             responses = {
@@ -140,7 +146,7 @@ public class EmployeeController {
         return ResponseEntity.noContent().build();
     }
 
-
+    @PreAuthorize("hasAnyAuthority('admin','treinador','funcionario')")
     @Operation(summary = "Atualiza a senha de um funcionário", description = "Atualiza a senha de um funcionário",
             tags = {"Employee"},
             responses = {
@@ -156,6 +162,7 @@ public class EmployeeController {
        employeeService.updatePassword(id,changePasswordDTO);
         return ResponseEntity.noContent().build();
     }
+    @PreAuthorize("hasAnyAuthority('admin','treinador','funcionario')")
     @Operation(summary = "Atualiza o telefone de um funcionário", description = "Atualiza o número de telefone de um funcionário",
             tags = {"Employee"},
             responses = {
@@ -173,7 +180,7 @@ public class EmployeeController {
         return ResponseEntity.noContent().build();
     }
 
-
+    @PreAuthorize("hasAnyAuthority('admin')")
     @Operation(summary = "Desabilita um funcionário", description = "Desabilita um funcionário",
             tags = {"Employee"},
             responses = {
@@ -189,7 +196,7 @@ public class EmployeeController {
         return ResponseEntity.noContent().build();
     }
 
-
+    @PreAuthorize("hasAnyAuthority('admin')")
     @Operation(summary = "Realiza uma busca avançada de funcionários",
             description = "Retorna uma lista paginada de funcionários com base em vários " +
                     " parâmetros opcionais de busca, como nome, sobrenome, registro de funcionário, status de ativação, função, permissão e departamento.",

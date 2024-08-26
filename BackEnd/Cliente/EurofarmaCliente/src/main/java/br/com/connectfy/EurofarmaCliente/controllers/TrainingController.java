@@ -10,7 +10,6 @@ import br.com.connectfy.EurofarmaCliente.specification.SearchCriteria;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -25,6 +24,7 @@ import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -42,6 +42,7 @@ public class TrainingController {
     private TrainingService trainingService;
 
 
+    @PreAuthorize("hasAnyAuthority('admin','treinador')")
     @Operation(summary = "Cria um treinamento", description = "Cria um novo treinamento",
             tags = {"Training"},
             responses = {
@@ -60,7 +61,7 @@ public class TrainingController {
         return ResponseEntity.created(uri).body(trainingDTO);
     }
 
-
+    @PreAuthorize("hasAnyAuthority('admin')")
     @Operation(summary = "Consulta treinamentos com paginação", description = "Retorna treinamentos com paginação",
             tags = {"Training"},
             responses = {
@@ -78,8 +79,8 @@ public class TrainingController {
         return ResponseEntity.ok(pagedModel);
     }
 
-
-    @Operation(summary = "Consulta treinamentos com paginação", description = "Retorna treinamentos com paginação",
+    @PreAuthorize("hasAnyAuthority('admin')")
+    @Operation(summary = "Consulta um treinamento ", description = "Retorna treinamento com base no id.",
             tags = {"Training"},
             responses = {
                     @ApiResponse(description = "Success", responseCode = "200", content = @Content()),
@@ -94,7 +95,7 @@ public class TrainingController {
         return ResponseEntity.ok(trainingDTO);
     }
 
-
+    @PreAuthorize("hasAnyAuthority('admin','treinador')")
     @Operation(summary = "Atualiza um treinamento", description = "Atualiza um treinamento a partir de um id",
             tags = {"Training"},
             responses = {
@@ -112,7 +113,7 @@ public class TrainingController {
         return ResponseEntity.ok(trainingDTO);
     }
 
-
+    @PreAuthorize("hasAnyAuthority('admin','treinador')")
     @Operation(summary = "Cancela um treinamento", description = "Cancela um treinamento a partir de um id",
             tags = {"Training"},
             responses = {
@@ -128,7 +129,7 @@ public class TrainingController {
         return ResponseEntity.noContent().build();
     }
 
-
+    @PreAuthorize("hasAnyAuthority('admin')")
     @Operation(summary = "Procura um treinamento", description = "Retorna um treinamento a partir de um id",
             tags = {"Training"},
             responses = {
@@ -144,7 +145,7 @@ public class TrainingController {
         return ResponseEntity.ok(trainingDTO);
     }
 
-
+    @PreAuthorize("hasAnyAuthority('admin','funcionario')")
     @Operation(summary = "Procura os treinamentos de um funcionário", description = "Retorna todos treinamentos a partir de um id de um funcionário",
             tags = {"Training"},
             responses = {
@@ -160,7 +161,7 @@ public class TrainingController {
         return ResponseEntity.ok(dto);
     }
 
-
+    @PreAuthorize("hasAnyAuthority('admin','treinador')")
     @Operation(summary = "Procura os treinamentos de um instrutor", description = "Retorna todos treinamentos a partir de um id de um instrutor",
             tags = {"Training"},
             responses = {
@@ -176,6 +177,7 @@ public class TrainingController {
         return ResponseEntity.ok(dto);
     }
 
+    @PreAuthorize("hasAnyAuthority('admin','treinador')")
     @Operation(summary = "Procura um treinamento de instrutor por tag", description = "Retorna todos treinamentos a partir de um id de um instrutor e uma tag",
             tags = {"Training"},
             responses = {
@@ -191,7 +193,7 @@ public class TrainingController {
         return ResponseEntity.ok(dto);
     }
 
-
+    @PreAuthorize("hasAnyAuthority('admin','treinador','funcionario')")
     @Operation(summary = "Verifica a senha do treinamento", description = "Verifica se a senha informada pelo funcionário" +
             "está correta, se está encerrada ou se o funcionário já está em um treinamento",
             tags = {"Training"},
@@ -209,6 +211,7 @@ public class TrainingController {
          return ResponseEntity.noContent().build();
     }
 
+    @PreAuthorize("hasAnyAuthority('admin','treinador')")
    @Operation(summary = "Procura os funcionários de um treinamento", description = "Retorna todos os funcionários que realizaram um treinamento",
            tags = {"Training"},
            responses = {
@@ -224,7 +227,7 @@ public class TrainingController {
        return ResponseEntity.ok(roomParticipantsDTOS);
    }
 
-
+    @PreAuthorize("hasAnyAuthority('admin','treinador')")
     @Operation(summary = "Adiciona um funcionário em um treinamento", description = "Insere um funcionário em um treinamento",
             tags = {"Training"},
             responses = {
@@ -242,6 +245,7 @@ public class TrainingController {
         return ResponseEntity.noContent().build();
     }
 
+    @PreAuthorize("hasAnyAuthority('admin')")
     @Operation(summary = "Busca treinamentos com base em critérios específicos",
             description = "Realiza a busca de treinamentos utilizando diversos parâmetros opcionais," +
                     " como nome, data de fechamento, tags, departamento," +

@@ -6,9 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -24,6 +24,10 @@ import java.util.Map;
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity(
+        securedEnabled = true,
+        jsr250Enabled = true
+)
 public class SecurityConfig {
 
     @Autowired
@@ -36,7 +40,6 @@ public class SecurityConfig {
     @Bean
     PasswordEncoder passwordEncoder() {
         Map<String, PasswordEncoder> encoders = new HashMap<>();
-
         Pbkdf2PasswordEncoder pbkdf2Encoder = new Pbkdf2PasswordEncoder(secretOfEncoder, 16, 310000, Pbkdf2PasswordEncoder.SecretKeyFactoryAlgorithm.PBKDF2WithHmacSHA256);
         encoders.put("pbkdf2", pbkdf2Encoder);
         DelegatingPasswordEncoder passwordEncoder = new DelegatingPasswordEncoder("pbkdf2", encoders);
@@ -62,9 +65,6 @@ public class SecurityConfig {
                 .authorizeHttpRequests(
                         authorizeHttpRequests -> authorizeHttpRequests
                                 .requestMatchers("/auth/**","/swagger-ui/**", "/v3/api-docs/**").permitAll()
-                                .requestMatchers("/eurofarma/admin/**").hasAuthority("admin")
-                                .requestMatchers(HttpMethod.POST, "/eurofarma/department/**").hasAuthority("admin")
-                                .requestMatchers("/eurofarma/treinador/**").hasAnyAuthority("admin", "treinador")
                                 .requestMatchers("/**").hasAnyAuthority("admin", "treinador","funcionario")
                 )
                 .cors(cors -> {})

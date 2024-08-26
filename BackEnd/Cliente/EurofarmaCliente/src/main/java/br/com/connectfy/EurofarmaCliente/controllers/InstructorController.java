@@ -18,6 +18,7 @@ import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
@@ -31,6 +32,7 @@ public class InstructorController {
     @Autowired
     private InstructorService instructorService;
 
+    @PreAuthorize("hasAnyAuthority('admin','treinador')")
     @Operation(summary = "Consulta instrutores", description = "Retorna todos os instrutores",
             tags = {"Instructor"},
             responses = {
@@ -44,7 +46,7 @@ public class InstructorController {
         return ResponseEntity.ok(list);
     }
 
-
+    @PreAuthorize("hasAnyAuthority('admin','treinador')")
     @Operation(summary = "Consulta instrutores com paginação", description = "Retorna todos instrutores com paginação",
             tags = {"Instructor"},
             responses = {
@@ -62,7 +64,7 @@ public class InstructorController {
         return ResponseEntity.ok(pagedModel);
     }
 
-
+    @PreAuthorize("hasAnyAuthority('admin','treinador')")
     @Operation(summary = "Consulta o nome completo dos instrutores e o RE", description = "Retorna todos os nomes completos dos instrutores junto com RE",
             tags = {"Instructor"},
             responses = {
@@ -76,7 +78,7 @@ public class InstructorController {
         return ResponseEntity.ok(dto);
     }
 
-
+    @PreAuthorize("hasAnyAuthority('admin','treinador')")
     @Operation(summary = "Consulta um instrutor", description = "Retorna um instrutor a partir de um id",
             tags = {"Instructor"},
             responses = {

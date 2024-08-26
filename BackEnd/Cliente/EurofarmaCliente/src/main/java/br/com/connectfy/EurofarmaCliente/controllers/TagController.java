@@ -19,6 +19,7 @@ import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -34,6 +35,7 @@ public class TagController {
     private TagService tagsService;
 
 
+    @PreAuthorize("hasAnyAuthority('admin','treinador')")
     @Operation(summary = "Cria uma tag", description = "Cria uma novo tag",
             tags = {"tag"},
             responses = {
@@ -51,7 +53,7 @@ public class TagController {
         return ResponseEntity.created(uri).body(tagInfoDTO);
     }
 
-
+    @PreAuthorize("hasAnyAuthority('admin','treinador')")
     @Operation(summary = "Consulta tags", description = "Consulta todas tags",
             tags = {"tag"},
             responses = {
@@ -65,7 +67,7 @@ public class TagController {
         return ResponseEntity.ok(TagInfoDTOs);
     }
 
-
+    @PreAuthorize("hasAnyAuthority('admin','treinador')")
     @Operation(summary = "Consulta tags com paginação", description = "Consulta todas tags com paginação",
             tags = {"tag"},
             responses = {
@@ -83,7 +85,7 @@ public class TagController {
         return ResponseEntity.ok(pagedModel);
     }
 
-
+    @PreAuthorize("hasAnyAuthority('admin','treinador')")
     @Operation(summary = "Consulta uma tag", description = "Consulta uma tag a partir de um id",
             tags = {"tag"},
             responses = {
@@ -100,7 +102,7 @@ public class TagController {
         return ResponseEntity.ok(tagInfoDTO);
     }
 
-
+    @PreAuthorize("hasAnyAuthority('admin','treinador')")
     @Operation(summary = "Atualiza uma tag", description = "Atualiza uma tag a partir de um id",
             tags = {"tag"},
             responses = {
@@ -118,7 +120,7 @@ public class TagController {
         return ResponseEntity.ok(tagInfoDTO);
     }
 
-
+    @PreAuthorize("hasAnyAuthority('admin','treinador')")
     @Operation(summary = "Exclui uma tag", description = "Exclui uma tag a partir de um id",
             tags = {"tag"},
             responses = {
