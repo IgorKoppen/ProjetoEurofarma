@@ -60,6 +60,13 @@ public class Training {
     )
     private Set<Department> departments;
 
+    @Column(nullable = false)
+    private Boolean hasQuiz;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "quiz_id")
+    private Quiz quiz;
+
 
     public Training(){}
 
@@ -74,6 +81,7 @@ public class Training {
         this.description = dto.getDescription();
         this.tags = dto.getTags().stream().map(Tag::new).collect(Collectors.toSet());
         this.departments = dto.getDepartments().stream().map(Department::new).collect(Collectors.toSet());
+        this.hasQuiz = dto.getHasQuiz();
     }
 
 
@@ -176,11 +184,28 @@ public class Training {
         this.employeeTrainings = employeeTrainings;
     }
 
+    public Boolean getHasQuiz() {
+        return hasQuiz;
+    }
+
+    public void setHasQuiz(Boolean hasQuiz) {
+        this.hasQuiz = hasQuiz;
+    }
+
+    public Quiz getQuiz() {
+        return quiz;
+    }
+
+    public void setQuiz(Quiz quiz) {
+        this.quiz = quiz;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Training training)) return false;
-        return Objects.equals(id, training.id) && Objects.equals(name, training.name) && Objects.equals(code, training.code) && Objects.equals(creationDate, training.creationDate) && Objects.equals(closingDate, training.closingDate) && Objects.equals(password, training.password) && Objects.equals(description, training.description) && Objects.equals(instructors, training.instructors) && Objects.equals(tags, training.tags) && Objects.equals(employeeTrainings, training.employeeTrainings) && Objects.equals(departments, training.departments);
+        if (o == null || getClass() != o.getClass()) return false;
+        Training training = (Training) o;
+        return Objects.equals(id, training.id) && Objects.equals(name, training.name) && Objects.equals(code, training.code) && Objects.equals(creationDate, training.creationDate) && Objects.equals(closingDate, training.closingDate) && Objects.equals(password, training.password) && Objects.equals(description, training.description) && Objects.equals(instructors, training.instructors) && Objects.equals(tags, training.tags) && Objects.equals(employeeTrainings, training.employeeTrainings) && Objects.equals(departments, training.departments) && Objects.equals(hasQuiz, training.hasQuiz) && Objects.equals(quiz, training.quiz);
     }
 
     @Override
