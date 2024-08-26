@@ -1,6 +1,7 @@
 package br.com.connectfy.EurofarmaCliente.models;
 
 import br.com.connectfy.EurofarmaCliente.dtos.quiz.QuestionDTO;
+import br.com.connectfy.EurofarmaCliente.dtos.quiz.QuestionInsertDTO;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
@@ -18,8 +19,6 @@ public class Question {
     private Long id;
     @Column(nullable = false)
     private String question;
-    @Column(nullable = false)
-    private String description;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "quiz_id")
     private Quiz quiz;
@@ -32,11 +31,15 @@ public class Question {
     public Question(QuestionDTO questionDTO) {
         this.id = questionDTO.getId();
         this.question = questionDTO.getQuestion();
-        this.description = questionDTO.getDescription();
         this.quiz = new Quiz(questionDTO.getQuiz());
         if(questionDTO.getAnswers() != null) {
             this.answers = questionDTO.getAnswers().stream().map(Answer::new).collect(Collectors.toList());
         }
+    }
+
+    public Question(QuestionInsertDTO questionInsertDTO) {
+        this.question = questionInsertDTO.question();
+        this.quiz = new Quiz(questionInsertDTO.quizDTO());
     }
 
     public Long getId() {
@@ -53,14 +56,6 @@ public class Question {
 
     public void setQuestion(String question) {
         this.question = question;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
     }
 
     public Quiz getQuiz() {
@@ -84,7 +79,7 @@ public class Question {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Question question1 = (Question) o;
-        return Objects.equals(id, question1.id) && Objects.equals(question, question1.question) && Objects.equals(description, question1.description) && Objects.equals(quiz, question1.quiz) && Objects.equals(answers, question1.answers);
+        return Objects.equals(id, question1.id) && Objects.equals(question, question1.question) && Objects.equals(quiz, question1.quiz) && Objects.equals(answers, question1.answers);
     }
 
     @Override

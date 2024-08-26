@@ -31,8 +31,6 @@ public class InstructorController {
     @Autowired
     private InstructorService instructorService;
 
-
-
     @Operation(summary = "Consulta instrutores", description = "Retorna todos os instrutores",
             tags = {"Instructor"},
             responses = {

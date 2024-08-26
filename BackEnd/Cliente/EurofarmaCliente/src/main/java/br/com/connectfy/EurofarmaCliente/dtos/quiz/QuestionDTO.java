@@ -14,15 +14,12 @@ public class QuestionDTO {
     private final Long id;
     @NotBlank(message = "É necessário uma pergunta")
     private final String question;
-    @NotBlank(message = "É necessário uma descrição")
-    private final String description;
     private QuizDTO quiz;
     private List<AnswerDTO> answers = new ArrayList<>();
 
     public QuestionDTO(Question question) {
         this.id = question.getId();
         this.question = question.getQuestion();
-        this.description = question.getDescription();
         if (question.getQuiz() != null) {
             this.quiz = new QuizDTO(question.getQuiz());
         }
@@ -37,10 +34,6 @@ public class QuestionDTO {
 
     public String getQuestion() {
         return question;
-    }
-
-    public String getDescription() {
-        return description;
     }
 
     public QuizDTO getQuiz() {
