@@ -32,7 +32,6 @@ public class InstructorController {
     @Autowired
     private InstructorService instructorService;
 
-
     @PreAuthorize("hasAnyAuthority('admin','treinador')")
     @Operation(summary = "Consulta instrutores", description = "Retorna todos os instrutores",
             tags = {"Instructor"},

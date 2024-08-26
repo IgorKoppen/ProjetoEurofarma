@@ -2,6 +2,7 @@ package br.com.connectfy.EurofarmaCliente.dtos.training;
 
 import br.com.connectfy.EurofarmaCliente.dtos.department.DepartmentDTO;
 import br.com.connectfy.EurofarmaCliente.dtos.instructor.InstructorInfo;
+import br.com.connectfy.EurofarmaCliente.dtos.quiz.QuizDTO;
 import br.com.connectfy.EurofarmaCliente.dtos.tag.TagDTO;
 import br.com.connectfy.EurofarmaCliente.models.Training;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -37,13 +38,17 @@ public class TrainingDTO implements Serializable {
     private final String password;
 
     @NotBlank(message = "Descrição não pode ser vazia!")
-    private String description;
+    private final String description;
 
     private final List<InstructorInfo>  instructorsInfo;
 
     private final List<TagDTO> tags;
 
     private final List<DepartmentDTO> departments;
+
+    private final Boolean hasQuiz;
+
+    private QuizDTO quiz;
 
     public TrainingDTO(Training entity) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yy HH:mm:ss,SSS");
@@ -58,6 +63,10 @@ public class TrainingDTO implements Serializable {
         this.instructorsInfo = entity.getInstructors().stream().map(InstructorInfo::new).toList();
         this.tags = entity.getTags().stream().map(TagDTO::new).toList();
         this.departments = entity.getDepartments().stream().map(DepartmentDTO::new).toList();
+        this.hasQuiz = entity.getHasQuiz();
+        if(entity.getQuiz() != null) {
+            this.quiz = new QuizDTO(entity.getQuiz());
+        }
     }
 
     public Long getId() {
@@ -102,5 +111,13 @@ public class TrainingDTO implements Serializable {
 
     public List<DepartmentDTO> getDepartments() {
         return departments;
+    }
+
+    public Boolean getHasQuiz() {
+        return hasQuiz;
+    }
+
+    public QuizDTO getQuiz() {
+        return quiz;
     }
 }
