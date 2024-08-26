@@ -1,10 +1,13 @@
 package br.com.connectfy.EurofarmaCliente.models;
 
+import br.com.connectfy.EurofarmaCliente.dtos.quiz.QuestionDTO;
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "tb_question")
@@ -24,6 +27,16 @@ public class Question {
     private List<Answer> answers;
 
     public Question() {
+    }
+
+    public Question(QuestionDTO questionDTO) {
+        this.id = questionDTO.getId();
+        this.question = questionDTO.getQuestion();
+        this.description = questionDTO.getDescription();
+        this.quiz = new Quiz(questionDTO.getQuiz());
+        if(questionDTO.getAnswers() != null) {
+            this.answers = questionDTO.getAnswers().stream().map(Answer::new).collect(Collectors.toList());
+        }
     }
 
     public Long getId() {

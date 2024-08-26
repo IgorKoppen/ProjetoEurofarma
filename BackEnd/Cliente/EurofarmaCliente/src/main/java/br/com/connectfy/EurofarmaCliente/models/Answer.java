@@ -1,5 +1,7 @@
 package br.com.connectfy.EurofarmaCliente.models;
 
+import br.com.connectfy.EurofarmaCliente.dtos.quiz.AnswerDTO;
+import br.com.connectfy.EurofarmaCliente.dtos.quiz.AnswerInsertDTO;
 import jakarta.persistence.*;
 
 import java.util.Objects;
@@ -20,6 +22,18 @@ public class Answer {
     private Question question;
 
     public Answer() {
+    }
+
+    public Answer(AnswerDTO answerDTO) {
+        this.id = answerDTO.getId();
+        this.answer = answerDTO.getAnswer();
+        this.isCorrect = answerDTO.getCorrect();
+        this.question = new Question(answerDTO.getQuestion());
+    }
+
+    public Answer(AnswerInsertDTO answerInsertDTO) {
+        this.answer = answerInsertDTO.answer();
+        this.isCorrect = answerInsertDTO.isCorrect();
     }
 
     public Long getId() {

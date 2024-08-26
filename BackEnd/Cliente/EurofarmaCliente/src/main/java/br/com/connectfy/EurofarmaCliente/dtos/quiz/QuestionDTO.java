@@ -4,15 +4,18 @@ import br.com.connectfy.EurofarmaCliente.models.Answer;
 import br.com.connectfy.EurofarmaCliente.models.Question;
 import br.com.connectfy.EurofarmaCliente.models.Quiz;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class QuestionDTO {
 
-    private Long id;
-    private String question;
-    private String description;
+    private final Long id;
+    @NotBlank(message = "É necessário uma pergunta")
+    private final String question;
+    @NotBlank(message = "É necessário uma descrição")
+    private final String description;
     private QuizDTO quiz;
     private List<AnswerDTO> answers = new ArrayList<>();
 

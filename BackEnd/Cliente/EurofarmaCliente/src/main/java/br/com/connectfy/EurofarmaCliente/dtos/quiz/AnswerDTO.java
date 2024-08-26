@@ -1,14 +1,17 @@
 package br.com.connectfy.EurofarmaCliente.dtos.quiz;
 
 import br.com.connectfy.EurofarmaCliente.models.Answer;
-import br.com.connectfy.EurofarmaCliente.models.Question;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 
 public class AnswerDTO {
 
-    private Long id;
-    private String answer;
-    private Boolean isCorrect;
+    private final Long id;
+    @NotBlank(message = "É necessário uma resposta")
+    private final String answer;
+    @NotNull(message = "É necessário informar se a questão é correta")
+    private final Boolean isCorrect;
     private QuestionDTO question;
 
     public AnswerDTO(Answer answer) {

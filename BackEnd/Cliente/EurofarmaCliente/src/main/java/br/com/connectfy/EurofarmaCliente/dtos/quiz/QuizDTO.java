@@ -2,6 +2,9 @@ package br.com.connectfy.EurofarmaCliente.dtos.quiz;
 
 import br.com.connectfy.EurofarmaCliente.dtos.training.TrainingDTO;
 import br.com.connectfy.EurofarmaCliente.models.Quiz;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 
 
 import java.util.ArrayList;
@@ -9,15 +12,16 @@ import java.util.List;
 
 public class QuizDTO {
 
-    private Long id;
-
-    private String nome;
-
-    private String description;
-
-    private Integer notaMinima;
-
-    private Integer questionsNumber;
+    private final Long id;
+    @NotBlank(message = "É necessário um nome")
+    private final String nome;
+    @NotBlank(message = "É necessário uma descrição")
+    private final String description;
+    @NotBlank(message = "É necessário uma nota mínima")
+    private final Integer notaMinima;
+    @NotNull(message = "É necessário informar o número de questões")
+    @Positive(message = "O valor deve ser positivo")
+    private final Integer questionsNumber;
 
     private List<TrainingDTO> trainings = new ArrayList<>();
 
