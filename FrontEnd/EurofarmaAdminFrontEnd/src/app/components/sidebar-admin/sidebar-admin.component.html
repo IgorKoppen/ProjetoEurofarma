@@ -27,7 +27,7 @@
               }
             </li></a
           >
-          <a [routerLink]="['/dashboard/euroComplianceDocs']" [class]="isOpen ? 'titleLink' : 'titleLinkMinimized'" >
+          <a [routerLink]="['/admin/euroComplianceDocs']" [class]="isOpen ? 'titleLink' : 'titleLinkMinimized'" >
             <li class="iconBox">
                 <mat-icon [class]="isOpen ?  'sidebarIcon' : 'sidebarIconMinimized'">assured_workload</mat-icon>
                 @if(isOpen){
@@ -35,7 +35,7 @@
                 }
               </li>
             </a>
-            <a [routerLink]="['/dashboard/euroDataDocs']"[class]="isOpen ? 'titleLink' : 'titleLinkMinimized'" >
+            <a [routerLink]="['/admin/euroDataDocs']"[class]="isOpen ? 'titleLink' : 'titleLinkMinimized'" >
             <li class="iconBox">
              <mat-icon [class]="isOpen ?  'sidebarIcon' : 'sidebarIconMinimized'">chat</mat-icon>
              @if(isOpen){
@@ -48,9 +48,9 @@
       </nav>
     
     @if(isOpen){
-      <button class="logoutBtn">Sair</button>
+      <button class="logoutBtn" (click)="logout()">Sair</button>
     }@else{
-      <button class="logoutBtnIcon"><mat-icon>logout</mat-icon></button>
+      <button class="logoutBtnIcon" (click)="logout()"><mat-icon>logout</mat-icon></button>
     }
     </div>
 

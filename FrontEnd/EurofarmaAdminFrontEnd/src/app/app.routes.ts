@@ -3,17 +3,20 @@ import { LoginPageComponent } from './pages/login-page/login-page.component';
 import { AdminLayoutPageComponent } from './pages/admin-layout-page/admin-layout-page.component';
 import { AddDocumentoCompliancePageComponent } from './pages/add-document-compliance-page/add-document-compliance-page.component';
 import { AddDocumentoEurofarmaPageComponent } from './pages/add-document-eurofarma-page/add-document-eurofarma-page.component';
-import { EmployeePageComponent } from './pages/employee-page/employee-page.component';
 import { DocumentosChatbotCompliancePageComponent } from './pages/documentos-chatbot-compliance-page/documentos-chatbot-compliance-page.component';
 import { DocumentosChatbotEuroDataPageComponent } from './pages/documentos-chatbot-euro-data-page/documentos-chatbot-euro-data-page.component';
+import { AuthGuard } from './guards/auth.guards';
+import { NotFoundPageComponent } from './pages/not-found-page/not-found-page.component';
 
 export const routes: Routes = [
     {path: '', component: LoginPageComponent},
-    {path: 'dashboard', component: AdminLayoutPageComponent , children: [
+    {path: 'admin', component: AdminLayoutPageComponent, 
+        canActivate: [AuthGuard] ,
+         children: [
         {path: 'complianceAdicionar',component: AddDocumentoCompliancePageComponent},
         {path: 'eurodataAdicionar',component: AddDocumentoEurofarmaPageComponent},
-        {path: 'funcionarios', component: EmployeePageComponent},
         {path: 'euroComplianceDocs',component: DocumentosChatbotCompliancePageComponent},
         {path: 'euroDataDocs',component: DocumentosChatbotEuroDataPageComponent}
-    ]}
+    ]},
+    {path:'**', component: NotFoundPageComponent}
 ];
