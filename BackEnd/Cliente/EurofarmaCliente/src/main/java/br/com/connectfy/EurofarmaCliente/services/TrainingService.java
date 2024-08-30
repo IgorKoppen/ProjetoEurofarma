@@ -12,6 +12,7 @@ import br.com.connectfy.EurofarmaCliente.dtos.training.TrainingWithEmployeesInfo
 import br.com.connectfy.EurofarmaCliente.exceptions.*;
 import br.com.connectfy.EurofarmaCliente.models.*;
 import br.com.connectfy.EurofarmaCliente.repositories.EmployeeRepository;
+import br.com.connectfy.EurofarmaCliente.repositories.QuizRepository;
 import br.com.connectfy.EurofarmaCliente.repositories.TrainingRepository;
 import br.com.connectfy.EurofarmaCliente.specification.SearchCriteria;
 import br.com.connectfy.EurofarmaCliente.specification.TrainingSpecification;
@@ -42,6 +43,7 @@ public class TrainingService {
     private final MessageService messageService;
     private final EmployeeRepository employeeRepository;
     private final DepartmentService departmentService;
+    private QuizRepository quizRepository;
 
     public TrainingService(TrainingRepository trainingRepository, TagService tagsService, InstructorService instructorService, EmployeeService employeeService, MessageService messageService, EmployeeRepository employeeRepository, DepartmentService departmentService) {
         this.trainingRepository = trainingRepository;
@@ -72,11 +74,18 @@ public class TrainingService {
                 .collect(Collectors.toSet());
 
         String code;
+
+
         do {
             code = RandomStringGenerator.generateRoomCode(10);
         } while (trainingRepository.existsByCode(code));
 
         Training training = buildTraining(trainingDTO, now, parsedDate, tags, instructors, code, departments);
+
+        if (Boolean.TRUE.equals(trainingDTO.getHasQuiz()) && trainingDTO.getQuiz() != null) {
+            training.setQuiz(new Quiz(trainingDTO.getQuiz()));
+        }
+
         Training trainingSaved = trainingRepository.save(training);
 
         if (trainingDTO.getToSendMessage()) {
@@ -89,6 +98,8 @@ public class TrainingService {
 
     @Transactional
     public TrainingDTO update(Long id, TrainingInsertDTO trainingDTO) {
+
+        System.out.println("Banana" +trainingDTO);
 
         Training training = trainingRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Treinamento não encontrada com id: " + id));
@@ -128,6 +139,16 @@ public class TrainingService {
         training.setClosingDate(parsedDate);
         training.setTags(tags);
         training.setDepartments(departments);
+        training.setHasQuiz(trainingDTO.getHasQuiz());
+        training.setInstructors(instructors);
+
+        if (Boolean.TRUE.equals(trainingDTO.getHasQuiz()) && trainingDTO.getQuiz() != null) {
+            training.setQuiz(new Quiz(trainingDTO.getQuiz()));
+        } else {
+            training.setQuiz(null);
+        }
+
+
         Training entity = trainingRepository.save(training);
         return toDTO(entity);
     }
@@ -168,7 +189,6 @@ public class TrainingService {
     @Transactional
     public void cancelTraining(Long id) {
         Training training = trainingRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Treinamento não encontrada com id: " + id));
-        validateDateOfClose(training.getClosingDate(), "Lista já encerrada!");
         if (!training.getEmployees().isEmpty()) {
             throw new TrainingHasEmployeesException("Não é possível cancelar o treinamento com funcionários alocados!");
         }
@@ -182,9 +202,12 @@ public class TrainingService {
 
     @Transactional(readOnly = true)
     public TrainingDTO findByCode(Long employeeId,String code) {
+        System.out.println("Nabo");
         Employee employee = getEmployeeById(employeeId);
         Training training = getTrainingByCode(code);
+        System.out.println("Picles");
         validateEmployeeForTraining(employee,training);
+        System.out.println("banana");
         validateDateOfClose(training.getClosingDate(), "Lista já encerrada!");
         return toDTO(training);
     }
@@ -371,6 +394,7 @@ public class TrainingService {
         training.setInstructors(instructors);
         training.setTags(tags);
         training.setDepartments(departments);
+        training.setHasQuiz(trainingDTO.getHasQuiz());
         return training;
     }
 

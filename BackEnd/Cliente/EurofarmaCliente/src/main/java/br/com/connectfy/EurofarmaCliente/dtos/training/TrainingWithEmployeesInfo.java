@@ -2,8 +2,10 @@ package br.com.connectfy.EurofarmaCliente.dtos.training;
 
 import br.com.connectfy.EurofarmaCliente.dtos.department.DepartmentDTO;
 import br.com.connectfy.EurofarmaCliente.dtos.instructor.InstructorInfo;
+import br.com.connectfy.EurofarmaCliente.dtos.quiz.QuizDTO;
 import br.com.connectfy.EurofarmaCliente.dtos.tag.TagDTO;
 import br.com.connectfy.EurofarmaCliente.models.Training;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.io.Serial;
@@ -42,6 +44,11 @@ public class TrainingWithEmployeesInfo implements Serializable {
 
     private Set<DepartmentDTO> departments = new HashSet<>();
 
+    private final Boolean hasQuiz;
+
+    @JsonIgnoreProperties({"trainings"})
+    private QuizDTO quiz;
+
     public TrainingWithEmployeesInfo(Training entity) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yy HH:mm:ss,SSS");
         this.id = entity.getId();
@@ -60,6 +67,10 @@ public class TrainingWithEmployeesInfo implements Serializable {
         }
         if(entity.getDepartments() != null){
             this.departments = entity.getDepartments().stream().map(DepartmentDTO::new).collect(Collectors.toSet());
+        }
+        this.hasQuiz = entity.getHasQuiz();
+        if(entity.getQuiz() != null) {
+            this.quiz = new QuizDTO(entity.getQuiz());
         }
     }
 
@@ -105,5 +116,13 @@ public class TrainingWithEmployeesInfo implements Serializable {
 
     public Set<DepartmentDTO> getDepartments() {
         return departments;
+    }
+
+    public Boolean getHasQuiz() {
+        return hasQuiz;
+    }
+
+    public QuizDTO getQuiz() {
+        return quiz;
     }
 }

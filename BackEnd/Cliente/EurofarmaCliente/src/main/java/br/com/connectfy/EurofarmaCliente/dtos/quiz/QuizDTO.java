@@ -14,18 +14,23 @@ public class QuizDTO {
 
     private final Long id;
     @NotBlank(message = "É necessário um nome")
-    private final String nome;
+    private  String nome;
     @NotBlank(message = "É necessário uma descrição")
-    private final String description;
+    private  String description;
     @NotBlank(message = "É necessário uma nota mínima")
-    private final Integer notaMinima;
+    private Integer notaMinima;
     @NotNull(message = "É necessário informar o número de questões")
     @Positive(message = "O valor deve ser positivo")
-    private final Integer questionsNumber;
+    private Integer questionsNumber;
 
     private List<TrainingDTO> trainings = new ArrayList<>();
 
     private List<QuestionDTO> questions = new ArrayList<>();
+
+    public QuizDTO(Long id) {
+        this.id = id;
+    }
+
 
     public QuizDTO(Quiz quiz) {
         this.id = quiz.getId();
@@ -36,9 +41,9 @@ public class QuizDTO {
         if (quiz.getQuestions() != null) {
             this.questions = quiz.getQuestions().stream().map(QuestionDTO::new).toList();
         }
-        if (quiz.getTrainings() != null) {
-            this.trainings = quiz.getTrainings().stream().map(TrainingDTO::new).toList();
-        }
+//        if (quiz.getTrainings() != null) {
+//            this.trainings = quiz.getTrainings().stream().map(TrainingDTO::new).toList();
+//        }
     }
 
     public Long getId() {
