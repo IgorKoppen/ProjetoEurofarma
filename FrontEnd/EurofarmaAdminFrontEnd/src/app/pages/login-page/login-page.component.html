@@ -1,4 +1,4 @@
-<main class="background" style="background-color: aqua">
+<main class="background">
   <div class="container">
     <div class="imgBox">
       <img
@@ -8,15 +8,21 @@
       />
     </div>
     <h1 class="title">Admin</h1>
-    <form class="formLogin" (submit)="login($event)">
+    <form class="formLogin" [formGroup]="loginForm" (submit)="login($event)">
       <div class="example-container" >
         <mat-form-field appearance="outline"  class="matInput">
           <mat-icon matIconPrefix class="icons">person</mat-icon>
-          <input matInput type="text" placeholder="Usuário" class="inputLogin"/>
+          <input matInput formControlName="userName" autocomplete="username" type="text" placeholder="Usuário" class="inputLogin"/>
+          @if(loginForm.get('userName')?.hasError('required')){
+            <mat-error>
+             Digite o seu RE
+            </mat-error>
+          }
+        
         </mat-form-field>
         <mat-form-field appearance="outline" class="matInput">
           <mat-icon matIconPrefix class="icons">lock</mat-icon>
-          <input matInput [type]="hide() ? 'password' : 'text'"  placeholder="Senha" class="inputLogin"/>
+          <input matInput formControlName="password" autocomplete="password" [type]="hide() ? 'password' : 'text'"  placeholder="Senha" class="inputLogin"/>
           <button
             mat-icon-button
             matSuffix
@@ -26,9 +32,21 @@
           >
             <mat-icon class="icons">{{hide() ? 'visibility_off' : 'visibility'}}</mat-icon>
           </button>
+          @if(loginForm.get('password')?.hasError('required')){
+            <mat-error>
+             Digite sua senha
+            </mat-error>
+          }
         </mat-form-field>
       </div>
-      <input type="submit" class="btnLogin" value="Login" />
+      <div class="erroBox"> 
+      @if(errorMenssage != ""){ 
+          <span class="erroMessage">{{errorMenssage}}</span>
+      }
+      </div>
+      <input type="submit" class="btnLogin" value="Login" [disabled]="loginForm.get('userName')?.hasError('required') 
+      || loginForm.get('password')?.hasError('required') 
+      ? true : false" />
     </form>
   </div>
 </main>

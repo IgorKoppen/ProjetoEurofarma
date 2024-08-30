@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { EmployeePageComponent } from './employee-page.component';
+import { NotFoundPageComponent } from './not-found-page.component';
 
-describe('EmployeePageComponent', () => {
-  let component: EmployeePageComponent;
-  let fixture: ComponentFixture<EmployeePageComponent>;
+describe('NotFoundPageComponent', () => {
+  let component: NotFoundPageComponent;
+  let fixture: ComponentFixture<NotFoundPageComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [EmployeePageComponent]
+      imports: [NotFoundPageComponent]
     })
     .compileComponents();
     
-    fixture = TestBed.createComponent(EmployeePageComponent);
+    fixture = TestBed.createComponent(NotFoundPageComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

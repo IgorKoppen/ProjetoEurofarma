@@ -6,5 +6,8 @@ export const environment = {
     euroDataApi:{
         api_key: "zwt_O_UzAfbWMUULhVseCd21psJnm--rE-JLCEo6VA",
         corpus_key: "Eurodata"
-    }
+    },
+    backEndApiBase:{
+        url: "http://localhost:8080"
+    },
 };

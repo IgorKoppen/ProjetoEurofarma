@@ -1,0 +1,44 @@
+.background {
+    background: linear-gradient(var(--main-color), var(--second-color));
+    height: 100%;
+}
+.center404{
+min-height: 100vh;
+color: white;
+text-align: center;
+font-family: "Source Code Pro", monospace;
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: center;
+gap: 30px;
+
+}
+.center404 h1{
+    font-size: 15rem;
+}
+.center404 h3{
+    font-size: 2rem;
+}
+.center404 a{
+    color: white;
+    text-decoration: none;
+    font-size: 1.2rem;
+}
+.center404 a:hover{
+    color: lightgray;
+    text-decoration: underline;
+}
+@media (max-width: 700px) {
+    .center404 h1{
+        font-size: 6.5rem;
+    }
+    .center404 h3{
+        font-size: 1.3rem;
+    }
+    .center404 a{
+        color: white;
+        text-decoration: none;
+        font-size: 0.9rem;
+    }
+  }
