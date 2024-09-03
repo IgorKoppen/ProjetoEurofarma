@@ -48,21 +48,17 @@ public class AnswerService {
         List<AnswerDTO> updatedAnswers = new ArrayList<>();
 
         for (AnswerUpdateDTO answerUpdateDTO : answerUpdateDTOs) {
-            // Verifica se uma resposta com o mesmo ID já existe no banco de dados
             if (answerRepository.existsById(answerUpdateDTO.id())) {
-                continue; // Se existir, pula para o próximo
+                continue;
             }
 
-            // Cria uma nova entidade Answer com os dados do DTO
             Answer answer = new Answer();
             answer.setId(answerUpdateDTO.id());
             answer.setAnswer(answerUpdateDTO.answer());
             answer.setCorrect(answerUpdateDTO.isCorrect());
 
-            // Salva a nova entidade no banco de dados
             answer = answerRepository.save(answer);
 
-            // Adiciona a resposta atualizada à lista de retorno
             updatedAnswers.add(new AnswerDTO(answer));
         }
 

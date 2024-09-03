@@ -13,6 +13,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -28,6 +29,7 @@ public class QuizController {
     @Autowired
     private QuizService quizService;
 
+    @PreAuthorize("hasAnyAuthority('admin','treinador','funcionario')")
     @Operation(summary = "Consulta Quizzes", description = "Retorna todos os quizzes",
             tags = {"Quiz"},
             responses = {
@@ -41,6 +43,7 @@ public class QuizController {
         return ResponseEntity.ok(list);
     }
 
+    @PreAuthorize("hasAnyAuthority('admin','treinador','funcionario')")
     @Operation(summary = "Consulta um quiz", description = "Retorna um quiz a partir de um id",
             tags = {"Quiz"},
             responses = {
@@ -56,6 +59,7 @@ public class QuizController {
         return ResponseEntity.ok(quizDTO);
     }
 
+    @PreAuthorize("hasAnyAuthority('admin','treinador')")
     @Operation(summary = "Cria um quiz", description = "Cria um novo quiz",
             tags = {"Quiz"},
             responses = {
@@ -75,6 +79,7 @@ public class QuizController {
         return ResponseEntity.created(uri).body(quizDTOInserted);
     }
 
+    @PreAuthorize("hasAnyAuthority('admin','treinador')")
     @Operation(summary = "Atualiza um quiz", description = "Atualiza um quiz a partir de um id",
             tags = {"Quiz"},
             responses = {
@@ -92,6 +97,7 @@ public class QuizController {
         return ResponseEntity.ok(quizDTOUpdated);
     }
 
+    @PreAuthorize("hasAnyAuthority('admin','treinador')")
     @Operation(summary = "Exclui um Quiz", description = "Exclui um quiz a partir de um id",
             tags = {"Quiz"},
             responses = {

@@ -20,9 +20,9 @@ public class QuestionDTO {
     public QuestionDTO(Question question) {
         this.id = question.getId();
         this.question = question.getQuestion();
-        if (question.getQuiz() != null) {
-            this.quiz = new QuizDTO(question.getQuiz());
-        }
+//        if (question.getQuiz() != null) {
+//            this.quiz = new QuizDTO(question.getQuiz());
+//        }
         if (question.getAnswers() != null) {
             question.getAnswers().forEach(answerDTO -> {this.answers.add(new AnswerDTO(answerDTO));});
         }

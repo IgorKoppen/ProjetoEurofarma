@@ -129,7 +129,7 @@ public class TrainingController {
         return ResponseEntity.noContent().build();
     }
 
-    @PreAuthorize("hasAnyAuthority('admin')")
+    @PreAuthorize("hasAnyAuthority('admin','treinador','funcionario')")
     @Operation(summary = "Procura um treinamento", description = "Retorna um treinamento a partir de um id",
             tags = {"Training"},
             responses = {
@@ -145,7 +145,7 @@ public class TrainingController {
         return ResponseEntity.ok(trainingDTO);
     }
 
-    @PreAuthorize("hasAnyAuthority('admin','funcionario')")
+    @PreAuthorize("hasAnyAuthority('admin','treinador','funcionario')")
     @Operation(summary = "Procura os treinamentos de um funcionário", description = "Retorna todos treinamentos a partir de um id de um funcionário",
             tags = {"Training"},
             responses = {
@@ -227,7 +227,7 @@ public class TrainingController {
        return ResponseEntity.ok(roomParticipantsDTOS);
    }
 
-    @PreAuthorize("hasAnyAuthority('admin','treinador')")
+    @PreAuthorize("hasAnyAuthority('admin','treinador','funcionario')")
     @Operation(summary = "Adiciona um funcionário em um treinamento", description = "Insere um funcionário em um treinamento",
             tags = {"Training"},
             responses = {
