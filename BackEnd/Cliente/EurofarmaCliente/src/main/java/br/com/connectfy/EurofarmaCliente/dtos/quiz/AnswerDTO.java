@@ -18,7 +18,7 @@ public class AnswerDTO {
         this.id = answer.getId();
         this.answer = answer.getAnswer();
         this.isCorrect = answer.getCorrect();
-        this.questionId = answer.getQuestion().getId();
+        this.questionId = (answer.getQuestion() != null) ? answer.getQuestion().getId() : null;
     }
 
     public Long getId() {

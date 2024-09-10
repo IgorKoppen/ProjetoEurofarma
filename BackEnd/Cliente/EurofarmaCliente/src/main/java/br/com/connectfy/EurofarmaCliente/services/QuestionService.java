@@ -45,6 +45,7 @@ public class QuestionService {
 
         // Busca as respostas pelos IDs fornecidos
         List<Answer> answers = answerRepository.findAllById(dto.answerIds());
+        System.out.println("Banana" + answers.toString());
 
         if (answers.size() != dto.answerIds().size()) {
             throw new IllegalArgumentException("Um ou mais IDs de respostas são inválidos.");

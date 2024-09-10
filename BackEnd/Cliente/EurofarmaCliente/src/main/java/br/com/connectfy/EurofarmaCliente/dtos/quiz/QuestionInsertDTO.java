@@ -3,6 +3,7 @@ package br.com.connectfy.EurofarmaCliente.dtos.quiz;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
+import java.io.Serializable;
 import java.util.List;
 
 public record QuestionInsertDTO(
@@ -12,5 +13,5 @@ public record QuestionInsertDTO(
         Long quizId,
         @NotNull(message = "Necessário informar os IDs das respostas")
         List<Long> answerIds
-) {
+){
 }

@@ -40,6 +40,9 @@ public class Question {
     public Question(QuestionIdDTO questionIdDTO) {
     }
 
+    public Question(Long aLong) {
+    }
+
     public Long getId() {
         return id;
     }

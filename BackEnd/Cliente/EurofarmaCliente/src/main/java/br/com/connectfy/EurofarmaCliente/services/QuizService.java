@@ -51,34 +51,40 @@ public class QuizService {
 
     @Transactional
     public QuizDTO update(Long id, QuizUpdateDTO dto) {
+        // Busca o Quiz no repositório, lançando exceção se não encontrado
         Quiz quiz = quizRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Nenhum quiz encontrado com id " + id));
 
+        // Atualiza os campos do quiz
         quiz.setNome(dto.nome());
         quiz.setDescription(dto.description());
         quiz.setNotaMinima(dto.notaMinima());
         quiz.setQuestionsNumber(dto.questionsNumber());
 
-        if (dto.questions() == null || dto.questions().isEmpty()) {
+        // Verifica se o QuestionIdDTO contém uma lista de IDs de perguntas
+        if (dto.questions() == null || dto.questions().id().isEmpty()) {
             quiz.setQuestions(new ArrayList<>());
         } else {
-            // Supondo que você tenha apenas um objeto QuestionIdListDTO na lista
-            List<Long> questionIds = dto.questions().stream()
-                    .flatMap(q -> q.id().stream())
-                    .toList();
+            // Extrai a lista de IDs das perguntas do QuestionIdDTO
+            List<Long> questionIds = dto.questions().id();
 
+            // Busca cada pergunta no repositório e cria uma lista de perguntas atualizadas
             List<Question> updatedQuestions = questionIds.stream()
                     .map(questionId -> questionRepository.findById(questionId)
                             .orElseThrow(() -> new ResourceNotFoundException("Nenhuma pergunta encontrada com id " + questionId)))
                     .collect(Collectors.toList());
 
+            // Atualiza a lista de perguntas no quiz
             quiz.setQuestions(updatedQuestions);
         }
 
+        // Salva o quiz atualizado
         quiz = quizRepository.save(quiz);
 
+        // Retorna o DTO do quiz atualizado
         return new QuizDTO(quiz);
     }
+
 
 
 
