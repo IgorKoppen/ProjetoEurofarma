@@ -2,6 +2,7 @@ package br.com.connectfy.EurofarmaCliente.services;
 
 import br.com.connectfy.EurofarmaCliente.dtos.department.DepartmentDTO;
 import br.com.connectfy.EurofarmaCliente.dtos.role.RoleDTO;
+import br.com.connectfy.EurofarmaCliente.dtos.role.RoleInsertDTO;
 import br.com.connectfy.EurofarmaCliente.exceptions.DatabaseException;
 import br.com.connectfy.EurofarmaCliente.exceptions.ResourceNotFoundException;
 import br.com.connectfy.EurofarmaCliente.models.Department;
@@ -39,6 +40,13 @@ public class RoleService {
         DepartmentDTO departmentDTO = departmentService.findById(roleDTO.getDepartment().getId());
         Role role = new Role(roleDTO);
         role.setDepartment(new Department(departmentDTO));
+        return toDTO(roleRepository.save(role));
+    }
+
+    @Transactional
+    public RoleDTO update(Long id, RoleInsertDTO roleInsertDTO) {
+        Role role = roleRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Nenhum funcionário encontrado com id: " + id));
+        role.setRoleName(roleInsertDTO.nome());
         return toDTO(roleRepository.save(role));
     }
 

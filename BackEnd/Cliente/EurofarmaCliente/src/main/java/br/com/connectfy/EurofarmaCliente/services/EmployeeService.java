@@ -116,6 +116,10 @@ public class EmployeeService implements UserDetailsService {
     public EmployeeInfoDTO update(Long id, EmployeeUpdateDTO dto) {
         Employee employee = employeeRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Nenhum funcionário encontrado com id: " + id));
+
+        employee.setName(dto.name());
+        employee.setSurname(dto.surname());
+
         String formattedCellPhone = removeCellPhoneFormatting(dto.cellphoneNumber());
         validatePhoneNumber(formattedCellPhone);
         employee.setCellphoneNumber(formattedCellPhone);

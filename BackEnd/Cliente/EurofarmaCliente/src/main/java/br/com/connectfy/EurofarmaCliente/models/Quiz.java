@@ -40,9 +40,6 @@ public class Quiz {
         this.description = quizDTO.getDescription();
         this.notaMinima = quizDTO.getNotaMinima();
         this.questionsNumber = quizDTO.getQuestionsNumber();
-        if(quizDTO.getTrainings() != null) {
-            this.trainings = quizDTO.getTrainings().stream().map(Training::new).collect(Collectors.toList());
-        }
         if(quizDTO.getQuestions() != null) {
             this.questions = quizDTO.getQuestions().stream().map(Question::new).collect(Collectors.toList());
         }

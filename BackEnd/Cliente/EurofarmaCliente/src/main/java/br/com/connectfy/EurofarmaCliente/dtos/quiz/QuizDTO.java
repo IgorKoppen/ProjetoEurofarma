@@ -23,8 +23,6 @@ public class QuizDTO {
     @Positive(message = "O valor deve ser positivo")
     private Integer questionsNumber;
 
-    private List<TrainingDTO> trainings = new ArrayList<>();
-
     private List<QuestionDTO> questions = new ArrayList<>();
 
     public QuizDTO(Long id) {
@@ -64,10 +62,6 @@ public class QuizDTO {
 
     public Integer getQuestionsNumber() {
         return questionsNumber;
-    }
-
-    public List<TrainingDTO> getTrainings() {
-        return trainings;
     }
 
     public List<QuestionDTO> getQuestions() {
