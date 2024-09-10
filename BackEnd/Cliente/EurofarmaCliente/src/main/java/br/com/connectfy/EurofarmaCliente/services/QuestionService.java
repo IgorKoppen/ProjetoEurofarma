@@ -9,6 +9,7 @@ import br.com.connectfy.EurofarmaCliente.models.Question;
 import br.com.connectfy.EurofarmaCliente.models.Quiz;
 import br.com.connectfy.EurofarmaCliente.repositories.AnswerRepository;
 import br.com.connectfy.EurofarmaCliente.repositories.QuestionRepository;
+import br.com.connectfy.EurofarmaCliente.repositories.QuizRepository;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,10 +22,12 @@ public class QuestionService {
 
     private final QuestionRepository questionRepository;
     private final AnswerRepository answerRepository;
+    private final QuizRepository quizRepository;
 
-    public QuestionService(QuestionRepository questionRepository, AnswerRepository answerRepository) {
+    public QuestionService(QuestionRepository questionRepository, AnswerRepository answerRepository, QuizRepository quizRepository) {
         this.questionRepository = questionRepository;
         this.answerRepository = answerRepository;
+        this.quizRepository = quizRepository;
     }
 
     @Transactional(readOnly = true)
@@ -35,38 +38,59 @@ public class QuestionService {
     }
 
     @Transactional
-    public QuestionDTO insert(QuestionInsertDTO questionInsertDTO, List<Long> answerIds) {
-        List<Answer> answers = answerRepository.findAllById(answerIds);
+    public QuestionDTO insert(QuestionInsertDTO dto) {
+        // Busca o quiz pelo ID fornecido
+        Quiz quiz = quizRepository.findById(dto.quizId())
+                .orElseThrow(() -> new ResourceNotFoundException("Nenhum quiz encontrado com id " + dto.quizId()));
 
-        if (answers.size() != answerIds.size()) {
+        // Busca as respostas pelos IDs fornecidos
+        List<Answer> answers = answerRepository.findAllById(dto.answerIds());
+
+        if (answers.size() != dto.answerIds().size()) {
             throw new IllegalArgumentException("Um ou mais IDs de respostas são inválidos.");
         }
 
-        Question question = new Question(questionInsertDTO);
+        // Cria uma nova pergunta e vincula ao quiz
+        Question question = new Question();
+        question.setQuestion(dto.question());
+        question.setQuiz(quiz);
 
+        // Define as respostas associadas à pergunta
         question.setAnswers(new ArrayList<>(answers));
 
+        // Salva a pergunta no banco de dados
         question = questionRepository.save(question);
 
         return new QuestionDTO(question);
     }
 
+
+
     @Transactional
     public QuestionDTO update(Long questionId, QuestionInsertDTO questionInsertDTO, List<Long> answerIds) {
+        // Busca a pergunta pelo ID
         Question question = questionRepository.findById(questionId)
                 .orElseThrow(() -> new IllegalArgumentException("Pergunta não encontrada para o ID fornecido."));
 
+        // Busca as respostas pelos IDs fornecidos
         List<Answer> answers = answerRepository.findAllById(answerIds);
 
         if (answers.size() != answerIds.size()) {
             throw new IllegalArgumentException("Um ou mais IDs de respostas são inválidos.");
         }
 
+        // Atualiza os campos da pergunta
         question.setQuestion(questionInsertDTO.question());
-        question.setQuiz(new Quiz(questionInsertDTO.quizDTO()));
 
+        // Busca o quiz pelo ID
+        Quiz quiz = quizRepository.findById(questionInsertDTO.quizId())
+                .orElseThrow(() -> new IllegalArgumentException("Quiz não encontrado para o ID fornecido."));
+        question.setQuiz(quiz);
+
+        // Define as respostas associadas à pergunta
         question.setAnswers(new ArrayList<>(answers));
 
+        // Salva a pergunta atualizada
         question = questionRepository.save(question);
 
         return new QuestionDTO(question);

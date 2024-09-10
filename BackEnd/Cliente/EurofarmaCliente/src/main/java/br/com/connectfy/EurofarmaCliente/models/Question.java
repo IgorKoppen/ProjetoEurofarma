@@ -1,6 +1,7 @@
 package br.com.connectfy.EurofarmaCliente.models;
 
 import br.com.connectfy.EurofarmaCliente.dtos.quiz.QuestionDTO;
+import br.com.connectfy.EurofarmaCliente.dtos.quiz.QuestionIdDTO;
 import br.com.connectfy.EurofarmaCliente.dtos.quiz.QuestionInsertDTO;
 import jakarta.persistence.*;
 
@@ -31,15 +32,12 @@ public class Question {
     public Question(QuestionDTO questionDTO) {
         this.id = questionDTO.getId();
         this.question = questionDTO.getQuestion();
-        this.quiz = new Quiz(questionDTO.getQuiz());
         if(questionDTO.getAnswers() != null) {
             this.answers = questionDTO.getAnswers().stream().map(Answer::new).collect(Collectors.toList());
         }
     }
 
-    public Question(QuestionInsertDTO questionInsertDTO) {
-        this.question = questionInsertDTO.question();
-        this.quiz = new Quiz(questionInsertDTO.quizDTO());
+    public Question(QuestionIdDTO questionIdDTO) {
     }
 
     public Long getId() {

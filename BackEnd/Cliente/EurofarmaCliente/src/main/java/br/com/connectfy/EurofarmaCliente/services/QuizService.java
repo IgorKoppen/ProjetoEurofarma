@@ -7,6 +7,7 @@ import br.com.connectfy.EurofarmaCliente.exceptions.DatabaseException;
 import br.com.connectfy.EurofarmaCliente.exceptions.ResourceNotFoundException;
 import br.com.connectfy.EurofarmaCliente.models.Quiz;
 import br.com.connectfy.EurofarmaCliente.models.Question;
+import br.com.connectfy.EurofarmaCliente.repositories.QuestionRepository;
 import br.com.connectfy.EurofarmaCliente.repositories.QuizRepository;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
@@ -21,8 +22,11 @@ public class QuizService {
 
     private final QuizRepository quizRepository;
 
-    public QuizService(QuizRepository quizRepository) {
+    private final QuestionRepository questionRepository;
+
+    public QuizService(QuizRepository quizRepository, QuestionRepository questionRepository) {
         this.quizRepository = quizRepository;
+        this.questionRepository = questionRepository;
     }
 
     @Transactional(readOnly = true)
@@ -55,16 +59,29 @@ public class QuizService {
         quiz.setNotaMinima(dto.notaMinima());
         quiz.setQuestionsNumber(dto.questionsNumber());
 
-        if (dto.questions() == null) {
+        if (dto.questions() == null || dto.questions().isEmpty()) {
             quiz.setQuestions(new ArrayList<>());
         } else {
-            quiz.setQuestions(dto.questions().stream().map(Question::new).collect(Collectors.toList()));
+            // Supondo que você tenha apenas um objeto QuestionIdListDTO na lista
+            List<Long> questionIds = dto.questions().stream()
+                    .flatMap(q -> q.id().stream())
+                    .toList();
+
+            List<Question> updatedQuestions = questionIds.stream()
+                    .map(questionId -> questionRepository.findById(questionId)
+                            .orElseThrow(() -> new ResourceNotFoundException("Nenhuma pergunta encontrada com id " + questionId)))
+                    .collect(Collectors.toList());
+
+            quiz.setQuestions(updatedQuestions);
         }
 
         quiz = quizRepository.save(quiz);
 
         return new QuizDTO(quiz);
     }
+
+
+
 
     @Transactional
     public void delete(Long id) {

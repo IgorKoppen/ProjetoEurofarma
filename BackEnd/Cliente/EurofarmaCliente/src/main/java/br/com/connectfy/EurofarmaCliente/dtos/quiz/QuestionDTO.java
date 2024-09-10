@@ -11,18 +11,21 @@ import java.util.List;
 
 public class QuestionDTO {
 
+
+
     private final Long id;
     @NotBlank(message = "É necessário uma pergunta")
     private final String question;
-    private QuizDTO quiz;
-    private List<AnswerDTO> answers = new ArrayList<>();
+    private final List<AnswerDTO> answers = new ArrayList<>();
+
+    public QuestionDTO(Long id, String question) {
+        this.id = id;
+        this.question = question;
+    }
 
     public QuestionDTO(Question question) {
         this.id = question.getId();
         this.question = question.getQuestion();
-//        if (question.getQuiz() != null) {
-//            this.quiz = new QuizDTO(question.getQuiz());
-//        }
         if (question.getAnswers() != null) {
             question.getAnswers().forEach(answerDTO -> {this.answers.add(new AnswerDTO(answerDTO));});
         }
@@ -36,9 +39,6 @@ public class QuestionDTO {
         return question;
     }
 
-    public QuizDTO getQuiz() {
-        return quiz;
-    }
 
     public List<AnswerDTO> getAnswers() {
         return answers;

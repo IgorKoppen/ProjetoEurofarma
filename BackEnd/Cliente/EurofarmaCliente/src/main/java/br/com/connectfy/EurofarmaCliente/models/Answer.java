@@ -28,7 +28,7 @@ public class Answer {
         this.id = answerDTO.getId();
         this.answer = answerDTO.getAnswer();
         this.isCorrect = answerDTO.getCorrect();
-        this.question = new Question(answerDTO.getQuestion());
+//        this.question = new Question(answerDTO.getQuestion());
     }
 
     public Answer(AnswerInsertDTO answerInsertDTO) {

@@ -38,9 +38,9 @@ public class QuestionController {
                     @ApiResponse(description = "Unprocessable Entity", responseCode = "422", content = @Content)
 
             })
-    @PostMapping(produces ="application/json")
-    public ResponseEntity<QuestionDTO> insert(@RequestBody @Valid QuestionInsertDTO questionInsertDTO, @RequestBody @Valid List<Long> answerIds) {
-        QuestionDTO questionDTO = questionService.insert(questionInsertDTO, answerIds);
+    @PostMapping(produces = "application/json")
+    public ResponseEntity<QuestionDTO> insert(@RequestBody @Valid QuestionInsertDTO questionInsertDTO) {
+        QuestionDTO questionDTO = questionService.insert(questionInsertDTO);
         return ResponseEntity.ok(questionDTO);
     }
 
