@@ -68,6 +68,12 @@ public class QuizService {
             // Extrai a lista de IDs das perguntas do QuestionIdDTO
             List<Long> questionIds = dto.questions().id();
 
+            // Verifica se o número de questões corresponde ao número esperado
+            if (questionIds.size() != dto.questionsNumber()) {
+                throw new IllegalArgumentException("O número de questões fornecidas não corresponde ao número esperado de "
+                        + dto.questionsNumber() + " questões.");
+            }
+
             // Busca cada pergunta no repositório e cria uma lista de perguntas atualizadas
             List<Question> updatedQuestions = questionIds.stream()
                     .map(questionId -> questionRepository.findById(questionId)
@@ -84,6 +90,7 @@ public class QuizService {
         // Retorna o DTO do quiz atualizado
         return new QuizDTO(quiz);
     }
+
 
 
 

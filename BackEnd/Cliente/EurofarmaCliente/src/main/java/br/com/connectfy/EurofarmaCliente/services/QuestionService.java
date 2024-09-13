@@ -45,7 +45,6 @@ public class QuestionService {
 
         // Busca as respostas pelos IDs fornecidos
         List<Answer> answers = answerRepository.findAllById(dto.answerIds());
-        System.out.println("Banana" + answers.toString());
 
         if (answers.size() != dto.answerIds().size()) {
             throw new IllegalArgumentException("Um ou mais IDs de respostas são inválidos.");
@@ -57,13 +56,19 @@ public class QuestionService {
         question.setQuiz(quiz);
 
         // Define as respostas associadas à pergunta
+        for (Answer answer : answers) {
+            answer.setQuestion(question);  // Vincula cada resposta à pergunta
+        }
+
+        // Adiciona as respostas à pergunta
         question.setAnswers(new ArrayList<>(answers));
 
-        // Salva a pergunta no banco de dados
+        // Salva a pergunta e as respostas no banco de dados
         question = questionRepository.save(question);
 
         return new QuestionDTO(question);
     }
+
 
 
 
