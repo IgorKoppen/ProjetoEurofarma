@@ -73,15 +73,15 @@ public class QuestionService {
 
 
     @Transactional
-    public QuestionDTO update(Long questionId, QuestionInsertDTO questionInsertDTO, List<Long> answerIds) {
+    public QuestionDTO update(Long questionId, QuestionInsertDTO questionInsertDTO) {
         // Busca a pergunta pelo ID
         Question question = questionRepository.findById(questionId)
                 .orElseThrow(() -> new IllegalArgumentException("Pergunta não encontrada para o ID fornecido."));
 
         // Busca as respostas pelos IDs fornecidos
-        List<Answer> answers = answerRepository.findAllById(answerIds);
+        List<Answer> answers = answerRepository.findAllById(questionInsertDTO.answerIds());
 
-        if (answers.size() != answerIds.size()) {
+        if (answers.size() != questionInsertDTO.answerIds().size()) {
             throw new IllegalArgumentException("Um ou mais IDs de respostas são inválidos.");
         }
 

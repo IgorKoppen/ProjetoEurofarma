@@ -73,8 +73,8 @@ public class QuestionController {
                     @ApiResponse(description = "Unprocessable Entity", responseCode = "422", content = @Content)
             })
     @PutMapping(value = "/{id}", produces ="application/json")
-    public ResponseEntity<QuestionDTO> update(@PathVariable Long id, @RequestBody @Valid QuestionInsertDTO questionInsertDTO, List<Long> answerIds) {
-        QuestionDTO questionDTO = questionService.update(id, questionInsertDTO, answerIds);
+    public ResponseEntity<QuestionDTO> update(@PathVariable Long id, @RequestBody @Valid QuestionInsertDTO questionInsertDTO) {
+        QuestionDTO questionDTO = questionService.update(id, questionInsertDTO);
         return ResponseEntity.ok(questionDTO);
     }
 
