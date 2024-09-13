@@ -18,8 +18,7 @@ public record QuizUpdateDTO(
         Integer notaMinima,
         @NotNull(message = "É necessário informar o número de questões")
         @Positive(message = "O valor deve ser positivo")
-        Integer questionsNumber,
-        QuestionIdDTO questions
+        Integer questionsNumber
 ) {
 }
 

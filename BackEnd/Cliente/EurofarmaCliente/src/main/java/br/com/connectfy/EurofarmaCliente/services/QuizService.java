@@ -61,29 +61,6 @@ public class QuizService {
         quiz.setNotaMinima(dto.notaMinima());
         quiz.setQuestionsNumber(dto.questionsNumber());
 
-        // Verifica se o QuestionIdDTO contém uma lista de IDs de perguntas
-        if (dto.questions() == null || dto.questions().id().isEmpty()) {
-            quiz.setQuestions(new ArrayList<>());
-        } else {
-            // Extrai a lista de IDs das perguntas do QuestionIdDTO
-            List<Long> questionIds = dto.questions().id();
-
-            // Verifica se o número de questões corresponde ao número esperado
-            if (questionIds.size() != dto.questionsNumber()) {
-                throw new IllegalArgumentException("O número de questões fornecidas não corresponde ao número esperado de "
-                        + dto.questionsNumber() + " questões.");
-            }
-
-            // Busca cada pergunta no repositório e cria uma lista de perguntas atualizadas
-            List<Question> updatedQuestions = questionIds.stream()
-                    .map(questionId -> questionRepository.findById(questionId)
-                            .orElseThrow(() -> new ResourceNotFoundException("Nenhuma pergunta encontrada com id " + questionId)))
-                    .collect(Collectors.toList());
-
-            // Atualiza a lista de perguntas no quiz
-            quiz.setQuestions(updatedQuestions);
-        }
-
         // Salva o quiz atualizado
         quiz = quizRepository.save(quiz);
 

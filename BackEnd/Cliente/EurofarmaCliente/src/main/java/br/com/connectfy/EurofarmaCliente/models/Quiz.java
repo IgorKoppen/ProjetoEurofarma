@@ -58,10 +58,6 @@ public class Quiz {
         this.notaMinima = quizUpdateDTO.notaMinima();
         this.questionsNumber = quizUpdateDTO.questionsNumber();
 
-        // Acessa a lista de IDs no QuestionIdDTO e mapeia para uma lista de objetos Question
-        this.questions = quizUpdateDTO.questions().id().stream()
-                .map(Question::new)
-                .collect(Collectors.toList());
     }
 
 

@@ -88,12 +88,17 @@ public class QuestionService {
         // Atualiza os campos da pergunta
         question.setQuestion(questionInsertDTO.question());
 
-        // Busca o quiz pelo ID
+        // Busca o quiz pelo ID fornecido
         Quiz quiz = quizRepository.findById(questionInsertDTO.quizId())
                 .orElseThrow(() -> new IllegalArgumentException("Quiz não encontrado para o ID fornecido."));
         question.setQuiz(quiz);
 
-        // Define as respostas associadas à pergunta
+        // Define as respostas associadas à pergunta, vinculando cada resposta à pergunta
+        for (Answer answer : answers) {
+            answer.setQuestion(question); // Atualiza a pergunta para cada resposta
+        }
+
+        // Atualiza as respostas associadas à pergunta
         question.setAnswers(new ArrayList<>(answers));
 
         // Salva a pergunta atualizada
