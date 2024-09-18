@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class AnswerService {
@@ -44,26 +45,26 @@ public class AnswerService {
     }
 
     @Transactional
-    public List<AnswerDTO> updateAll(List<AnswerUpdateDTO> answerUpdateDTOs) {
+    public List<AnswerDTO> updateAll(List<AnswerUpdateDTO> answerUpdateDTOs, List<Long> existingIds) {
         List<AnswerDTO> updatedAnswers = new ArrayList<>();
 
+        if (existingIds != null && !existingIds.isEmpty()) {
+            answerRepository.deleteAllById(existingIds);
+        }
+
         for (AnswerUpdateDTO answerUpdateDTO : answerUpdateDTOs) {
-            if (answerRepository.existsById(answerUpdateDTO.id())) {
-                continue;
-            }
+            Answer newAnswer = new Answer();
+            newAnswer.setAnswer(answerUpdateDTO.answer());
+            newAnswer.setCorrect(answerUpdateDTO.isCorrect());
 
-            Answer answer = new Answer();
-            answer.setId(answerUpdateDTO.id());
-            answer.setAnswer(answerUpdateDTO.answer());
-            answer.setCorrect(answerUpdateDTO.isCorrect());
+            newAnswer = answerRepository.save(newAnswer);
 
-            answer = answerRepository.save(answer);
-
-            updatedAnswers.add(new AnswerDTO(answer));
+            updatedAnswers.add(new AnswerDTO(newAnswer));
         }
 
         return updatedAnswers;
     }
+
 
 
     @Transactional

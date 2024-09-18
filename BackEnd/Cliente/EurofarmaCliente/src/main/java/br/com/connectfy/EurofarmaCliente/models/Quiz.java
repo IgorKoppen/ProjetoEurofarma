@@ -28,7 +28,7 @@ public class Quiz {
     private Integer questionsNumber;
     @OneToMany(mappedBy = "quiz", cascade = CascadeType.ALL)
     private List<Training> trainings;
-    @OneToMany(mappedBy = "quiz", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "quiz", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Question> questions;
 
     public Quiz() {

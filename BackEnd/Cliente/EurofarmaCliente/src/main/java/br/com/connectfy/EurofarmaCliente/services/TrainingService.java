@@ -4,11 +4,9 @@ import br.com.connectfy.EurofarmaCliente.dtos.*;
 import br.com.connectfy.EurofarmaCliente.dtos.department.DepartmentDTO;
 import br.com.connectfy.EurofarmaCliente.dtos.employee.EmployeeInfoDTO;
 import br.com.connectfy.EurofarmaCliente.dtos.instructor.InstructorDTO;
+import br.com.connectfy.EurofarmaCliente.dtos.instructor.InstructorDetailsDTO;
 import br.com.connectfy.EurofarmaCliente.dtos.tag.TagDTO;
-import br.com.connectfy.EurofarmaCliente.dtos.training.TrainingDTO;
-import br.com.connectfy.EurofarmaCliente.dtos.training.TrainingInsertDTO;
-import br.com.connectfy.EurofarmaCliente.dtos.training.TrainingOfEmployeeDTO;
-import br.com.connectfy.EurofarmaCliente.dtos.training.TrainingWithEmployeesInfo;
+import br.com.connectfy.EurofarmaCliente.dtos.training.*;
 import br.com.connectfy.EurofarmaCliente.exceptions.*;
 import br.com.connectfy.EurofarmaCliente.models.*;
 import br.com.connectfy.EurofarmaCliente.repositories.EmployeeRepository;
@@ -26,10 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -183,9 +178,6 @@ public class TrainingService {
         }
     }
 
-
-
-
     @Transactional
     public void cancelTraining(Long id) {
         Training training = trainingRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Treinamento não encontrada com id: " + id));
@@ -290,6 +282,44 @@ public class TrainingService {
         Page<Training> trainingPage = trainingRepository.findAll(specification, pageable);
         return trainingPage.map(this::toDTO);
     }
+
+    @Transactional(readOnly = true)
+    public TrainingDetailsDTO findTrainingInfoById(Long trainingId) {
+        Training training = trainingRepository.findById(trainingId)
+                .orElseThrow(() -> new ResourceNotFoundException("Treinamento não encontrado com id: " + trainingId));
+
+        List<InstructorDetailsDTO> instructors = training.getInstructors().stream()
+                .map(instructor -> {
+                    Employee employee = instructor.getEmployee();
+                    return new InstructorDetailsDTO(
+                            employee.getName(),
+                            employee.getSurname(),
+                            employee.getEmployeeRegistration()
+                    );
+                })
+                .collect(Collectors.toList());
+
+        List<EmployeeTrainingInfoDTO> attendanceList = training.getEmployeeTrainings().stream()
+                .map(employeeTraining -> {
+                    EmployeeTrainingInfoDTO dto = new EmployeeTrainingInfoDTO();
+                    Employee employee = employeeTraining.getEmployee();
+                    dto.setName(employee.getName());
+                    dto.setSurname(employee.getSurname());
+                    dto.setEmployeeRegistration(employee.getEmployeeRegistration());
+                    dto.setSignature(employeeTraining.getSignature());
+                    dto.setRegistrationDate(employeeTraining.getRegistrationDate());
+                    return dto;
+                })
+                .collect(Collectors.toList());
+
+        TrainingDetailsDTO response = new TrainingDetailsDTO();
+        response.setInstructors(instructors);
+        response.setAttendanceList(attendanceList);
+
+        return response;
+    }
+
+
 
     private void validatePassword(Training training, String password) {
         if (!training.getPassword().equals(password)) {

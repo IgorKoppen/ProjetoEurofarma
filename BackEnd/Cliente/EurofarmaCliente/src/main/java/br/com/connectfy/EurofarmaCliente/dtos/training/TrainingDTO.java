@@ -1,7 +1,7 @@
 package br.com.connectfy.EurofarmaCliente.dtos.training;
 
 import br.com.connectfy.EurofarmaCliente.dtos.department.DepartmentDTO;
-import br.com.connectfy.EurofarmaCliente.dtos.instructor.InstructorInfo;
+import br.com.connectfy.EurofarmaCliente.dtos.instructor.InstructorInfoDTO;
 import br.com.connectfy.EurofarmaCliente.dtos.quiz.QuizDTO;
 import br.com.connectfy.EurofarmaCliente.dtos.tag.TagDTO;
 import br.com.connectfy.EurofarmaCliente.models.Training;
@@ -40,7 +40,7 @@ public class TrainingDTO implements Serializable {
     @NotBlank(message = "Descrição não pode ser vazia!")
     private final String description;
 
-    private final List<InstructorInfo>  instructorsInfo;
+    private final List<InstructorInfoDTO>  instructorsInfo;
 
     private final List<TagDTO> tags;
 
@@ -60,7 +60,7 @@ public class TrainingDTO implements Serializable {
         this.isOpened = LocalDateTime.now().isBefore(entity.getClosingDate());
         this.password = entity.getPassword();
         this.description = entity.getDescription();
-        this.instructorsInfo = entity.getInstructors().stream().map(InstructorInfo::new).toList();
+        this.instructorsInfo = entity.getInstructors().stream().map(InstructorInfoDTO::new).toList();
         this.tags = entity.getTags().stream().map(TagDTO::new).toList();
         this.departments = entity.getDepartments().stream().map(DepartmentDTO::new).toList();
         this.hasQuiz = entity.getHasQuiz();
@@ -101,7 +101,7 @@ public class TrainingDTO implements Serializable {
         return description;
     }
 
-    public List<InstructorInfo> getInstructorsInfo() {
+    public List<InstructorInfoDTO> getInstructorsInfo() {
         return instructorsInfo;
     }
 

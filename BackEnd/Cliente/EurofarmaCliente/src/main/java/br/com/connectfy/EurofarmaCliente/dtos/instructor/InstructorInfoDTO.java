@@ -2,14 +2,14 @@ package br.com.connectfy.EurofarmaCliente.dtos.instructor;
 
 import br.com.connectfy.EurofarmaCliente.models.Instructor;
 
-public class InstructorInfo {
+public class InstructorInfoDTO {
     private final Long id;
     private final String name;
     private final String surname;
     private final String cellphoneNumber;
     private final Long employeeRegistration;
 
-    public InstructorInfo(Instructor entity) {
+    public InstructorInfoDTO(Instructor entity) {
         this.id = entity.getId();
         this.name = entity.getEmployee().getName();
         this.surname = entity.getEmployee().getSurname();

@@ -15,7 +15,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class QuestionService {
@@ -74,38 +76,34 @@ public class QuestionService {
 
     @Transactional
     public QuestionDTO update(Long questionId, QuestionInsertDTO questionInsertDTO) {
-        // Busca a pergunta pelo ID
         Question question = questionRepository.findById(questionId)
                 .orElseThrow(() -> new IllegalArgumentException("Pergunta não encontrada para o ID fornecido."));
 
-        // Busca as respostas pelos IDs fornecidos
         List<Answer> answers = answerRepository.findAllById(questionInsertDTO.answerIds());
 
         if (answers.size() != questionInsertDTO.answerIds().size()) {
             throw new IllegalArgumentException("Um ou mais IDs de respostas são inválidos.");
         }
 
-        // Atualiza os campos da pergunta
         question.setQuestion(questionInsertDTO.question());
 
-        // Busca o quiz pelo ID fornecido
         Quiz quiz = quizRepository.findById(questionInsertDTO.quizId())
                 .orElseThrow(() -> new IllegalArgumentException("Quiz não encontrado para o ID fornecido."));
         question.setQuiz(quiz);
 
-        // Define as respostas associadas à pergunta, vinculando cada resposta à pergunta
-        for (Answer answer : answers) {
-            answer.setQuestion(question); // Atualiza a pergunta para cada resposta
+        Set<Answer> updatedAnswers = new HashSet<>(answers);
+        question.getAnswers().clear();
+        question.getAnswers().addAll(updatedAnswers);
+
+        for (Answer answer : updatedAnswers) {
+            answer.setQuestion(question);
         }
 
-        // Atualiza as respostas associadas à pergunta
-        question.setAnswers(new ArrayList<>(answers));
-
-        // Salva a pergunta atualizada
         question = questionRepository.save(question);
 
         return new QuestionDTO(question);
     }
+
 
 
     @Transactional

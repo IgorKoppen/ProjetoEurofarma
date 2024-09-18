@@ -2,13 +2,10 @@ package br.com.connectfy.EurofarmaCliente.models;
 
 import br.com.connectfy.EurofarmaCliente.dtos.quiz.QuestionDTO;
 import br.com.connectfy.EurofarmaCliente.dtos.quiz.QuestionIdDTO;
-import br.com.connectfy.EurofarmaCliente.dtos.quiz.QuestionInsertDTO;
 import jakarta.persistence.*;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Entity
@@ -23,7 +20,7 @@ public class Question {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "quiz_id")
     private Quiz quiz;
-    @OneToMany(mappedBy = "question")
+    @OneToMany(mappedBy = "question", orphanRemoval = true)
     private List<Answer> answers;
 
     public Question() {

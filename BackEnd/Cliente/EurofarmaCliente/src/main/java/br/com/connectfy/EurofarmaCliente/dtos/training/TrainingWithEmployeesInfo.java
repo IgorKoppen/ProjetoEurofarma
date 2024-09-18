@@ -1,7 +1,7 @@
 package br.com.connectfy.EurofarmaCliente.dtos.training;
 
 import br.com.connectfy.EurofarmaCliente.dtos.department.DepartmentDTO;
-import br.com.connectfy.EurofarmaCliente.dtos.instructor.InstructorInfo;
+import br.com.connectfy.EurofarmaCliente.dtos.instructor.InstructorInfoDTO;
 import br.com.connectfy.EurofarmaCliente.dtos.quiz.QuizDTO;
 import br.com.connectfy.EurofarmaCliente.dtos.tag.TagDTO;
 import br.com.connectfy.EurofarmaCliente.models.Training;
@@ -38,7 +38,7 @@ public class TrainingWithEmployeesInfo implements Serializable {
 
     private final String description;
 
-    private Set<InstructorInfo> instructorsInfo = new HashSet<>();
+    private Set<InstructorInfoDTO> instructorsInfo = new HashSet<>();
 
     private Set<TagDTO> tags = new HashSet<>();
 
@@ -60,7 +60,7 @@ public class TrainingWithEmployeesInfo implements Serializable {
         this.password = entity.getPassword();
         this.description = entity.getDescription();
         if(entity.getInstructors() != null) {
-            this.instructorsInfo = entity.getInstructors().stream().map(InstructorInfo::new).collect(Collectors.toSet());
+            this.instructorsInfo = entity.getInstructors().stream().map(InstructorInfoDTO::new).collect(Collectors.toSet());
         }
         if(entity.getTags() != null){
             this.tags = entity.getTags().stream().map(TagDTO::new).collect(Collectors.toSet());
@@ -106,7 +106,7 @@ public class TrainingWithEmployeesInfo implements Serializable {
         return description;
     }
 
-    public Set<InstructorInfo> getInstructorsInfo() {
+    public Set<InstructorInfoDTO> getInstructorsInfo() {
         return instructorsInfo;
     }
 

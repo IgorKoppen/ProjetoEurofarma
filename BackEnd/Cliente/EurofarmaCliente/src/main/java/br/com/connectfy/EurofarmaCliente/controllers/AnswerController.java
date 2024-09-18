@@ -4,6 +4,9 @@ import br.com.connectfy.EurofarmaCliente.dtos.quiz.AnswerDTO;
 import br.com.connectfy.EurofarmaCliente.dtos.quiz.AnswerInsertDTO;
 import br.com.connectfy.EurofarmaCliente.dtos.quiz.AnswerUpdateDTO;
 import br.com.connectfy.EurofarmaCliente.services.AnswerService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -15,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -56,11 +60,24 @@ public class AnswerController {
                     @ApiResponse(description = "Conflict", responseCode = "409", content = @Content),
                     @ApiResponse(description = "Unprocessable Entity", responseCode = "422", content = @Content)
             })
-    @PutMapping(produces ="application/json")
-    public ResponseEntity<List<AnswerDTO>> updateAll(@RequestBody @Valid List<AnswerUpdateDTO> answerUpdateDTOs) {
-        List<AnswerDTO> answerDTOs = answerService.updateAll(answerUpdateDTOs);
-        return ResponseEntity.ok(answerDTOs);
+    @PutMapping(produces = "application/json")
+    public ResponseEntity<List<AnswerDTO>> updateAll(@RequestParam(value = "existingIds", required = false) String existingIdsJson, @RequestBody @Valid List<AnswerUpdateDTO> answerUpdateDTOs) {
+        List<Long> existingIds = new ArrayList<>();
+        if (existingIdsJson != null && !existingIdsJson.isEmpty()) {
+            try {
+                ObjectMapper objectMapper = new ObjectMapper();
+                existingIds = objectMapper.readValue(existingIdsJson, new TypeReference<List<Long>>() {});
+            } catch (JsonProcessingException e) {
+                return ResponseEntity.badRequest().build();
+            }
+        }
+
+        List<AnswerDTO> updatedAnswers = answerService.updateAll(answerUpdateDTOs, existingIds);
+
+        return ResponseEntity.ok(updatedAnswers);
     }
+
+
 
     @PreAuthorize("hasAnyAuthority('admin','treinador')")
     @Operation(summary = "Exclui uma resposta", description = "Exclui uma resposta com base em um id",

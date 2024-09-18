@@ -1,10 +1,7 @@
 package br.com.connectfy.EurofarmaCliente.controllers;
 
 import br.com.connectfy.EurofarmaCliente.dtos.*;
-import br.com.connectfy.EurofarmaCliente.dtos.training.TrainingDTO;
-import br.com.connectfy.EurofarmaCliente.dtos.training.TrainingInsertDTO;
-import br.com.connectfy.EurofarmaCliente.dtos.training.TrainingOfEmployeeDTO;
-import br.com.connectfy.EurofarmaCliente.dtos.training.TrainingWithEmployeesInfo;
+import br.com.connectfy.EurofarmaCliente.dtos.training.*;
 import br.com.connectfy.EurofarmaCliente.services.TrainingService;
 import br.com.connectfy.EurofarmaCliente.specification.SearchCriteria;
 import io.swagger.v3.oas.annotations.Operation;
@@ -31,6 +28,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/eurofarma/training")
@@ -299,6 +297,22 @@ public class TrainingController {
         PagedModel<EntityModel<TrainingDTO>> pagedModel = assembler.toModel(trainingDTOPage);
 
         return ResponseEntity.ok(pagedModel);
+    }
+
+    @PreAuthorize("hasAnyAuthority('admin')")
+    @Operation(summary = "Busca as informações dos treinamentos",
+            description = "Realiza a busca de treinamentos e retorna as informações dos treinadores e funcionários que realizaram o treinamento",
+            tags = {"Training"},
+            responses = {
+                    @ApiResponse(description = "No Content", responseCode = "204", content = @Content),
+                    @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
+                    @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
+                    @ApiResponse(description = "Forbidden", responseCode = "403", content = @Content)
+            })
+    @GetMapping(value = "/details/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<TrainingDetailsDTO> getTrainingInfo(@PathVariable Long id) {
+        TrainingDetailsDTO trainingDetails = trainingService.findTrainingInfoById(id);
+        return ResponseEntity.ok(trainingDetails);
     }
 
 }
