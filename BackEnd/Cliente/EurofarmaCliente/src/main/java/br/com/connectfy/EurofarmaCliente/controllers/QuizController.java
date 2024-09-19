@@ -71,7 +71,6 @@ public class QuizController {
                     @ApiResponse(description = "Forbidden", responseCode = "403", content = @Content),
                     @ApiResponse(description = "Conflict", responseCode = "409", content = @Content),
                     @ApiResponse(description = "Unprocessable Entity", responseCode = "422", content = @Content)
-
             })
     @PostMapping(produces ="application/json")
     public ResponseEntity<QuizDTO> insert(@RequestBody @Valid QuizInsertDTO quizDTO) {
@@ -115,7 +114,18 @@ public class QuizController {
         return ResponseEntity.noContent().build();
     }
 
-    @PostMapping("/validate/{quizId}")
+    @PreAuthorize("hasAnyAuthority('admin','treinador','funcionario')")
+    @Operation(summary = "Valida as respostas do quiz", description = "Valida as respostas do quiz e retorna se o usuário passou ou não",
+            tags = {"Quiz"},
+            responses = {
+                    @ApiResponse(description = "Success", responseCode = "200", content = @Content()),
+                    @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
+                    @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
+                    @ApiResponse(description = "Forbidden", responseCode = "403", content = @Content),
+                    @ApiResponse(description = "Conflict", responseCode = "409", content = @Content),
+                    @ApiResponse(description = "Unprocessable Entity", responseCode = "422", content = @Content)
+            })
+    @PostMapping(value = "/validate/{quizId}", produces ="application/json")
     public ResponseEntity<ValidationResponseDTO> validateQuiz(@PathVariable Long quizId, @RequestBody QuizValidateDTO quizValidateBatchDTO) {
         Boolean isPassed = quizService.validateQuizAnswers(quizId, quizValidateBatchDTO);
         return ResponseEntity.ok(new ValidationResponseDTO(isPassed));
