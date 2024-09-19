@@ -18,7 +18,7 @@ public class Department {
     private String departName;
 
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "department", cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "department", cascade = CascadeType.ALL)
     private Set<Role> roles;
 
     @ManyToMany(mappedBy = "departments", fetch = FetchType.LAZY)

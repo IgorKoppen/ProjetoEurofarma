@@ -48,7 +48,7 @@ public class Employee implements UserDetails, Serializable {
     @Column(nullable = false)
     private boolean enabled;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "role_id", nullable = false)
     private Role role;
 

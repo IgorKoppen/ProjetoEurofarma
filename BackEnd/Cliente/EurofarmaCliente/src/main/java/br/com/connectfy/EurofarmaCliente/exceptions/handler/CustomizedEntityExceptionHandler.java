@@ -104,6 +104,12 @@ public class CustomizedEntityExceptionHandler {
         return new ResponseEntity<>(exceptionResponseDTO, HttpStatus.UNPROCESSABLE_ENTITY);
     }
 
+    @ExceptionHandler(InvalidDataException.class)
+    public final ResponseEntity<ExceptionResponseDTO> handleInvalidDataException(InvalidDataException ex, WebRequest request) {
+        ExceptionResponseDTO exceptionResponseDTO = new ExceptionResponseDTO(new Date(), ex.getMessage(), request.getDescription(false));
+        return new ResponseEntity<>(exceptionResponseDTO, HttpStatus.BAD_REQUEST);
+    }
+
     @ExceptionHandler(PasswordDoesntMatchException.class)
     public final ResponseEntity<ExceptionResponseDTO> handlePasswordDontMatchException(PasswordDoesntMatchException ex, WebRequest request) {
         ExceptionResponseDTO exceptionResponseDTO = new ExceptionResponseDTO(new Date(), ex.getMessage(), request.getDescription(false));
