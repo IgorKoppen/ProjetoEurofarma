@@ -1,8 +1,10 @@
 package br.com.connectfy.EurofarmaCliente.controllers;
 
+import br.com.connectfy.EurofarmaCliente.dtos.ValidationResponseDTO;
 import br.com.connectfy.EurofarmaCliente.dtos.quiz.QuizDTO;
 import br.com.connectfy.EurofarmaCliente.dtos.quiz.QuizInsertDTO;
 import br.com.connectfy.EurofarmaCliente.dtos.quiz.QuizUpdateDTO;
+import br.com.connectfy.EurofarmaCliente.dtos.quiz.QuizValidateDTO;
 import br.com.connectfy.EurofarmaCliente.services.QuizService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -112,5 +114,12 @@ public class QuizController {
         quizService.delete(id);
         return ResponseEntity.noContent().build();
     }
+
+    @PostMapping("/validate/{quizId}")
+    public ResponseEntity<ValidationResponseDTO> validateQuiz(@PathVariable Long quizId, @RequestBody QuizValidateDTO quizValidateBatchDTO) {
+        Boolean isPassed = quizService.validateQuizAnswers(quizId, quizValidateBatchDTO);
+        return ResponseEntity.ok(new ValidationResponseDTO(isPassed));
+    }
+
 
 }

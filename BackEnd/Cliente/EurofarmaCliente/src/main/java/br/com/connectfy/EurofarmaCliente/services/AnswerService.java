@@ -1,8 +1,8 @@
 package br.com.connectfy.EurofarmaCliente.services;
 
-import br.com.connectfy.EurofarmaCliente.dtos.quiz.AnswerDTO;
-import br.com.connectfy.EurofarmaCliente.dtos.quiz.AnswerInsertDTO;
-import br.com.connectfy.EurofarmaCliente.dtos.quiz.AnswerUpdateDTO;
+import br.com.connectfy.EurofarmaCliente.dtos.answer.AnswerDTO;
+import br.com.connectfy.EurofarmaCliente.dtos.answer.AnswerInsertDTO;
+import br.com.connectfy.EurofarmaCliente.dtos.answer.AnswerUpdateDTO;
 import br.com.connectfy.EurofarmaCliente.exceptions.DatabaseException;
 import br.com.connectfy.EurofarmaCliente.exceptions.ResourceNotFoundException;
 import br.com.connectfy.EurofarmaCliente.models.Answer;
@@ -44,26 +44,26 @@ public class AnswerService {
     }
 
     @Transactional
-    public List<AnswerDTO> updateAll(List<AnswerUpdateDTO> answerUpdateDTOs) {
+    public List<AnswerDTO> updateAll(List<AnswerUpdateDTO> answerUpdateDTOs, List<Long> existingIds) {
         List<AnswerDTO> updatedAnswers = new ArrayList<>();
 
+        if (existingIds != null && !existingIds.isEmpty()) {
+            answerRepository.deleteAllById(existingIds);
+        }
+
         for (AnswerUpdateDTO answerUpdateDTO : answerUpdateDTOs) {
-            if (answerRepository.existsById(answerUpdateDTO.id())) {
-                continue;
-            }
+            Answer newAnswer = new Answer();
+            newAnswer.setAnswer(answerUpdateDTO.answer());
+            newAnswer.setCorrect(answerUpdateDTO.isCorrect());
 
-            Answer answer = new Answer();
-            answer.setId(answerUpdateDTO.id());
-            answer.setAnswer(answerUpdateDTO.answer());
-            answer.setCorrect(answerUpdateDTO.isCorrect());
+            newAnswer = answerRepository.save(newAnswer);
 
-            answer = answerRepository.save(answer);
-
-            updatedAnswers.add(new AnswerDTO(answer));
+            updatedAnswers.add(new AnswerDTO(newAnswer));
         }
 
         return updatedAnswers;
     }
+
 
 
     @Transactional

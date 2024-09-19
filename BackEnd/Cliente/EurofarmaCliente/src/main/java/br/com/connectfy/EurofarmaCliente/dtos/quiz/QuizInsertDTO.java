@@ -9,7 +9,7 @@ public record QuizInsertDTO(
         String nome,
         @NotBlank(message = "É necessário uma descrição")
         String description,
-        @NotBlank(message = "É necessário uma nota mínima")
+        @NotNull(message = "É necessário uma nota mínima")
         Integer notaMinima,
         @NotNull(message = "É necessário informar o número de questões")
         @Positive(message = "O valor deve ser positivo")

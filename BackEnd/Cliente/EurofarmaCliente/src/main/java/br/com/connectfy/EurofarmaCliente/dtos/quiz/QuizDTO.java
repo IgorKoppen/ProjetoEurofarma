@@ -1,6 +1,6 @@
 package br.com.connectfy.EurofarmaCliente.dtos.quiz;
 
-import br.com.connectfy.EurofarmaCliente.dtos.training.TrainingDTO;
+import br.com.connectfy.EurofarmaCliente.dtos.question.QuestionDTO;
 import br.com.connectfy.EurofarmaCliente.models.Quiz;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -22,8 +22,6 @@ public class QuizDTO {
     @NotNull(message = "É necessário informar o número de questões")
     @Positive(message = "O valor deve ser positivo")
     private Integer questionsNumber;
-
-    private List<TrainingDTO> trainings = new ArrayList<>();
 
     private List<QuestionDTO> questions = new ArrayList<>();
 
@@ -64,10 +62,6 @@ public class QuizDTO {
 
     public Integer getQuestionsNumber() {
         return questionsNumber;
-    }
-
-    public List<TrainingDTO> getTrainings() {
-        return trainings;
     }
 
     public List<QuestionDTO> getQuestions() {

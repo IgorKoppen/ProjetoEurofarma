@@ -1,7 +1,7 @@
 package br.com.connectfy.EurofarmaCliente.models;
 
-import br.com.connectfy.EurofarmaCliente.dtos.quiz.AnswerDTO;
-import br.com.connectfy.EurofarmaCliente.dtos.quiz.AnswerInsertDTO;
+import br.com.connectfy.EurofarmaCliente.dtos.answer.AnswerDTO;
+import br.com.connectfy.EurofarmaCliente.dtos.answer.AnswerInsertDTO;
 import jakarta.persistence.*;
 
 import java.util.Objects;
@@ -28,7 +28,7 @@ public class Answer {
         this.id = answerDTO.getId();
         this.answer = answerDTO.getAnswer();
         this.isCorrect = answerDTO.getCorrect();
-        this.question = new Question(answerDTO.getQuestion());
+//        this.question = new Question(answerDTO.getQuestion());
     }
 
     public Answer(AnswerInsertDTO answerInsertDTO) {
@@ -79,5 +79,15 @@ public class Answer {
     @Override
     public int hashCode() {
         return Objects.hashCode(id);
+    }
+
+    @Override
+    public String toString() {
+        return "Answer{" +
+                "id=" + id +
+                ", answer='" + answer + '\'' +
+                ", isCorrect=" + isCorrect +
+                ", question=" + question +
+                '}';
     }
 }

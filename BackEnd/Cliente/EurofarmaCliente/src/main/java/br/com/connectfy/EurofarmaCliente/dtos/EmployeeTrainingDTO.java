@@ -17,7 +17,6 @@ public class EmployeeTrainingDTO implements Serializable {
     @JsonIgnore
     private final EmployeeInfoDTO employee;
 
-
     private final TrainingDTO training;
 
     @JsonIgnore

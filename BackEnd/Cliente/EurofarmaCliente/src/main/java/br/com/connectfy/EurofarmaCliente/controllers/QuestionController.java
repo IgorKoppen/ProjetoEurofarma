@@ -1,7 +1,7 @@
 package br.com.connectfy.EurofarmaCliente.controllers;
 
-import br.com.connectfy.EurofarmaCliente.dtos.quiz.QuestionDTO;
-import br.com.connectfy.EurofarmaCliente.dtos.quiz.QuestionInsertDTO;
+import br.com.connectfy.EurofarmaCliente.dtos.question.QuestionDTO;
+import br.com.connectfy.EurofarmaCliente.dtos.question.QuestionInsertDTO;
 import br.com.connectfy.EurofarmaCliente.services.QuestionService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -14,8 +14,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/eurofarma/question")
@@ -38,9 +36,9 @@ public class QuestionController {
                     @ApiResponse(description = "Unprocessable Entity", responseCode = "422", content = @Content)
 
             })
-    @PostMapping(produces ="application/json")
-    public ResponseEntity<QuestionDTO> insert(@RequestBody @Valid QuestionInsertDTO questionInsertDTO, @RequestBody @Valid List<Long> answerIds) {
-        QuestionDTO questionDTO = questionService.insert(questionInsertDTO, answerIds);
+    @PostMapping(produces = "application/json")
+    public ResponseEntity<QuestionDTO> insert(@RequestBody @Valid QuestionInsertDTO questionInsertDTO) {
+        QuestionDTO questionDTO = questionService.insert(questionInsertDTO);
         return ResponseEntity.ok(questionDTO);
     }
 
@@ -73,8 +71,8 @@ public class QuestionController {
                     @ApiResponse(description = "Unprocessable Entity", responseCode = "422", content = @Content)
             })
     @PutMapping(value = "/{id}", produces ="application/json")
-    public ResponseEntity<QuestionDTO> update(@PathVariable Long id, @RequestBody @Valid QuestionInsertDTO questionInsertDTO, List<Long> answerIds) {
-        QuestionDTO questionDTO = questionService.update(id, questionInsertDTO, answerIds);
+    public ResponseEntity<QuestionDTO> update(@PathVariable Long id, @RequestBody @Valid QuestionInsertDTO questionInsertDTO) {
+        QuestionDTO questionDTO = questionService.update(id, questionInsertDTO);
         return ResponseEntity.ok(questionDTO);
     }
 

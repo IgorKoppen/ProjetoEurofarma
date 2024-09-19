@@ -3,10 +3,13 @@ package br.com.connectfy.EurofarmaCliente.services;
 import br.com.connectfy.EurofarmaCliente.dtos.quiz.QuizDTO;
 import br.com.connectfy.EurofarmaCliente.dtos.quiz.QuizInsertDTO;
 import br.com.connectfy.EurofarmaCliente.dtos.quiz.QuizUpdateDTO;
+import br.com.connectfy.EurofarmaCliente.dtos.quiz.QuizValidateDTO;
 import br.com.connectfy.EurofarmaCliente.exceptions.DatabaseException;
 import br.com.connectfy.EurofarmaCliente.exceptions.ResourceNotFoundException;
+import br.com.connectfy.EurofarmaCliente.models.Answer;
 import br.com.connectfy.EurofarmaCliente.models.Quiz;
 import br.com.connectfy.EurofarmaCliente.models.Question;
+import br.com.connectfy.EurofarmaCliente.repositories.QuestionRepository;
 import br.com.connectfy.EurofarmaCliente.repositories.QuizRepository;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
@@ -14,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -21,8 +25,11 @@ public class QuizService {
 
     private final QuizRepository quizRepository;
 
-    public QuizService(QuizRepository quizRepository) {
+    private final QuestionRepository questionRepository;
+
+    public QuizService(QuizRepository quizRepository, QuestionRepository questionRepository) {
         this.quizRepository = quizRepository;
+        this.questionRepository = questionRepository;
     }
 
     @Transactional(readOnly = true)
@@ -55,12 +62,6 @@ public class QuizService {
         quiz.setNotaMinima(dto.notaMinima());
         quiz.setQuestionsNumber(dto.questionsNumber());
 
-        if (dto.questions() == null) {
-            quiz.setQuestions(new ArrayList<>());
-        } else {
-            quiz.setQuestions(dto.questions().stream().map(Question::new).collect(Collectors.toList()));
-        }
-
         quiz = quizRepository.save(quiz);
 
         return new QuizDTO(quiz);
@@ -77,5 +78,45 @@ public class QuizService {
             throw new DatabaseException("Falha de inegridade referencial");
         }
     }
+
+    @Transactional(readOnly = true)
+    public Boolean validateQuizAnswers(Long quizId, QuizValidateDTO quizValidateBatchDTO) {
+        Quiz quiz = quizRepository.findById(quizId)
+                .orElseThrow(() -> new ResourceNotFoundException("Quiz not found"));
+
+        List<Long> questionIds = quizValidateBatchDTO.questionIds();
+        List<String> userAnswers = quizValidateBatchDTO.userAnswers();
+
+        if (questionIds.size() != userAnswers.size()) {
+            throw new IllegalArgumentException("O número de questionIds e userAnswers deve ser igual.");
+        }
+
+        int correctAnswersCount = 0;
+
+        for (int i = 0; i < questionIds.size(); i++) {
+            Long questionId = questionIds.get(i);
+            String userAnswer = userAnswers.get(i);
+
+            Question question = questionRepository.findById(questionId)
+                    .orElseThrow(() -> new ResourceNotFoundException("Question not found"));
+
+            Optional<Answer> correctAnswer = question.getAnswers().stream()
+                    .filter(Answer::getCorrect)
+                    .findFirst();
+
+            if (correctAnswer.isPresent() && correctAnswer.get().getAnswer().equals(userAnswer)) {
+                correctAnswersCount++;
+            }
+        }
+
+        int totalQuestions = quiz.getQuestions().size();
+        int notaMinima = quiz.getNotaMinima();
+
+        double userScore = ((double) correctAnswersCount / totalQuestions) * 10;
+
+        return userScore >= notaMinima;
+    }
+
+
 
 }

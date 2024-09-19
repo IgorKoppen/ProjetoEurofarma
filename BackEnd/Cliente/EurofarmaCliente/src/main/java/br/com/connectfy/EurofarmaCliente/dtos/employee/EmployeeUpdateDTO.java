@@ -6,6 +6,10 @@ import jakarta.validation.constraints.NotNull;
 import java.util.Set;
 
 public record EmployeeUpdateDTO(
+        @NotBlank(message = "O nome é obrigatório e não pode estar em branco.")
+        String name,
+        @NotBlank(message = "O sobrenome é obrigatório e não pode estar em branco.")
+        String surname,
         @NotBlank(message = "O número de celular é obrigatório e não pode estar em branco.")
         String cellphoneNumber,
         @NotNull(message = "O cargo do funcionário é obrigatório e deve ser especificado.")

@@ -1,6 +1,7 @@
 package br.com.connectfy.EurofarmaCliente.controllers;
 
 import br.com.connectfy.EurofarmaCliente.dtos.role.RoleDTO;
+import br.com.connectfy.EurofarmaCliente.dtos.role.RoleInsertDTO;
 import br.com.connectfy.EurofarmaCliente.services.RoleService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -72,6 +73,24 @@ public class RoleController {
     public ResponseEntity<RoleDTO> findById(@PathVariable Long id) {
         RoleDTO rolesDTO = roleService.findById(id);
         return ResponseEntity.ok(rolesDTO);
+    }
+
+    @PreAuthorize("hasAnyAuthority('admin')")
+    @Operation(summary = "Atualiza um cargo", description = "Atualiza um cargo a partir de um id",
+            tags = {"Employee"},
+            responses = {
+                    @ApiResponse(description = "Success", responseCode = "200", content = @Content()),
+                    @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
+                    @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
+                    @ApiResponse(description = "Forbidden", responseCode = "403", content = @Content),
+                    @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
+                    @ApiResponse(description = "Conflict", responseCode = "409", content = @Content),
+                    @ApiResponse(description = "Unprocessable Entity", responseCode = "422", content = @Content)
+            })
+    @PutMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<RoleDTO> update(@PathVariable Long id, @RequestBody RoleInsertDTO dto) {
+        RoleDTO roleDTO = roleService.update(id, dto);
+        return ResponseEntity.ok(roleDTO);
     }
 
     @PreAuthorize("hasAnyAuthority('admin')")

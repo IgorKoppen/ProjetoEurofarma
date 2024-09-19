@@ -28,7 +28,7 @@ public class Quiz {
     private Integer questionsNumber;
     @OneToMany(mappedBy = "quiz", cascade = CascadeType.ALL)
     private List<Training> trainings;
-    @OneToMany(mappedBy = "quiz", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "quiz", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Question> questions;
 
     public Quiz() {
@@ -40,9 +40,6 @@ public class Quiz {
         this.description = quizDTO.getDescription();
         this.notaMinima = quizDTO.getNotaMinima();
         this.questionsNumber = quizDTO.getQuestionsNumber();
-        if(quizDTO.getTrainings() != null) {
-            this.trainings = quizDTO.getTrainings().stream().map(Training::new).collect(Collectors.toList());
-        }
         if(quizDTO.getQuestions() != null) {
             this.questions = quizDTO.getQuestions().stream().map(Question::new).collect(Collectors.toList());
         }
@@ -60,8 +57,9 @@ public class Quiz {
         this.description = quizUpdateDTO.description();
         this.notaMinima = quizUpdateDTO.notaMinima();
         this.questionsNumber = quizUpdateDTO.questionsNumber();
-        this.questions = quizUpdateDTO.questions().stream().map(Question::new).collect(Collectors.toList());
+
     }
+
 
     public Long getId() {
         return id;

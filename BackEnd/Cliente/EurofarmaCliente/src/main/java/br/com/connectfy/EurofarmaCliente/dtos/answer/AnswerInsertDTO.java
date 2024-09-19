@@ -1,4 +1,4 @@
-package br.com.connectfy.EurofarmaCliente.dtos.quiz;
+package br.com.connectfy.EurofarmaCliente.dtos.answer;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

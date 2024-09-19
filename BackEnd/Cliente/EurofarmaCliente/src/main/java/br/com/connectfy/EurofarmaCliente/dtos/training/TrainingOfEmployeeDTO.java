@@ -1,12 +1,11 @@
 package br.com.connectfy.EurofarmaCliente.dtos.training;
 
-import br.com.connectfy.EurofarmaCliente.dtos.instructor.InstructorInfo;
+import br.com.connectfy.EurofarmaCliente.dtos.instructor.InstructorInfoDTO;
 import br.com.connectfy.EurofarmaCliente.dtos.tag.TagDTO;
 import br.com.connectfy.EurofarmaCliente.models.EmployeeTraining;
 import br.com.connectfy.EurofarmaCliente.models.Training;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.validation.constraints.NotBlank;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -34,7 +33,7 @@ public class TrainingOfEmployeeDTO implements Serializable {
 
     private final String description;
 
-    private final List<InstructorInfo> instructorsInfo;
+    private final List<InstructorInfoDTO> instructorsInfo;
 
     private final List<TagDTO> tags;
 
@@ -53,7 +52,7 @@ public class TrainingOfEmployeeDTO implements Serializable {
         this.closingDate = formatter.format(entity.getClosingDate());
         this.isOpened = LocalDateTime.now().isBefore(entity.getClosingDate());
         this.description = entity.getDescription();
-        this.instructorsInfo = entity.getInstructors().stream().map(InstructorInfo::new).toList();
+        this.instructorsInfo = entity.getInstructors().stream().map(InstructorInfoDTO::new).toList();
         this.tags = entity.getTags().stream().map(TagDTO::new).toList();
         this.registrationDate = formatter.format(employeeTraining.getRegistrationDate());
         this.signature = employeeTraining.getSignature();
@@ -87,7 +86,7 @@ public class TrainingOfEmployeeDTO implements Serializable {
         return description;
     }
 
-    public List<InstructorInfo> getInstructorsInfo() {
+    public List<InstructorInfoDTO> getInstructorsInfo() {
         return instructorsInfo;
     }
 

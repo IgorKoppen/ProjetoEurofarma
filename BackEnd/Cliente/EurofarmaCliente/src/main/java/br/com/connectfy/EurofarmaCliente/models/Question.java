@@ -1,13 +1,11 @@
 package br.com.connectfy.EurofarmaCliente.models;
 
-import br.com.connectfy.EurofarmaCliente.dtos.quiz.QuestionDTO;
-import br.com.connectfy.EurofarmaCliente.dtos.quiz.QuestionInsertDTO;
+import br.com.connectfy.EurofarmaCliente.dtos.question.QuestionDTO;
+import br.com.connectfy.EurofarmaCliente.dtos.question.QuestionIdDTO;
 import jakarta.persistence.*;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Entity
@@ -22,7 +20,7 @@ public class Question {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "quiz_id")
     private Quiz quiz;
-    @OneToMany(mappedBy = "question")
+    @OneToMany(mappedBy = "question", orphanRemoval = true)
     private List<Answer> answers;
 
     public Question() {
@@ -31,15 +29,15 @@ public class Question {
     public Question(QuestionDTO questionDTO) {
         this.id = questionDTO.getId();
         this.question = questionDTO.getQuestion();
-        this.quiz = new Quiz(questionDTO.getQuiz());
         if(questionDTO.getAnswers() != null) {
             this.answers = questionDTO.getAnswers().stream().map(Answer::new).collect(Collectors.toList());
         }
     }
 
-    public Question(QuestionInsertDTO questionInsertDTO) {
-        this.question = questionInsertDTO.question();
-        this.quiz = new Quiz(questionInsertDTO.quizDTO());
+    public Question(QuestionIdDTO questionIdDTO) {
+    }
+
+    public Question(Long aLong) {
     }
 
     public Long getId() {

@@ -58,6 +58,8 @@ public class EmployeeInfoDTO implements Serializable {
     public EmployeeInfoDTO() {
     }
 
+
+
     public List<PermissionDTO> getPermission() {
         return permission;
     }

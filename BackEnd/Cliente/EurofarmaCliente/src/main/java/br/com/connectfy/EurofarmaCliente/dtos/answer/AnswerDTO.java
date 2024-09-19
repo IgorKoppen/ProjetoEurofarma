@@ -1,4 +1,4 @@
-package br.com.connectfy.EurofarmaCliente.dtos.quiz;
+package br.com.connectfy.EurofarmaCliente.dtos.answer;
 
 import br.com.connectfy.EurofarmaCliente.models.Answer;
 import jakarta.validation.constraints.NotBlank;
@@ -12,15 +12,13 @@ public class AnswerDTO {
     private final String answer;
     @NotNull(message = "É necessário informar se a questão é correta")
     private final Boolean isCorrect;
-    private QuestionDTO question;
+    private final Long questionId;
 
     public AnswerDTO(Answer answer) {
         this.id = answer.getId();
         this.answer = answer.getAnswer();
         this.isCorrect = answer.getCorrect();
-//        if (answer.getQuestion() != null) {
-//            this.question = new QuestionDTO(answer.getQuestion());
-//        }
+        this.questionId = (answer.getQuestion() != null) ? answer.getQuestion().getId() : null;
     }
 
     public Long getId() {
@@ -35,7 +33,7 @@ public class AnswerDTO {
         return isCorrect;
     }
 
-    public QuestionDTO getQuestion() {
-        return question;
+    public Long getQuestion() {
+        return questionId;
     }
 }
