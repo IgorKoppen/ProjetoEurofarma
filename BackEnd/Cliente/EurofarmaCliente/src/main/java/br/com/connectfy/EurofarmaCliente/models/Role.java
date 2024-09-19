@@ -48,6 +48,11 @@ public class Role {
         this.roleName = s;
     }
 
+    public Role(String roleName, Department department) {
+        this.roleName = roleName;
+        this.department = department;
+    }
+
     public Long getId() {
         return id;
     }

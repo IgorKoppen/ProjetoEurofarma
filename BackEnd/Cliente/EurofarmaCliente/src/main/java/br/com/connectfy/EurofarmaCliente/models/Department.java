@@ -40,6 +40,10 @@ public class Department {
         this.departName = departmentDTO.getDepartName();
     }
 
+    public Department(String departmentName) {
+        this.departName = departmentName;
+    }
+
     public Long getId() {
         return id;
     }
