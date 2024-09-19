@@ -1,7 +1,7 @@
 package br.com.connectfy.EurofarmaCliente.services;
 
-import br.com.connectfy.EurofarmaCliente.dtos.quiz.QuestionDTO;
-import br.com.connectfy.EurofarmaCliente.dtos.quiz.QuestionInsertDTO;
+import br.com.connectfy.EurofarmaCliente.dtos.question.QuestionDTO;
+import br.com.connectfy.EurofarmaCliente.dtos.question.QuestionInsertDTO;
 import br.com.connectfy.EurofarmaCliente.exceptions.DatabaseException;
 import br.com.connectfy.EurofarmaCliente.exceptions.ResourceNotFoundException;
 import br.com.connectfy.EurofarmaCliente.models.Answer;

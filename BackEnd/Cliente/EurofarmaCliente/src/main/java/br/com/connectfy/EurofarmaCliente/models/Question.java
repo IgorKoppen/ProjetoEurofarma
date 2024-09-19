@@ -1,7 +1,7 @@
 package br.com.connectfy.EurofarmaCliente.models;
 
-import br.com.connectfy.EurofarmaCliente.dtos.quiz.QuestionDTO;
-import br.com.connectfy.EurofarmaCliente.dtos.quiz.QuestionIdDTO;
+import br.com.connectfy.EurofarmaCliente.dtos.question.QuestionDTO;
+import br.com.connectfy.EurofarmaCliente.dtos.question.QuestionIdDTO;
 import jakarta.persistence.*;
 
 import java.util.List;

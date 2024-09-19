@@ -1,9 +1,7 @@
-package br.com.connectfy.EurofarmaCliente.dtos.quiz;
+package br.com.connectfy.EurofarmaCliente.dtos.question;
 
-import br.com.connectfy.EurofarmaCliente.models.Answer;
+import br.com.connectfy.EurofarmaCliente.dtos.answer.AnswerDTO;
 import br.com.connectfy.EurofarmaCliente.models.Question;
-import br.com.connectfy.EurofarmaCliente.models.Quiz;
-import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 
 import java.util.ArrayList;

@@ -1,8 +1,8 @@
 package br.com.connectfy.EurofarmaCliente.controllers;
 
-import br.com.connectfy.EurofarmaCliente.dtos.quiz.AnswerDTO;
-import br.com.connectfy.EurofarmaCliente.dtos.quiz.AnswerInsertDTO;
-import br.com.connectfy.EurofarmaCliente.dtos.quiz.AnswerUpdateDTO;
+import br.com.connectfy.EurofarmaCliente.dtos.answer.AnswerDTO;
+import br.com.connectfy.EurofarmaCliente.dtos.answer.AnswerInsertDTO;
+import br.com.connectfy.EurofarmaCliente.dtos.answer.AnswerUpdateDTO;
 import br.com.connectfy.EurofarmaCliente.services.AnswerService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;

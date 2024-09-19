@@ -1,6 +1,6 @@
 package br.com.connectfy.EurofarmaCliente.dtos.quiz;
 
-import br.com.connectfy.EurofarmaCliente.dtos.training.TrainingDTO;
+import br.com.connectfy.EurofarmaCliente.dtos.question.QuestionDTO;
 import br.com.connectfy.EurofarmaCliente.models.Quiz;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

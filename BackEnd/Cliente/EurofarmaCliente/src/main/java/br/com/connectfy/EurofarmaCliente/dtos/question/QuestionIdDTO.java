@@ -1,4 +1,4 @@
-package br.com.connectfy.EurofarmaCliente.dtos.quiz;
+package br.com.connectfy.EurofarmaCliente.dtos.question;
 
 import java.util.List;
 

@@ -94,7 +94,7 @@ public class TrainingService {
     @Transactional
     public TrainingDTO update(Long id, TrainingInsertDTO trainingDTO) {
 
-        System.out.println("Banana" +trainingDTO);
+
 
         Training training = trainingRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Treinamento não encontrada com id: " + id));
@@ -194,12 +194,9 @@ public class TrainingService {
 
     @Transactional(readOnly = true)
     public TrainingDTO findByCode(Long employeeId,String code) {
-        System.out.println("Nabo");
         Employee employee = getEmployeeById(employeeId);
         Training training = getTrainingByCode(code);
-        System.out.println("Picles");
         validateEmployeeForTraining(employee,training);
-        System.out.println("banana");
         validateDateOfClose(training.getClosingDate(), "Lista já encerrada!");
         return toDTO(training);
     }

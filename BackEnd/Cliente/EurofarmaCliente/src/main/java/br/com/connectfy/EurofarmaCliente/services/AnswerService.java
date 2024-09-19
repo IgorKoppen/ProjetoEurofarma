@@ -1,8 +1,8 @@
 package br.com.connectfy.EurofarmaCliente.services;
 
-import br.com.connectfy.EurofarmaCliente.dtos.quiz.AnswerDTO;
-import br.com.connectfy.EurofarmaCliente.dtos.quiz.AnswerInsertDTO;
-import br.com.connectfy.EurofarmaCliente.dtos.quiz.AnswerUpdateDTO;
+import br.com.connectfy.EurofarmaCliente.dtos.answer.AnswerDTO;
+import br.com.connectfy.EurofarmaCliente.dtos.answer.AnswerInsertDTO;
+import br.com.connectfy.EurofarmaCliente.dtos.answer.AnswerUpdateDTO;
 import br.com.connectfy.EurofarmaCliente.exceptions.DatabaseException;
 import br.com.connectfy.EurofarmaCliente.exceptions.ResourceNotFoundException;
 import br.com.connectfy.EurofarmaCliente.models.Answer;
@@ -13,7 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class AnswerService {
