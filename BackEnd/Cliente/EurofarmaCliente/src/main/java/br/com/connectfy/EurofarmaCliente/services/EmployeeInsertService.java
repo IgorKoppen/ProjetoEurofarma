@@ -33,16 +33,18 @@ public class EmployeeInsertService {
     private final EmployeeRepository employeeRepository;
     private final DepartmentRepository departmentRepository;
     private final RoleRepository roleRepository;
+    private final MessageService messageService;
 
-    public EmployeeInsertService(EmployeeRepository employeeRepository, DepartmentRepository departmentRepository, RoleRepository roleRepository) {
+    public EmployeeInsertService(EmployeeRepository employeeRepository, DepartmentRepository departmentRepository, RoleRepository roleRepository, MessageService messageService) {
         this.employeeRepository = employeeRepository;
         this.departmentRepository = departmentRepository;
         this.roleRepository = roleRepository;
+        this.messageService = messageService;
     }
 
     @Transactional
     public List<EmployeeInfoDTO> readExcelFile(MultipartFile file) throws IOException {
-        validateFileType(file); // Valida se o arquivo é do tipo correto
+        validateFileType(file);
 
         List<Employee> employees;
         if (isExcelFile(file)) {
@@ -51,13 +53,28 @@ public class EmployeeInsertService {
             throw new InvalidDataException("Formato de arquivo não suportado. Apenas arquivos Excel (.xls, .xlsx) são aceitos.");
         }
 
-        // Salvar todos os funcionários processados
-        List<Employee> employeeList = employeeRepository.saveAll(employees);
+        List<Employee> employeeList = new LinkedList<>();
+
+        for (Employee employee : employees) {
+            String rawPassword = RandomStringGenerator.generatePassword(10);
+
+            setDefaultEmployeeSettings(employee, rawPassword);
+
+            employee = employeeRepository.save(employee);
+            employeeList.add(employee);
+
+            sendCreationEmployeeMessage(
+                    employee.getName(),
+                    employee.getEmployeeRegistration().toString(),
+                    rawPassword,
+                    employee.getCellphoneNumber()
+            );
+        }
+
         return employeeList.stream().map(EmployeeInfoDTO::new).toList();
     }
 
     private void validateFileType(MultipartFile file) throws InvalidDataException {
-        String contentType = file.getContentType();
         if (!isExcelFile(file)) {
             throw new InvalidDataException("Arquivo inválido. Somente arquivos Excel são aceitos.");
         }
@@ -115,7 +132,7 @@ public class EmployeeInsertService {
         for (Sheet sheet : workbook) {
             int index = 0;
             for (Row row : sheet) {
-                if (index++ == 0) continue; // Ignora cabeçalho
+                if (index++ == 0) continue;
 
                 Employee employee = processRow(row, dataFormatter);
                 if (employee != null) {
@@ -133,14 +150,12 @@ public class EmployeeInsertService {
         Role role = new Role();
 
         try {
-            // Verifica se o employeeRegistration já existe no banco de dados
             Long employeeRegistration = getNumericCellValue(row, 0, "RE nulo ou não numérico");
             if (employeeRepository.existsByEmployeeRegistration(employeeRegistration)) {
                 throw new AlreadyExistException("O registro de funcionário " + employeeRegistration + " já existe.");
             }
             employee.setEmployeeRegistration(employeeRegistration);
 
-            // Verifica se o número de telefone já existe no banco de dados
             String formattedCellphoneNumber = formatCellphoneNumber(row);
             if (employeeRepository.existsByCellphoneNumber(formattedCellphoneNumber)) {
                 throw new AlreadyExistException("O número de telefone " + formattedCellphoneNumber + " já está registrado.");
@@ -150,13 +165,11 @@ public class EmployeeInsertService {
             employee.setName(getStringCellValue(row, 1, "Nome nulo ou numérico"));
             employee.setSurname(getStringCellValue(row, 2, "Sobrenome nulo ou numérico"));
 
-            department = getOrCreateDepartmentFromCell(row.getCell(4)); // Para Excel, usa Cell
-            employee.setRole(getOrCreateRoleFromCell(row.getCell(5), department)); // Para Excel, usa Cell
+            department = getOrCreateDepartmentFromCell(row.getCell(4));
+            employee.setRole(getOrCreateRoleFromCell(row.getCell(5), department));
 
-            setDefaultEmployeeSettings(employee);
             return employee;
         } catch (InvalidDataException | AlreadyExistException e) {
-            // Log de erro ou manipulação de exceção
             return null;
         }
     }
@@ -178,14 +191,12 @@ public class EmployeeInsertService {
     private String formatCellphoneNumber(Row row) throws InvalidDataException {
         if (row.getCell(3) != null && row.getCell(3).getCellType() == CellType.NUMERIC) {
             BigDecimal cellphoneNumber = BigDecimal.valueOf(row.getCell(3).getNumericCellValue());
-            String formattedCellphoneNumber = "+" + cellphoneNumber.toPlainString();
-            return formattedCellphoneNumber;
+            return "+" + cellphoneNumber.toPlainString();
         } else {
             throw new InvalidDataException("Celular nulo ou não numérico");
         }
     }
 
-    // Para arquivos Excel (usa Cell)
     private Department getOrCreateDepartmentFromCell(Cell cell) throws InvalidDataException {
         if (cell != null && cell.getCellType() == CellType.STRING) {
             String departmentName = cell.getStringCellValue();
@@ -195,7 +206,6 @@ public class EmployeeInsertService {
         throw new InvalidDataException("Departamento nulo ou numérico");
     }
 
-    // Para arquivos Excel (usa Cell)
     private Role getOrCreateRoleFromCell(Cell cell, Department department) throws InvalidDataException {
         if (cell != null && cell.getCellType() == CellType.STRING) {
             String roleName = cell.getStringCellValue();
@@ -205,9 +215,8 @@ public class EmployeeInsertService {
         throw new InvalidDataException("Cargo nulo ou numérico");
     }
 
-    private void setDefaultEmployeeSettings(Employee employee) {
-        String randomPassword = RandomStringGenerator.generatePassword(10);
-        employee.setPassword(EncryptedPassword.encryptPassword(randomPassword));
+    private void setDefaultEmployeeSettings(Employee employee, String rawPassword) {
+        employee.setPassword(EncryptedPassword.encryptPassword(rawPassword));
         employee.setEnabled(true);
         employee.setAccountNonExpired(true);
         employee.setCredentialsNonExpired(true);
@@ -219,4 +228,28 @@ public class EmployeeInsertService {
         employee.addPermission(defaultPermission);
     }
 
+    private void sendCreationEmployeeMessage(String employeeName, String registerOfEmployee, String password, String cellphoneNumber) {
+        String message = String.format(
+                """
+                Olá %s!
+    
+                Bem-vindo(a) à Eurofarma Treinamentos! Sua conta foi criada com sucesso.
+                Use o seu Registro de Funcionário como nome de usuário: %s.
+                Sua senha temporária é: %s.
+    
+                Recomendamos que você faça login imediatamente e altere sua senha
+                para garantir a segurança da sua conta. Se tiver alguma dúvida,
+                não hesite em entrar em contato conosco.
+    
+                Estamos felizes em tê-lo(a) conosco!
+    
+                Atenciosamente,
+                Equipe Eurofarma
+                """,
+                employeeName,
+                registerOfEmployee,
+                password
+        );
+        messageService.send(message, cellphoneNumber);
+    }
 }
