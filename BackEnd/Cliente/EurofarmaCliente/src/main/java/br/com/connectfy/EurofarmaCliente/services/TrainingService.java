@@ -300,6 +300,7 @@ public class TrainingService {
                 .map(employeeTraining -> {
                     EmployeeTrainingInfoDTO dto = new EmployeeTrainingInfoDTO();
                     Employee employee = employeeTraining.getEmployee();
+                    dto.setId(employee.getId());
                     dto.setName(employee.getName());
                     dto.setSurname(employee.getSurname());
                     dto.setEmployeeRegistration(employee.getEmployeeRegistration());
