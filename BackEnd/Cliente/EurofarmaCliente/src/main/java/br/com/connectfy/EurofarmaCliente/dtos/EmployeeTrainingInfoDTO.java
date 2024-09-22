@@ -1,5 +1,6 @@
 package br.com.connectfy.EurofarmaCliente.dtos;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.Lob;
 
 import java.io.Serial;
@@ -17,6 +18,7 @@ public class EmployeeTrainingInfoDTO implements Serializable {
     private Long employeeRegistration;
     @Lob
     private String signature;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy HH:mm:ss")
     private LocalDateTime registrationDate;
 
     public EmployeeTrainingInfoDTO() {
