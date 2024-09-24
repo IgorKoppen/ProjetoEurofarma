@@ -13,8 +13,8 @@
             <mat-icon>search_off</mat-icon>
           </button>
         }
-         <app-default-btn  iconName="search" text="Filtrar" [callbackSearchDialog]="openSearchDialog"></app-default-btn>
-         <app-default-btn  iconName="add" text="Novo" [callbackSearchDialog]="openSearchDialog"></app-default-btn>
+         <app-default-btn  iconName="search" text="Filtrar" [callback]="openSearchDialog"></app-default-btn>
+         <app-default-btn  iconName="add" text="Novo" [callback]="openSearchDialog"></app-default-btn>
         </div>
   </div>
     <app-table-employee-component

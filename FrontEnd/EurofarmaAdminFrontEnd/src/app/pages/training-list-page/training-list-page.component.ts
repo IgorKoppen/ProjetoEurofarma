@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import {  TrainingSearchParams } from '../../interfaces/SearchParamsIntefaces';
+
 import { MatTableDataSource } from '@angular/material/table';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { DefaultBtnComponent } from '../../components/default-btn/default-btn.component';
@@ -14,11 +14,12 @@ import { catchError, map, merge, of, startWith, switchMap } from 'rxjs';
 import { TableTrainingsComponent } from '../../components/table-trainings/table-trainings.component';
 import { TrainingPaginationResponse } from '../../interfaces/trainingInterface';
 import { TrainingSearchDialogComponent } from '../../components/training-search-dialog/training-search-dialog.component';
+import { TrainingSearchParams } from '../../interfaces/SearchParamsIntefaces';
 
 @Component({
   selector: 'app-training-list-page',
   standalone: true,
-  imports: [MatProgressSpinnerModule,DefaultBtnComponent,MatIconModule,MatButtonModule, MatDividerModule,TableTrainingsComponent],
+  imports: [MatProgressSpinnerModule,DefaultBtnComponent,DefaultBtnComponent,MatIconModule,MatButtonModule, MatDividerModule,TableTrainingsComponent],
   templateUrl: './training-list-page.component.html',
   styleUrl: './training-list-page.component.css'
 })

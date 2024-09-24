@@ -1,10 +1,13 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { TokenResponse } from '../interfaces/TokenResponseInterface';
+
 import { UserCredential } from '../interfaces/userCredential';
 import { catchError, map, Observable, throwError } from 'rxjs';
 import { AuthException } from '../Errors/AuthError';
 import { environment } from '../../environments/environment.development';
+import { deleteCookie, getCookie } from '../util/cookieFunction';
+import { TokenResponse } from '../interfaces/tokenResponseInterface';
+
 
 
 @Injectable({
@@ -22,48 +25,57 @@ export class AuthService {
 
   signin(userCredential: UserCredential): Observable<boolean> {
     return this.http.post<TokenResponse>(this.baseUrl + '/signin', userCredential, { headers: this.headers }).pipe(
-      map((res: TokenResponse) => {
-        if (res.authenticated) {
-          sessionStorage.setItem('user', JSON.stringify(res));
-          const expirationDate = new Date(res.expiration);
-          document.cookie = `employeeRegistration=${res.employeeRegistration}; expires=${expirationDate.toUTCString()}; path=/; secure; SameSite=Strict;`
-          document.cookie = `accessToken=${res.accessToken}; expires=${expirationDate.toUTCString()}; path=/; secure; SameSite=Strict;`;
-          document.cookie = `refreshToken=${res.refreshToken}; expires=${expirationDate.toUTCString()}; path=/; secure; SameSite=Strict;`;
-
-          return true;
-        } else {
-          throw new AuthException('Authentication failed');
-        }
-      }),
-      catchError((error) => {
-        const errorMessage = error.error?.message || 'An error occurred during authentication';
-        return throwError(() => new AuthException(errorMessage));
-      })
+        map((res: TokenResponse) => {
+            if (res.authenticated && res.roles && res.roles.includes('admin')) {
+                sessionStorage.setItem('user', JSON.stringify(res));
+                const expirationDate = new Date(res.expiration);
+                document.cookie = `employeeRegistration=${res.employeeRegistration}; expires=${expirationDate.toUTCString()}; path=/; secure; SameSite=Strict;`;
+                document.cookie = `accessToken=${res.accessToken}; expires=${expirationDate.toUTCString()}; path=/; secure; SameSite=Strict;`;
+                document.cookie = `refreshToken=${res.refreshToken}; expires=${expirationDate.toUTCString()}; path=/; secure; SameSite=Strict;`;
+                return true;
+            } else {
+                if (!res.authenticated) {
+                    throw new AuthException('Sua conta está desativada!');
+                }
+                if (!res.roles.includes('admin')) {
+                    throw new AuthException('Você não tem permissão de administrador para acessar o painel!');
+                }
+                return false;
+            }
+        }),
+        catchError((error: HttpErrorResponse | AuthException) => {
+            let errorMessage: string;
+            if (error instanceof HttpErrorResponse) {
+                if (error.status === 0) {
+                    errorMessage = 'Servidor está offline. Tente de novo mais tarde!';
+                } else {
+                    errorMessage = error.error?.message || 'Ocorreu um erro inesperado';
+                }
+            } else if (error instanceof AuthException) {
+                errorMessage = error.message;
+            } else {
+                errorMessage = 'Ocorreu um erro inesperado';
+            }
+            return throwError(() => new AuthException(errorMessage));
+        })
     );
-  }
+}
 
   refreshToken(){
-    const employeeRegistration = this.getCookie('employeeRegistration');
-    const refreshToken = this.getCookie('refreshToken');
+    const employeeRegistration = getCookie('employeeRegistration');
+    const refreshToken = getCookie('refreshToken');
   }
 
   logout(){
     sessionStorage.removeItem('user');
-    this.deleteCookie('accessToken');
-    this.deleteCookie('refreshToken');
+    deleteCookie('accessToken');
+    deleteCookie('refreshToken');
   }
 
   authenticated(): boolean {
-    const accessToken = this.getCookie('accessToken');
+    const accessToken = getCookie('accessToken');
     return !!accessToken;
   }
 
-  private getCookie(name: string): string | null {
-    const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
-    return match ? match[2] : null;
-  }
-
-  private deleteCookie(name: string): void {
-    document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; secure; SameSite=Strict;`;
-  }
+ 
 }

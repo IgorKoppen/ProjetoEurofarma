@@ -12,7 +12,7 @@ import { EventEmitter } from 'stream';
 export class DefaultBtnComponent {
   @Input({ required: true }) iconName = ""
   @Input({ required: true }) text = ""
-  @Input({ required: true }) callbackSearchDialog!: () => void;
+  @Input({ required: true }) callback!: () => void;
  
   
 }

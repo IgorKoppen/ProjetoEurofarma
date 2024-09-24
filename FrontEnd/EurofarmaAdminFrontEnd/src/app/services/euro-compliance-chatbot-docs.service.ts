@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { catchError, Observable, throwError } from 'rxjs';
-import { DocumentApiResponse } from '../interfaces/documentInterfaces';
+import { DocumentApiResponse } from '../interfaces/documentInterface';
 import { environment } from '../../environments/environment';
 
 
@@ -36,8 +36,7 @@ export class EuroComplianceChatbotDocsService {
 
     return this.http.post<any>(`${this.apiUrl}/upload_file`, formData, { headers: this.headers }).pipe(
       catchError(error => {
-        console.error('Erro ao fazer upload do arquivo:', error);
-        return throwError(error);
+        return throwError(() => new Error(error));
       })
     );
   }
@@ -45,8 +44,7 @@ export class EuroComplianceChatbotDocsService {
   deleteDoc(docId: string): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/documents/${encodeURIComponent(docId)}`, { headers: this.headersDelete }).pipe(
       catchError(error => {
-        console.error('Erro ao deletar documento:', error);
-        return throwError(error);
+        return throwError(() => new Error(error));
       })
     );
 }

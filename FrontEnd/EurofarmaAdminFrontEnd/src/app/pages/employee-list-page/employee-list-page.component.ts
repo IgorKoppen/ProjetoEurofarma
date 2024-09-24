@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { EmployeeService } from '../../services/employee.service';
+
 import { MatTableDataSource } from '@angular/material/table';
 import { PageEvent } from '@angular/material/paginator';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
@@ -11,11 +11,13 @@ import { MatDialog } from '@angular/material/dialog';
 import { ErrorDialogComponent } from '../../components/error-dialog/error-dialog.component';
 import { DeleteException } from '../../Errors/DeleteError';
 import { EmployeeSearchDialogComponent } from '../../components/employee-search-dialog/employee-search-dialog.component';
-import { EmployeeSearchParams } from '../../interfaces/SearchParamsIntefaces';
+
 import { EmployeePaginationResponse } from '../../interfaces/employeePagination';
 import {MatIconModule} from '@angular/material/icon';
 import {MatDividerModule} from '@angular/material/divider';
 import {MatButtonModule} from '@angular/material/button';
+import { EmployeeSearchParams } from '../../interfaces/SearchParamsIntefaces';
+import { EmployeeService } from '../../services/employee.service';
 
 
 
