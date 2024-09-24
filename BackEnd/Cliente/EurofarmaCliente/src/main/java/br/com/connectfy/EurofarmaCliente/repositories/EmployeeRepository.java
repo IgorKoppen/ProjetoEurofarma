@@ -36,5 +36,4 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long>, JpaSp
 
     boolean existsByEmployeeRegistration(@Param("employeeRegistration") Long employeeRegistration);
 
-
 }

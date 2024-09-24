@@ -7,6 +7,7 @@ import br.com.connectfy.EurofarmaCliente.dtos.employee.EmployeeInsertDTO;
 import br.com.connectfy.EurofarmaCliente.dtos.employee.EmployeeUpdateDTO;
 import br.com.connectfy.EurofarmaCliente.dtos.employee.EmployeeUserProfileInfoDTO;
 import br.com.connectfy.EurofarmaCliente.dtos.training.TrainingDTO;
+import br.com.connectfy.EurofarmaCliente.services.EmployeeInsertService;
 import br.com.connectfy.EurofarmaCliente.services.EmployeeService;
 import br.com.connectfy.EurofarmaCliente.specification.SearchCriteria;
 import io.swagger.v3.oas.annotations.Operation;
@@ -28,8 +29,10 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
@@ -42,6 +45,9 @@ public class EmployeeController {
 
     @Autowired
     private EmployeeService employeeService;
+
+    @Autowired
+    private EmployeeInsertService employeeInsertService;
 
 
     @PreAuthorize("hasAnyAuthority('admin')")
@@ -260,6 +266,23 @@ public class EmployeeController {
         Page<EmployeeInfoDTO> employeeInfoDTOPage =  employeeService.search(params, pageable);
         PagedModel<EntityModel<EmployeeInfoDTO>> pagedModel = assembler.toModel(employeeInfoDTOPage);
         return ResponseEntity.ok(pagedModel);
+    }
+
+    @PreAuthorize("hasAnyAuthority('admin')")
+    @Operation(summary = "Cria todos os funcionarios", description = "Cria todos os funcionarios com base em um arquivo Excel",
+            tags = {"Employee"},
+            responses = {
+                    @ApiResponse(description = "Success", responseCode = "200", content = @Content()),
+                    @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
+                    @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
+                    @ApiResponse(description = "Forbidden", responseCode = "403", content = @Content),
+                    @ApiResponse(description = "Conflict", responseCode = "409", content = @Content),
+                    @ApiResponse(description = "Unprocessable Entity", responseCode = "422", content = @Content)
+
+            })
+    @PostMapping(value = "/createAllEmployees")
+    public ResponseEntity<List<EmployeeInfoDTO>> createAllEmployees(@RequestPart MultipartFile file ) throws IOException {
+        return ResponseEntity.ok(employeeInsertService.readExcelFile(file));
     }
 
 }

@@ -18,7 +18,7 @@ public class Department {
     private String departName;
 
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "department", cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "department", cascade = CascadeType.ALL)
     private Set<Role> roles;
 
     @ManyToMany(mappedBy = "departments", fetch = FetchType.LAZY)
@@ -38,6 +38,10 @@ public class Department {
     public Department(DepartmentDTO departmentDTO) {
         this.id = departmentDTO.getId();
         this.departName = departmentDTO.getDepartName();
+    }
+
+    public Department(String departmentName) {
+        this.departName = departmentName;
     }
 
     public Long getId() {
