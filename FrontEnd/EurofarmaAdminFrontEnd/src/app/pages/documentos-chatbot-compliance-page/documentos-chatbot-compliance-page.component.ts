@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { EuroComplianceChatbotDocsService } from '../../services/euro-compliance-chatbot-docs.service';
-import { DocumentChatbot } from '../../interfaces/documentInterfaces';
+import { DocumentChatbot } from '../../interfaces/documentInterface';
 import { TableDocumentComponent } from '../../components/table-document/table-document.component';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { MatIcon } from '@angular/material/icon';

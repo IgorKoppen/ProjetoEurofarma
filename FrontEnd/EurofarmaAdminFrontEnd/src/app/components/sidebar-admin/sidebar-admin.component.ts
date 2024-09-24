@@ -16,7 +16,7 @@ export class SidebarAdminComponent {
 
   constructor(private authService: AuthService, private router: Router){}
 
-  isOpen:boolean = true;
+  isOpen:boolean = false;
    minimizeOrOpen = () => {
     this.isOpen = !this.isOpen;
   }

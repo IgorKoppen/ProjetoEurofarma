@@ -1,0 +1,6 @@
+<h2 class="title" mat-dialog-title>Lista de presença: {{data.title}}</h2>
+<mat-dialog-content>
+    <app-presence-list 
+    [dataSource]="dataSourceAttendanceList" [filterByEmployeeRegistration]="data.filterByEmployeeRegistration" [isLoadingResults]="loading" [instructors]="dataSourceTrainers"
+   ></app-presence-list>
+</mat-dialog-content>

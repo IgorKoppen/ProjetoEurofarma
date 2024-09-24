@@ -1,0 +1,33 @@
+.form{
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    grid-column-gap: 20px;
+    grid-row-gap: 20px;
+}
+.actionsBox{
+    display: flex !important;
+    justify-content: right !important;
+    padding: 0 10px 10px 0;
+}
+.confirmBtn{
+   
+        padding: 15px;
+        transition: 200ms ease;
+        background: var(--main-color);
+        color: var(--font-color) !important;
+        cursor: pointer;
+    }
+   
+.confirmBtn:hover{
+        transition: 200ms ease;
+        background: var(--accent);
+    }
+    .cancelBtn{
+        padding: 15px;
+        transition: 200ms ease;
+        cursor: pointer;
+    }
+.cancelBtn:hover{
+    color: #c70000;
+}

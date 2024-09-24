@@ -1,0 +1,42 @@
+.topDiv{
+    display: flex;
+    align-items: center;
+    padding: 25px 25px 25px 25px;
+  }
+  .topDiv h1{
+     font-size: 40px;
+     font-family: "Inter", sans-serif;
+     text-wrap: nowrap;
+  }
+  .loading-shade {
+      position: absolute;
+      top: 0;
+      left: 0;
+      bottom: 56px;
+      right: 0;
+      background: rgba(0, 0, 0, 0.15);
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .container {
+      position: relative;
+    }
+    .actionsDiv {
+  
+      width: 100%;
+      display: flex;
+      justify-content: end;
+      gap: 30px;
+      align-items: center;
+    }
+   .btnCleanSearch{
+    transition: 200ms ease;
+    background: #c70000 !important;
+    color: white !important;
+   }
+  .btnCleanSearch:hover{
+    background: #9f0000;
+  
+  }

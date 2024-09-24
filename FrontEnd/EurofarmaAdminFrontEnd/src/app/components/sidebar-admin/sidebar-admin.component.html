@@ -19,7 +19,7 @@
               }
             </li></a
           >
-          <a [class]="isOpen ? 'titleLink' : 'titleLinkMinimized'"  href="#"
+          <a [class]="isOpen ? 'titleLink' : 'titleLinkMinimized'"  [routerLink]="['/admin/funcionarios']"
             ><li class="iconBox">
               <mat-icon [class]="isOpen ?  'sidebarIcon' : 'sidebarIconMinimized'">person</mat-icon>
               @if(isOpen){

@@ -1,0 +1,29 @@
+.title{
+    font-size: 23px;
+    text-align: center;
+}
+.actionsBox{
+    display: flex !important;
+    justify-content: space-evenly !important;
+}
+.cancelBtn{
+    padding: 15px;
+    transition: 200ms ease;
+    background: var(--main-color);
+    color: var(--font-color) !important;
+    cursor: pointer;
+}
+.cancelBtn:hover{
+    transition: 200ms ease;
+    background: var(--accent);
+}
+.deleteBtn{
+    padding: 15px;
+    background: #c70000;
+    color: white !important;
+    cursor: pointer;
+}
+.deleteBtn:hover{
+    background: #9f0000;
+
+}

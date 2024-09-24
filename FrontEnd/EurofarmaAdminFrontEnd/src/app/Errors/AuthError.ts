@@ -1,10 +1,10 @@
 export class AuthException extends Error {
-    public readonly statusCode: number;
+    public readonly status: number;
   
-    constructor(message: string, statusCode: number = 401) {
+    constructor(message: string, status: number = 401) {
       super(message);
       this.name = '';
-      this.statusCode = statusCode;
+      this.status = status;
   
       Object.setPrototypeOf(this, AuthException.prototype);
     }

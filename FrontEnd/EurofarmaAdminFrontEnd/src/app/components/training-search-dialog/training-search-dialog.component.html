@@ -1,0 +1,61 @@
+<h2 class="title" mat-dialog-title>Filtrar Treinamentos</h2>
+<mat-dialog-content>
+  <form [formGroup]="searchForm" class="form" [classList]="getFormClass()">
+    <mat-radio-group formControlName="filterType" color="primary" class="matRadio">
+      <mat-radio-button value="criteria">Buscar</mat-radio-button>
+      <mat-radio-button value="employeeRegistration">Buscar por RE do Funcionário</mat-radio-button>
+      <mat-radio-button value="instructorRegistration">Buscar por RE do Instrutor</mat-radio-button>
+    </mat-radio-group>
+
+    @if(searchForm.get('filterType')?.value === 'criteria'){
+      <mat-form-field appearance="fill">
+        <mat-label>Nome</mat-label>
+        <input matInput formControlName="name" placeholder="Nome" />
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Tag</mat-label>
+        <mat-select formControlName="tagId">
+          @for (tag of tags; track tag.id) {
+          <mat-option [value]="tag.id">{{ tag.name }}</mat-option>
+          } @empty {
+          <mat-option [value]="null">Sem Tag cadastrada</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+  
+      <mat-form-field appearance="fill">
+        <mat-label>Departamento</mat-label>
+        <mat-select formControlName="departmentId">
+          @for (departament of departments; track departament.id) {
+          <mat-option [value]="departament.id">{{ departament.departName }}</mat-option>
+          } @empty {
+          <mat-option [value]="null">Sem departamento cadastrado</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    }
+
+    @if(searchForm.get('filterType')?.value === 'employeeRegistration'){
+      <mat-form-field appearance="fill" class="register">
+        <mat-label>Registro de Funcionário</mat-label>
+        <input matInput type="number" min="0" formControlName="employeeRegistration" placeholder="Registro" />
+      </mat-form-field>
+    }
+
+    @if(searchForm.get('filterType')?.value === 'instructorRegistration') {
+      <mat-form-field appearance="fill"  class="register">
+        <mat-label>Registro do Instrutor</mat-label>
+        <input matInput type="number" min="0" formControlName="instructorRegistration" placeholder="Registro" />
+      </mat-form-field>
+  }
+  </form>
+  <mat-dialog-actions class="actionsBox">
+    <button class="confirmBtn" mat-button [mat-dialog-close]="searchForm.value" cdkFocusInitial>
+      Confirmar
+    </button>
+    <button class="cancelBtn" mat-button mat-dialog-close cdkFocusInitial>
+      Cancelar
+    </button>
+  </mat-dialog-actions>
+</mat-dialog-content>

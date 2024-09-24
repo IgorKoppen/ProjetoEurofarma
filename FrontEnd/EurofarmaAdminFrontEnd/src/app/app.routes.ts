@@ -7,6 +7,7 @@ import { DocumentosChatbotCompliancePageComponent } from './pages/documentos-cha
 import { DocumentosChatbotEuroDataPageComponent } from './pages/documentos-chatbot-euro-data-page/documentos-chatbot-euro-data-page.component';
 import { AuthGuard } from './guards/auth.guards';
 import { NotFoundPageComponent } from './pages/not-found-page/not-found-page.component';
+import { TrainingListPageComponent } from './pages/training-list-page/training-list-page.component';
 
 export const routes: Routes = [
     {path: '', component: LoginPageComponent},
@@ -16,7 +17,8 @@ export const routes: Routes = [
         {path: 'complianceAdicionar',component: AddDocumentoCompliancePageComponent},
         {path: 'eurodataAdicionar',component: AddDocumentoEurofarmaPageComponent},
         {path: 'euroComplianceDocs',component: DocumentosChatbotCompliancePageComponent},
-        {path: 'euroDataDocs',component: DocumentosChatbotEuroDataPageComponent}
+        {path: 'euroDataDocs',component: DocumentosChatbotEuroDataPageComponent},
+        {path: 'treinamentos', component: TrainingListPageComponent}
     ]},
     {path:'**', component: NotFoundPageComponent}
 ];

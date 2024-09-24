@@ -1,0 +1,28 @@
+
+<div class="container">
+   
+    <div class="topDiv">
+      <h1>Treinamentos</h1>
+      <div class="actionsDiv">
+        @if(searchParams != null){
+          <button class="btnCleanSearch" mat-fab aria-label="Limpar pesquisa" (click)="cleanSearch()">
+            <mat-icon>search_off</mat-icon>
+          </button>
+        }
+        <app-default-btn  iconName="search" text="Filtrar" [callback]="openSearchDialog"></app-default-btn>
+        </div>
+   
+  </div>
+  </div>
+  <app-table-trainings 
+  [displayedColumns]="displayedColumns"
+  [totalElements]="totalElements"
+  [pageSize]="pageSize"
+  [pageSizeOptions]="[10,30,50,100]"
+  [dataSource]="dataSource"
+  [currentPage]="currentPage"
+  (pageChange)="onPageChange($event)"
+  (sortChange)="onSortChanged($event)"
+  [isLoading]="isLoadingResults"
+  [employeeRegistrationParamenter]="searchParams?.employeeRegistration"
+  ></app-table-trainings>
