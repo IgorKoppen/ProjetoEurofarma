@@ -68,19 +68,19 @@ export class EmployeeService {
   search(params: EmployeeSearchParams): Observable<EmployeePaginationResponse> {
     let httpParams = new HttpParams();
     
-    if (params.name) httpParams = httpParams.set('name', params.name);
-    if (params.surname) httpParams = httpParams.set('surname', params.surname);
-    if (params.employeeRegistration !== undefined) httpParams = httpParams.set('employeeRegistration', params.employeeRegistration.toString());
-    if (params.enabled !== undefined) httpParams = httpParams.set('enabled', params.enabled.toString());
-    if (params.roleId !== undefined) httpParams = httpParams.set('roleId', params.roleId.toString());
-    if (params.roleName) httpParams = httpParams.set('roleName', params.roleName);
-    if (params.permissionId) httpParams = httpParams.set('permissionId', params.permissionId);
-    if (params.permissionDescription) httpParams = httpParams.set('permissionDescription', params.permissionDescription);
-    if (params.departmentId !== undefined) httpParams = httpParams.set('departmentId', params.departmentId.toString());
-    if (params.departmentName) httpParams = httpParams.set('departmentName', params.departmentName);
-    if (params.page !== undefined) httpParams = httpParams.set('page', params.page.toString());
-    if (params.size !== undefined) httpParams = httpParams.set('size', params.size.toString());
-    if (params.sort) httpParams = httpParams.set('sort', params.sort);
+    if (params.name != null) httpParams = httpParams.set('name', params.name);
+    if (params.surname != null) httpParams = httpParams.set('surname', params.surname);
+    if (params.employeeRegistration != null) httpParams = httpParams.set('employeeRegistration', params.employeeRegistration.toString());
+    if (params.enabled != null) httpParams = httpParams.set('enabled', params.enabled.toString());
+    if (params.roleId != null) httpParams = httpParams.set('roleId', params.roleId.toString());
+    if (params.roleName != null) httpParams = httpParams.set('roleName', params.roleName);
+    if (params.permissionId != null) httpParams = httpParams.set('permissionId', params.permissionId);
+    if (params.permissionDescription != null) httpParams = httpParams.set('permissionDescription', params.permissionDescription);
+    if (params.departmentId != null) httpParams = httpParams.set('departmentId', params.departmentId.toString());
+    if (params.departmentName != null) httpParams = httpParams.set('departmentName', params.departmentName);
+    if (params.page != null) httpParams = httpParams.set('page', params.page.toString());
+    if (params.size != null) httpParams = httpParams.set('size', params.size.toString());
+    if (params.sort != null) httpParams = httpParams.set('sort', params.sort);
 
     return this.http.get<EmployeePaginationResponse>(`${this.baseUrl}/search`, { headers: this.AuthorizationHeader, params: httpParams });
   }

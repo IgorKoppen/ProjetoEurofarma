@@ -34,16 +34,16 @@ export class TrainingService {
   search(params: TrainingSearchParams): Observable<TrainingPaginationResponse> {
     let httpParams = new HttpParams();
 
-    if (params.name) httpParams = httpParams.set('name', params.name);
-    if (params.tagId !== undefined) httpParams = httpParams.set('tagId', params.tagId.toString());
-    if (params.tagName) httpParams = httpParams.set('tagName', params.tagName);
-    if (params.departmentId !== undefined) httpParams = httpParams.set('departmentId', params.departmentId.toString());
-    if (params.departmentName) httpParams = httpParams.set('departmentName', params.departmentName);
-    if (params.instructorRegistration !== undefined) httpParams = httpParams.set('instructorRegistration', params.instructorRegistration.toString());
-    if (params.employeeRegistration !== undefined) httpParams = httpParams.set('employeeRegistration', params.employeeRegistration.toString());
-    if (params.page !== undefined) httpParams = httpParams.set('page', params.page.toString());
-    if (params.size !== undefined) httpParams = httpParams.set('size', params.size.toString());
-    if (params.sort) httpParams = httpParams.set('sort', params.sort);
+    if (params.name != null) httpParams = httpParams.set('name', params.name);
+    if (params.tagId != null) httpParams = httpParams.set('tagId', params.tagId.toString());
+    if (params.tagName != null) httpParams = httpParams.set('tagName', params.tagName);
+    if (params.departmentId != null) httpParams = httpParams.set('departmentId', params.departmentId.toString());
+    if (params.departmentName != null) httpParams = httpParams.set('departmentName', params.departmentName);
+    if (params.instructorRegistration != null) httpParams = httpParams.set('instructorRegistration', params.instructorRegistration.toString());
+    if (params.employeeRegistration != null) httpParams = httpParams.set('employeeRegistration', params.employeeRegistration.toString());
+    if (params.page != null) httpParams = httpParams.set('page', params.page.toString());
+    if (params.size != null) httpParams = httpParams.set('size', params.size.toString());
+    if (params.sort != null) httpParams = httpParams.set('sort', params.sort);
 
     return this.http.get<TrainingPaginationResponse>(`${this.baseUrl}/search`, { headers: this.AuthorizationHeader, params: httpParams });
   }

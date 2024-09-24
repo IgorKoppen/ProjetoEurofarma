@@ -27,7 +27,7 @@ export class LoginPageComponent {
 
   constructor(private authService: AuthService, private router: Router) {
     if(authService.authenticated()){
-      this.router.navigate(['/admin']);
+      this.router.navigate(['/admin/treinamentos']);
     }
   }
 
