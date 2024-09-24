@@ -20,6 +20,7 @@ import br.com.connectfy.EurofarmaCliente.util.RandomStringGenerator;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.*;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -117,6 +118,10 @@ public class EmployeeService implements UserDetailsService {
         Employee employee = employeeRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Nenhum funcionário encontrado com id: " + id));
 
+        if (employee.getPermissions().stream().anyMatch(p -> p.getId() == 1)) {
+            throw new AccessDeniedException("Não é possível modificar um administrador.");
+        }
+
         employee.setName(dto.name());
         employee.setSurname(dto.surname());
 
@@ -177,6 +182,13 @@ public class EmployeeService implements UserDetailsService {
         if (!employeeRepository.existsById(id)) {
             throw new ResourceNotFoundException("Nenhum funcionário encontrado com id: " + id);
         }
+
+        Employee employeeToDelete = employeeRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Nenhum funcionário encontrado com id: " + id));
+        if (employeeToDelete.getPermissions().stream().anyMatch(p -> p.getId() == 1)) {
+            throw new AccessDeniedException("Não é possível excluir um administrador.");
+        }
+
         try {
             employeeRepository.deleteById(id);
         } catch (DataIntegrityViolationException e) {
@@ -214,6 +226,11 @@ public class EmployeeService implements UserDetailsService {
     public void toggleEmployeeStatus(Long id) {
         Employee entity = employeeRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Nenhum funcionário encontrado com id: " + id));
+
+        if (entity.getPermissions().stream().anyMatch(p -> p.getId() == 1)) {
+            throw new AccessDeniedException("Não é possível modificar o status de um administrador.");
+        }
+
         boolean newStatus = !entity.isEnabled();
         employeeRepository.toggleEmployeeStatus(id, newStatus);
     }
