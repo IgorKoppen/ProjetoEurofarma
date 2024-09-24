@@ -1,6 +1,13 @@
 <h2 class="title" mat-dialog-title>Filtrar Funcionários</h2>
 <mat-dialog-content>
-  <form [formGroup]="searchForm" class="form">
+  <form [formGroup]="searchForm"  [classList]="getFormClass()">
+
+    <mat-radio-group formControlName="filterType" color="primary" class="matRadio">
+      <mat-radio-button value="criteria">Buscar</mat-radio-button>
+      <mat-radio-button value="employeeRegistration">Buscar por RE do Funcionário</mat-radio-button>
+    </mat-radio-group>
+
+    @if(searchForm.get('filterType')?.value === 'criteria'){
     <mat-form-field appearance="fill">
       <mat-label>Nome</mat-label>
       <input matInput formControlName="name" placeholder="Nome">
@@ -10,12 +17,6 @@
       <mat-label>Sobrenome</mat-label>
       <input matInput formControlName="surname" placeholder="Sobrenome">
     </mat-form-field>
-  
-    <mat-form-field appearance="fill">
-      <mat-label>Registro de Funcionário</mat-label>
-      <input matInput type="number" min="0" formControlName="employeeRegistration" placeholder="Registro">
-    </mat-form-field>
-  
     <mat-form-field appearance="fill">
       <mat-label>Ativo</mat-label>
       <mat-select formControlName="enabled">
@@ -59,6 +60,12 @@
        
       </mat-select>
     </mat-form-field>
+  } @else{
+    <mat-form-field appearance="fill">
+      <mat-label>Registro de Funcionário</mat-label>
+      <input matInput type="number" min="0" formControlName="employeeRegistration" placeholder="Registro">
+    </mat-form-field>
+  }
   </form>
 
   <mat-dialog-actions class="actionsBox">

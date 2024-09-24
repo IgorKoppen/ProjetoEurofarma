@@ -11,11 +11,12 @@ import { DepartmentService } from '../../services/department.service';
 import { Permission } from '../../interfaces/permissionInterface';
 import { Role } from '../../interfaces/roleInterface';
 import { Department } from '../../interfaces/departmentInterface';
+import { MatRadioModule } from '@angular/material/radio';
 
 @Component({
   selector: 'app-employee-search-dialog',
   standalone: true,
-  imports: [MatButtonModule, MatDialogActions, MatDialogClose, MatDialogTitle, MatDialogContent,MatFormFieldModule,MatInputModule,FormsModule,ReactiveFormsModule,MatSelectModule],
+  imports: [MatButtonModule,MatRadioModule, MatDialogActions, MatDialogClose, MatDialogTitle, MatDialogContent,MatFormFieldModule,MatInputModule,FormsModule,ReactiveFormsModule,MatSelectModule],
   templateUrl: './employee-search-dialog.component.html',
   styleUrl: './employee-search-dialog.component.css'
 })
@@ -32,6 +33,7 @@ export class EmployeeSearchDialogComponent {
     private departmentService: DepartmentService
   ) {
     this.searchForm = this.fb.group({
+      filterType: ['criteria'],
       name: [''],
       surname: [''],
       employeeRegistration: [''],
@@ -63,5 +65,30 @@ private loadDepartments() {
   this.departmentService.findAll().subscribe(data => {
     this.departments = data;
   });
+}
+private resetFormFields() {
+  const filterType = this.searchForm.get('filterType')?.value;
+  const resetFields = {
+      name: null,
+      tagId: null,
+      departmentId: null,
+      employeeRegistration: null,
+      instructorRegistration: null
+  };
+
+  if (filterType === 'employeeRegistration') {
+      resetFields.instructorRegistration = null;
+  } 
+   else{
+    resetFields.departmentId = null;
+    resetFields.name = null;
+    resetFields.tagId = null;
+  }
+
+  this.searchForm.patchValue(resetFields, { emitEvent: false });
+}
+
+getFormClass() {
+  return this.searchForm.get('filterType')?.value !== 'criteria' ? 'formMini' : 'form';
 }
 }

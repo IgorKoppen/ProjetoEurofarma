@@ -92,7 +92,7 @@ export class TableTrainingsComponent {
     const cleanDateString = dateString.split(',')[0];
     const [datePart, timePart] = cleanDateString.split(' ');
     const [day, month, year] = datePart.split('/');
-    const isoString = `${year}-${month}-${day}T${timePart}`;
+    const isoString = `20${year}-${month}-${day}T${timePart}`;
     return new Date(isoString);
   }
 }
