@@ -1,0 +1,22 @@
+
+.mat-icon{
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+   }
+   .btnDeletar{
+    width: 35px;
+    height: 35px;
+   }
+
+@media (max-width: 650px){
+    .mat-icon{
+        font-size: 20px;
+
+       }
+       .btnDeletar{
+        width: 40px;
+        height: 40px;
+       }
+  }

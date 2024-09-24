@@ -1,0 +1,29 @@
+.mat-icon{
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+   }
+.btnDisable{
+    width: 35px;
+    height: 35px;
+   }
+   .mat-icon-button{
+    width: 35px;
+    height: 35px;
+   }
+ 
+@media (max-width: 650px){
+    .mat-icon{
+        font-size: 20px;
+
+       }
+       .btnDisable{
+        width: 40px;
+        height: 40px;
+       }
+       .mat-icon-button{
+        width: 40px;
+        height: 40px;
+       }
+  }

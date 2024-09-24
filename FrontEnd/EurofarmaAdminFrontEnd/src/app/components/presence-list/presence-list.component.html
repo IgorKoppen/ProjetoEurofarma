@@ -1,0 +1,71 @@
+<mat-form-field [className]="filterByEmployeeRegistration != null ? 'disable' : ''">
+  <mat-label>Filtro</mat-label>
+  <input matInput [disabled]="filterByEmployeeRegistration != null" [value]="filterByEmployeeRegistration" (keyup)="applyFilter($event)" placeholder="Exemplo: Registro" #input>
+</mat-form-field>
+
+<div class="mat-elevation-z8">
+  <h3 class="titleTable">Treinadores</h3>
+  <div class="scrollable-container">
+    <table mat-table [dataSource]="instructors" class="mat-elevation-z8">
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef> Nome </th>
+        <td mat-cell *matCellDef="let instructor"> {{instructor.name}} </td>
+      </ng-container>
+      <ng-container matColumnDef="surname">
+        <th mat-header-cell *matHeaderCellDef> Sobrenome </th>
+        <td mat-cell *matCellDef="let instructor"> {{instructor.surname}} </td>
+      </ng-container>
+      <ng-container matColumnDef="employeeRegistration">
+        <th mat-header-cell *matHeaderCellDef> Registro do funcionário </th>
+        <td mat-cell *matCellDef="let instructor"> {{instructor.employeeRegistration}} </td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="displayedColumnsInstructors"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumnsInstructors;"></tr>
+    </table>
+  </div>
+</div>
+
+<div class="mat-elevation-z8">
+  <h3 class="titleTable">Funcionários Presentes</h3>
+  <div class="scrollable-container">
+    <table mat-table [dataSource]="dataSource" matSort>
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> ID </th>
+        <td mat-cell *matCellDef="let row"> {{ row.id }} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Nome </th>
+        <td mat-cell *matCellDef="let row"> {{ row.name }} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="surname">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Sobrenome </th>
+        <td mat-cell *matCellDef="let row"> {{ row.surname }} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="employeeRegistration">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Registro do funcionário </th>
+        <td mat-cell *matCellDef="let row"> {{ row.employeeRegistration }} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="signature">
+        <th mat-header-cell *matHeaderCellDef> Assinatura </th>
+        <td mat-cell *matCellDef="let row"> <img [src]="'data:image/png;base64,' + row.signature" alt="Signature" draggable="false" />
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="registrationDate">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Data de Registro </th>
+        <td mat-cell *matCellDef="let row" class="dateRegister"> {{ row.registrationDate}} </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumnsAttendece"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumnsAttendece;"></tr>
+
+      <tr class="mat-row" *matNoDataRow>
+        <td class="mat-cell" colspan="6">Nenhum funcionário encontrado com: "{{input.value}}"</td>
+      </tr>
+    </table>
+  </div>
+</div>

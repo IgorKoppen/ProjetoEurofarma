@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
-import { DocumentChatbot } from '../../interfaces/documentInterfaces';
+import { DocumentChatbot } from '../../interfaces/documentInterface';
 import { TableDocumentComponent } from '../../components/table-document/table-document.component';
 import { EuroDataChatbotDocsService } from '../../services/euro-data-chatbot-docs.service';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';

@@ -1,0 +1,10 @@
+<h2 class="title" mat-dialog-title>{{data.title}}</h2>
+@if(data.description != null){
+<mat-dialog-content>
+    {{data.description}}
+</mat-dialog-content>
+}
+    <mat-dialog-actions class="actionsBox">
+      <button class="cancelBtn" mat-button mat-dialog-close (click)="onNoClick()" cdkFocusInitial>Cancelar</button>
+      <button class="deleteBtn" mat-button mat-dialog-close (click)="onYesClick()">{{data.confirmText}}</button>
+</mat-dialog-actions>

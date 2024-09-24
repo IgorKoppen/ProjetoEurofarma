@@ -1,0 +1,118 @@
+<div class="tableMain">
+
+    @if (isLoading) {
+      <div class="loading-shade">
+          <mat-spinner></mat-spinner>
+      </div>
+    }
+ 
+    <table class="table" mat-table [dataSource]="dataSource" matSort (matSortChange)="onSortChanged($event)">
+     
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header="id"> ID </th>
+        <td mat-cell *matCellDef="let training"> {{ training.id }} </td>
+      </ng-container>
+ 
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header="name"> Nome </th>
+        <td mat-cell *matCellDef="let training"> {{ training.name }} </td>
+      </ng-container>
+  
+
+      <ng-container matColumnDef="code">
+        <th mat-header-cell *matHeaderCellDef> Código </th>
+        <td mat-cell *matCellDef="let training"> {{ training.code }} </td>
+      </ng-container>
+  
+  
+      <ng-container matColumnDef="description">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header="description"> Descrição </th>
+        <td mat-cell *matCellDef="let training" class="description"> {{ training.description }} </td>
+      </ng-container>
+  
+ 
+      <ng-container matColumnDef="tags">
+        <th mat-header-cell *matHeaderCellDef> Tags </th>
+        <td mat-cell *matCellDef="let training">
+          <div class="ChipBox">
+            @for (tag of training.tags; track $index) {
+                <div class="chip" [style.backgroundColor]="tag.color" [style.color]="tag.color | textColor">
+                    {{ tag.name }}
+                  </div>
+            }
+          </div>
+        </td>
+      </ng-container>
+  
+ 
+      <ng-container matColumnDef="departments">
+        <th mat-header-cell *matHeaderCellDef> Departamentos </th>
+        <td mat-cell *matCellDef="let training">
+          <div class="ChipBox">
+            @for (department of training.departments; track $index) {
+                <div class="chip chipDepartment">
+                    {{ department.departName }}
+                  </div>
+            }
+          </div>
+        </td>
+      </ng-container>
+  
+   
+      <ng-container matColumnDef="opened">
+        <th mat-header-cell *matHeaderCellDef> Aberto </th>
+        <td mat-cell *matCellDef="let training">
+            @if(training.opened){
+                <div  class="chipActive chip">Aberto</div>
+            }@else {
+                <div  class="chipInactive chip">Fechado</div>
+            }  
+        </td>
+      </ng-container>
+  
+      <ng-container matColumnDef="creation_date">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header="creationDate"> Data de Criação </th>
+        <td mat-cell *matCellDef="let training"> {{convertStringToDate(training.creation_date) | date:'dd/MM/yyyy HH:mm:ss'}} </td>
+      </ng-container>
+  
+
+      <ng-container matColumnDef="closing_date">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header="closingDate"> Data de Fechamento </th>
+        <td mat-cell *matCellDef="let training"> {{convertStringToDate(training.closing_date) | date:'dd/MM/yyyy HH:mm:ss' }} </td>
+      </ng-container>
+  
+
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let training">
+          <div class="actionBox">
+    
+           <button mat-flat-button color="primary" class="presencelistBtn" (click)="openListOfPresence(training.name,training.id)">
+            <mat-icon>checklist</mat-icon>
+              Lista de presença
+           </button>
+          </div>
+        </td>
+      </ng-container>
+  
+
+      <tr class="mat-row" *matNoDataRow>
+        <td class="mat-cell" colspan="9">Nenhum dado encontrado</td>
+      </tr>
+  
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+  
+
+    <mat-paginator
+      [length]="totalElements"
+      [pageSize]="pageSize"
+      [pageSizeOptions]="pageSizeOptions"
+      [pageIndex]="currentPage"
+      (page)="onPageChange($event)"
+      aria-label="Selecione página de treinamentos"
+      showFirstLastButtons>
+    </mat-paginator>
+  </div>

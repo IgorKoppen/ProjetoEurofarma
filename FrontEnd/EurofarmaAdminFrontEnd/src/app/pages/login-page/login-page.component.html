@@ -8,7 +8,7 @@
       />
     </div>
     <h1 class="title">Admin</h1>
-    <form class="formLogin" [formGroup]="loginForm" (submit)="login($event)">
+    <form class="formLogin" [formGroup]="loginForm" (submit)="login($event)" >
       <div class="example-container" >
         <mat-form-field appearance="outline"  class="matInput">
           <mat-icon matIconPrefix class="icons">person</mat-icon>
@@ -24,6 +24,7 @@
           <mat-icon matIconPrefix class="icons">lock</mat-icon>
           <input matInput formControlName="password" autocomplete="password" [type]="hide() ? 'password' : 'text'"  placeholder="Senha" class="inputLogin"/>
           <button
+            type="button"
             mat-icon-button
             matSuffix
             (click)="clickEvent($event)"
@@ -43,10 +44,19 @@
       @if(errorMenssage != ""){ 
           <span class="erroMessage">{{errorMenssage}}</span>
       }
+      </div> 
+      <button type="submit"  class="btnLogin"  [disabled]="loginForm.get('userName')?.hasError('required') 
+      || loginForm.get('password')?.hasError('required') || isLoading == true
+      ? true : false" >
+     @if(isLoading){
+      <div class="spinner">
+        <mat-spinner diameter="35" color="accent A500"></mat-spinner>
       </div>
-      <input type="submit" class="btnLogin" value="Login" [disabled]="loginForm.get('userName')?.hasError('required') 
-      || loginForm.get('password')?.hasError('required') 
-      ? true : false" />
+     
+      } @else {
+       Login
+      }
+    </button>
     </form>
   </div>
 </main>
