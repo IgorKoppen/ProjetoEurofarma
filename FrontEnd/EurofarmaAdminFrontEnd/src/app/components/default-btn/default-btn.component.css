@@ -24,3 +24,14 @@
     border: #000000 solid 4px;
     color: #000000;
   }
+  @media screen and (max-width: 1200px) {
+    .btn{
+        font-size: calc(23px * 0.7);
+        padding: 10px 15px 10px 15px;
+        gap: 5px;
+        border: #284678 solid 2px;
+       }
+       .mat-icon{
+        font-size: 20px;
+      }
+  }

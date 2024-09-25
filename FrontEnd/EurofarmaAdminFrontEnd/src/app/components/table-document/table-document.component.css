@@ -6,6 +6,11 @@
   }
   .tableMain {
     padding: 0 20px 0 20px;
+    overflow-x: auto;
+  }
+  .table{
+    width: 100%;
+    min-width: 1200px;
   }
   th {
     font-size: 17px;
@@ -71,4 +76,20 @@
   display: flex;
   align-items: center;
   justify-content: center;
+}
+@media screen and (max-width: 1550px) {
+  th {
+    font-size: calc(17px * 0.8);
+  }
+  
+  td {
+    font-size: calc(15px * 0.8);
+  }
+  .tableMain {
+    padding: 0 5px 0 5px;
+  }
+  .mdc-data-table__cell,
+  .mdc-data-table__header-cell {
+    padding: 0 1px 0 1px !important;
+  }
 }

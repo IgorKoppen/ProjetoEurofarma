@@ -35,7 +35,6 @@ export class DocumentosChatbotEuroDataPageComponent {
         this.isLoading = false;
       },
       error: (error) => {
-        console.error('Failed to load documents:', error);
         this.isLoading = false;
       }
     });
@@ -45,7 +44,7 @@ export class DocumentosChatbotEuroDataPageComponent {
     this.loadDocuments();
   }
 
-
+  
   deleteDoc = (id: string): void => {
     this.euroDataService.deleteDoc(id).subscribe({
       next: () => {

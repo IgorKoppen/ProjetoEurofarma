@@ -2,10 +2,10 @@ import { Permission } from "./permissionInterface";
 import { Role } from "./roleInterface";
 
  interface Employee {
-    id: number;
+    id?: number;
     name: string;
     surname: string;
-    enabled: boolean;
+    enabled?: boolean;
     role: Role;
     instructorId?: number; 
     permission: Permission[];
@@ -13,6 +13,7 @@ import { Role } from "./roleInterface";
     employee_registration: number;
     cellphone_number: string;
   }
+
 interface EmployeeUpdate {
   name: string;
     surname: string;
