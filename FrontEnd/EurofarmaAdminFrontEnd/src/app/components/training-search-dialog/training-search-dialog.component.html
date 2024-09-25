@@ -39,14 +39,14 @@
     @if(searchForm.get('filterType')?.value === 'employeeRegistration'){
       <mat-form-field appearance="fill" class="register">
         <mat-label>Registro de Funcionário</mat-label>
-        <input matInput type="number" min="0" formControlName="employeeRegistration" placeholder="Registro" />
+        <input matInput type="number" min="0" max="5" formControlName="employeeRegistration" placeholder="Registro" />
       </mat-form-field>
     }
 
     @if(searchForm.get('filterType')?.value === 'instructorRegistration') {
       <mat-form-field appearance="fill"  class="register">
         <mat-label>Registro do Instrutor</mat-label>
-        <input matInput type="number" min="0" formControlName="instructorRegistration" placeholder="Registro" />
+        <input matInput type="number" min="0" max="5" formControlName="instructorRegistration" placeholder="Registro" />
       </mat-form-field>
   }
   </form>
