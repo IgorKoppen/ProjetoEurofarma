@@ -2,6 +2,7 @@ package br.com.connectfy.EurofarmaCliente.dtos.security;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.time.Instant;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -16,8 +17,8 @@ public class TokenVO implements Serializable {
     private String name;
     private List<String> roles;
     private Boolean authenticated;
-    private Date created;
-    private Date expiration;
+    private Instant created;
+    private Instant expiration;
     private String accessToken;
     private String refreshToken;
     private Long instructorId;
@@ -25,7 +26,7 @@ public class TokenVO implements Serializable {
     public TokenVO() {
     }
 
-    public TokenVO(Long id, String employeeRegistration, String name, List<String> roles, Boolean authenticated, Date created, Date expiration, String accessToken, String refreshToken, Long instructorId) {
+    public TokenVO(Long id, String employeeRegistration, String name, List<String> roles, Boolean authenticated, Instant created, Instant expiration, String accessToken, String refreshToken, Long instructorId) {
         this.id = id;
         this.employeeRegistration = employeeRegistration;
         this.name = name;
@@ -60,19 +61,19 @@ public class TokenVO implements Serializable {
         this.authenticated = authenticated;
     }
 
-    public Date getCreated() {
+    public Instant getCreated() {
         return created;
     }
 
-    public void setCreated(Date created) {
+    public void setCreated(Instant created) {
         this.created = created;
     }
 
-    public Date getExpiration() {
+    public Instant getExpiration() {
         return expiration;
     }
 
-    public void setExpiration(Date expiration) {
+    public void setExpiration(Instant expiration) {
         this.expiration = expiration;
     }
 

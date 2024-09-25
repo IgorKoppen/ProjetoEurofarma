@@ -18,6 +18,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Date;
@@ -45,9 +46,11 @@ public class JwtTokenProvider {
     }
 
     public TokenVO createToken(Long id, String username, String name, List<String> roles, Long instructorId) {
-        Date now = new Date();
-        Date expiration = new Date(now.getTime() + validityInMilliseconds);
-        String accessToken = getAccessToken(username, roles, now, expiration);
+        Instant now = Instant.now();
+        Instant expiration = now.plusMillis(validityInMilliseconds);
+        Date expirationDate = Date.from(expiration);
+        Date nowDate = Date.from(now);
+        String accessToken = getAccessToken(username, roles, now, expirationDate);
         String refreshToken = getRefreshToken(username, roles, now);
         return new TokenVO(id,username, name,roles, true, now, expiration, accessToken, refreshToken, instructorId);
     }
@@ -66,7 +69,7 @@ public class JwtTokenProvider {
         return createToken(id,username, name, roles, instructorId);
     }
 
-    private String getAccessToken(String username, List<String> roles, Date now, Date expiration) {
+    private String getAccessToken(String username, List<String> roles, Instant now, Date expiration) {
         String issueUrl = ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();
         return JWT.create()
                 .withClaim("roles", roles)
@@ -77,8 +80,8 @@ public class JwtTokenProvider {
                 .sign(algorithm);
     }
 
-    private String getRefreshToken(String username, List<String> roles, Date now) {
-        Date validityRefreshToken = new Date(now.getTime() + validityInMilliseconds * 3);
+    private String getRefreshToken(String username, List<String> roles, Instant now) {
+        Instant validityRefreshToken =  now.plusMillis (validityInMilliseconds * 3);
         String issueUrl = ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();
         return JWT.create()
                 .withClaim("roles", roles)
