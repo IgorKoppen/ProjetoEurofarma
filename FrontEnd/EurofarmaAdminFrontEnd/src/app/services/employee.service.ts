@@ -36,6 +36,15 @@ export class EmployeeService {
       headers: this.AuthorizationHeader
     })}
 
+    bulkInsertWithExcel(file: File): Observable<any> {
+      const formData: FormData = new FormData();
+      formData.append('file', file); 
+      return this.http.post(`${this.baseUrl}/createAllEmployees`, formData, {
+        headers: this.AuthorizationHeader
+      });
+    }
+    
+
     update(employeeId: number, employeeUpdateData: EmployeeUpdate): Observable<Employee> {
       const employeeData = {
         name: employeeUpdateData.name,

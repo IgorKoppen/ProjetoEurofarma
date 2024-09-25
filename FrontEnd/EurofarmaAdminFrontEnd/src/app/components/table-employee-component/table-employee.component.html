@@ -1,6 +1,13 @@
 
 
 <div class="tableMain">
+
+  @if (isLoading) {
+    <div class="loading-shade">
+        <mat-spinner></mat-spinner>
+    </div>
+  }
+
   <table class="table" mat-table [dataSource]="dataSource" matSort (matSortChange)="onSortChanged($event)">
     <ng-container matColumnDef="id">
       <th mat-header-cell *matHeaderCellDef mat-sort-header="id" > ID </th>

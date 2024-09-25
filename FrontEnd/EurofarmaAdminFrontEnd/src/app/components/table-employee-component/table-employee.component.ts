@@ -10,12 +10,13 @@ import { PhoneMaskPipe } from '../../pipe/phone-mask.pipe';
 import { EditBtnComponent } from '../edit-btn/edit-btn.component';
 import { DeleteBtnComponent } from '../delete-btn/delete-btn.component';
 import { DisableEmployeeBtnComponent } from '../disable-employee-btn/disable-employee-btn.component';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
 
 
 @Component({
   selector: 'app-table-employee-component',
   standalone: true,
-  imports: [MatFormFieldModule,DisableEmployeeBtnComponent,MatIconModule, MatInputModule, MatTableModule, MatSortModule, MatPaginatorModule,PhoneMaskPipe,EditBtnComponent,DeleteBtnComponent],
+  imports: [MatFormFieldModule,DisableEmployeeBtnComponent,MatProgressSpinner,MatIconModule, MatInputModule, MatTableModule, MatSortModule, MatPaginatorModule,PhoneMaskPipe,EditBtnComponent,DeleteBtnComponent],
   templateUrl: './table-employee.component.html',
   styleUrl: './table-employee.component.css'
 })
@@ -27,6 +28,7 @@ export class TableEmployeeComponent {
   @Input({ required: true }) pageSize!: number;
   @Input({ required: true }) dataSource!: MatTableDataSource<any>;
   @Input({ required: true }) currentPage!: number;
+  @Input({ required: true }) isLoading!: boolean;
   @Input({ required: true }) callbackDelete!: (id:number) => void;
   @Input({ required: true }) callbackDisable!: (id:number) => void;
 

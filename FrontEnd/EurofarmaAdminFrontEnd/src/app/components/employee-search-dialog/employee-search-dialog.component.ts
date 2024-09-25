@@ -47,6 +47,12 @@ ngOnInit() {
   this.loadPermissions();
   this.loadRoles();
   this.loadDepartments();
+  const filterTypeControl = this.searchForm.get('filterType');
+  if (filterTypeControl) {
+    filterTypeControl.valueChanges.subscribe(() => {
+      this.resetFormFields();
+    });
+  }
 }
 
 private loadPermissions() {

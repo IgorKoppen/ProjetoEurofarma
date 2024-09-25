@@ -2,6 +2,7 @@
 
 .tableMain {
   padding: 0 20px 0 20px;
+  overflow-x: auto;
 }
 th {
   font-size: 16px;
@@ -20,6 +21,7 @@ th {
 }
 .table {
   width: 100%;
+  min-width: 1200px;
 }
 .filter {
   width: 15%;
@@ -31,6 +33,7 @@ th {
   text-align: center;
   font-size: 14px;
   font-weight: 600;
+  text-wrap: nowrap;
 }
 .ativo {
   color: #0a580e;
@@ -42,12 +45,29 @@ th {
 .desativo {
   color: #331212;
   background: #b00b1e;
+  
 }
-.ChipBox{
+
+.loading-shade {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.15);
+  z-index: 1;
   display: flex;
-  gap: 5px;
+  align-items: center;
+  justify-content: center;
+}
+
+.ChipBox{
+  display: grid;
+  grid-template-columns: repeat(3,0.7fr);
+  column-gap: 5px;
+  row-gap: 10px;
   margin: 5px 0 5px 0;
-  padding: 0 5px 0 5px;
+  padding: 5px;
   flex-wrap: wrap;
 }
 .chipEmployee{
@@ -71,7 +91,7 @@ th {
   align-items: center;
   justify-content: center;
 }
-@media screen and (max-width: 1450px) {
+@media screen and (max-width: 1200px) {
   th {
     font-size: calc(17px * 0.80); 
   }

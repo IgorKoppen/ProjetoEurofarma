@@ -1,0 +1,75 @@
+<h2 class="title" mat-dialog-title>Novo Funcionário</h2>
+<mat-dialog-content>
+    <form [formGroup]="insertForm"  class="form">
+  
+      <mat-radio-group formControlName="filterType" color="primary" class="matRadio ">
+        <mat-radio-button value="criteria">Buscar</mat-radio-button>
+        <mat-radio-button value="employeeRegistration">Buscar por RE do Funcionário</mat-radio-button>
+      </mat-radio-group>
+  
+      <mat-form-field appearance="fill">
+        <mat-label>Nome</mat-label>
+        <input matInput formControlName="name" placeholder="Nome">
+      </mat-form-field>
+      
+      <mat-form-field appearance="fill">
+        <mat-label>Sobrenome</mat-label>
+        <input matInput formControlName="surname" placeholder="Sobrenome">
+      </mat-form-field>
+   
+      <mat-form-field appearance="fill">
+        <mat-label>Departamento</mat-label>
+        <mat-select formControlName="departmentId" multiple>
+          @for (department of departments; track department.id) {
+            <mat-option [value]="department.id">{{ department.departName}}</mat-option>
+          } @empty {
+            <mat-option [value]="null">Sem departamento cadastrado</mat-option>
+          }
+         
+        </mat-select>
+      </mat-form-field>
+    
+      <mat-form-field appearance="fill">
+        <mat-label>Cargo</mat-label>
+        <mat-select formControlName="roleId">
+          @for (role of roles; track role.id) {
+            <mat-option [value]="role.id">{{ role.roleName }}</mat-option>
+          } @empty {
+            <mat-option [value]="null">Sem Cargo cadastrado</mat-option>
+          }
+        
+        </mat-select>
+      </mat-form-field>
+    
+      <mat-form-field appearance="fill">
+        <mat-label>Permissão</mat-label>
+        <mat-select formControlName="permissionId">
+          @for (permission of permissions; track permission.id) {
+            <mat-option [value]="permission.id">{{ permission.description }}</mat-option>
+          } @empty {
+            <mat-option [value]="null">Sem Permissão cadastrada</mat-option>
+          }
+      
+        </mat-select>
+      </mat-form-field>
+    
+      <mat-form-field appearance="fill">
+        <mat-label>Registro de Funcionário</mat-label>
+        <input matInput type="number" min="0" max="5" formControlName="employeeRegistration" placeholder="Registro">
+      </mat-form-field>
+   
+      <mat-form-field appearance="fill" >
+        <mat-label>Registro de Funcionário</mat-label>
+        <input matInput type="number" min="0" max="5" formControlName="employeeRegistration" placeholder="Registro">
+      </mat-form-field>
+    
+      <mat-form-field appearance="fill">
+        <mat-label>Número de Celular</mat-label>
+        <input matInput formControlName="cellphoneNumber" placeholder="Número de Celular" type="tel">
+      </mat-form-field>
+      
+      <mat-dialog-actions class="actionsBox">
+        <button class="confirmBtn" mat-button cdkFocusInitial>Confirmar</button>
+        <button class="cancelBtn" mat-button mat-dialog-close cdkFocusInitial>Cancelar</button>
+      </mat-dialog-actions>
+    </form>

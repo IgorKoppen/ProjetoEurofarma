@@ -8,12 +8,13 @@ import { MatIconModule } from '@angular/material/icon';
 import { DocumentChatbot } from '../../interfaces/documentInterface';
 import { DatePipe } from '@angular/common';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { DeleteBtnComponent } from '../delete-btn/delete-btn.component';
 
 
 @Component({
   selector: 'app-table-document',
   standalone: true,
-  imports: [MatFormFieldModule,MatIconModule, MatInputModule, MatTableModule, MatSortModule, MatPaginatorModule,DatePipe,MatProgressSpinner],
+  imports: [MatFormFieldModule,MatIconModule, MatInputModule,DeleteBtnComponent, MatTableModule, MatSortModule, MatPaginatorModule,DatePipe,MatProgressSpinner],
   templateUrl: './table-document.component.html',
   styleUrl: './table-document.component.css'
 })
