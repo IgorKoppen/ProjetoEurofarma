@@ -10,7 +10,7 @@ import { Department } from '../../interfaces/departmentInterface';
 
 import { Tag } from '../../interfaces/trainingInterface';
 import { MatRadioModule } from '@angular/material/radio';
-import { TagService } from '../../services/tag-service';
+import { TagService } from '../../services/tag.service';
 
 @Component({
   selector: 'app-training-search-dialog',
