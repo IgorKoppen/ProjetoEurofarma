@@ -1,5 +1,7 @@
 package br.com.connectfy.EurofarmaCliente.services;
 import br.com.connectfy.EurofarmaCliente.dtos.department.DepartmentDTO;
+import br.com.connectfy.EurofarmaCliente.dtos.department.DepartmentInfoDTO;
+import br.com.connectfy.EurofarmaCliente.dtos.role.RoleInfoDTO;
 import br.com.connectfy.EurofarmaCliente.exceptions.DatabaseException;
 import br.com.connectfy.EurofarmaCliente.exceptions.ResourceNotFoundException;
 import br.com.connectfy.EurofarmaCliente.models.Department;
@@ -36,9 +38,9 @@ public class DepartmentService {
     }
 
     @Transactional(readOnly = true)
-    public List<DepartmentDTO> findAll() {
+    public List<DepartmentInfoDTO> findAll() {
         return departmentRepository.findAll().stream()
-                .map(this::toDTO)
+                .map(this::toInfoDTO)
                 .collect(Collectors.toList());
     }
 
@@ -77,6 +79,19 @@ public class DepartmentService {
 
     private DepartmentDTO toDTO(Department department) {
         return new DepartmentDTO(department);
+    }
+
+    private DepartmentInfoDTO toInfoDTO(Department department) {
+        List<RoleInfoDTO> roleInfoDTOs = department.getRoles().stream()
+                .map(role -> new RoleInfoDTO(role.getId(), role.getRoleName()))
+                .collect(Collectors.toList());
+
+        DepartmentInfoDTO dto = new DepartmentInfoDTO();
+        dto.setId(department.getId());
+        dto.setDepartName(department.getDepartName());
+        dto.setRoles(roleInfoDTOs);
+
+        return dto;
     }
 
 }

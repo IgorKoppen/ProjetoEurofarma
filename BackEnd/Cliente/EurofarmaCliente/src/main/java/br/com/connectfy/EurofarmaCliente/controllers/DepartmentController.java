@@ -1,6 +1,7 @@
 package br.com.connectfy.EurofarmaCliente.controllers;
 
 import br.com.connectfy.EurofarmaCliente.dtos.department.DepartmentDTO;
+import br.com.connectfy.EurofarmaCliente.dtos.department.DepartmentInfoDTO;
 import br.com.connectfy.EurofarmaCliente.services.DepartmentService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -53,8 +54,8 @@ public class DepartmentController {
                     @ApiResponse(description = "Forbidden", responseCode = "403", content = @Content)
             })
     @GetMapping(produces = "application/json")
-    public ResponseEntity<List<DepartmentDTO>> findAll() {
-        List<DepartmentDTO> departmentDTOS = departmentService.findAll();
+    public ResponseEntity<List<DepartmentInfoDTO>> findAll() {
+        List<DepartmentInfoDTO> departmentDTOS = departmentService.findAll();
         return ResponseEntity.ok(departmentDTOS);
     }
 
