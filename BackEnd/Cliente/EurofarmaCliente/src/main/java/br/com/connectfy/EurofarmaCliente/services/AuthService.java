@@ -27,7 +27,7 @@ public class AuthService {
 
     public TokenVO signIn(AccountCredentialsVO data) {
         try {
-            Long employeeRegistration = Long.parseLong(data.getUserName());
+            Long employeeRegistration = data.getUserName();
             String password = data.getPassword();
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(employeeRegistration, password));
             EmployeeInfoDTO user = employeeService.findByEmployeeRegistration(employeeRegistration);

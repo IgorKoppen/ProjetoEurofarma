@@ -1,6 +1,7 @@
 package br.com.connectfy.EurofarmaCliente.dtos.security;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -11,22 +12,22 @@ public class AccountCredentialsVO implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
-    @NotBlank(message = "O campo 'username' é obrigatório. Por favor, informe um nome de usuário válido.")
-    private String userName;
+    @NotNull(message = "O campo 'username' é obrigatório. Por favor, informe um nome de usuário válido.")
+    private Long userName;
     @NotBlank(message = "O campo 'senha' é obrigatório. Por favor, insira uma senha válida.")
     private String password;
 
 
-    public AccountCredentialsVO(String userName, String password) {
+    public AccountCredentialsVO(Long userName, String password) {
         this.userName = userName;
         this.password = password;
     }
 
-    public String getUserName() {
+    public Long getUserName() {
         return userName;
     }
 
-    public void setUserName(String userName) {
+    public void setUserName(Long userName) {
         this.userName = userName;
     }
 
