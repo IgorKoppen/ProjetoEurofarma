@@ -1,8 +1,8 @@
 <h2 class="title" mat-dialog-title>Filtrar Funcionários</h2>
 <mat-dialog-content>
-  <form [formGroup]="searchForm"  [classList]="getFormClass()">
+  <form [formGroup]="searchForm"  class="form" [classList]="getFormClass()">
 
-    <mat-radio-group formControlName="filterType" color="primary" class="matRadio">
+    <mat-radio-group formControlName="filterType" color="primary" class="matRadio ">
       <mat-radio-button value="criteria">Buscar</mat-radio-button>
       <mat-radio-button value="employeeRegistration">Buscar por RE do Funcionário</mat-radio-button>
     </mat-radio-group>
@@ -61,7 +61,7 @@
       </mat-select>
     </mat-form-field>
   } @else{
-    <mat-form-field appearance="fill">
+    <mat-form-field appearance="fill" class="register">
       <mat-label>Registro de Funcionário</mat-label>
       <input matInput type="number" min="0" formControlName="employeeRegistration" placeholder="Registro">
     </mat-form-field>

@@ -18,6 +18,11 @@
              Digite o seu RE
             </mat-error>
           }
+          @if(loginForm.get('userName')?.hasError('pattern')){
+            <mat-error>
+             Só digitos númericos
+            </mat-error>
+          }
         
         </mat-form-field>
         <mat-form-field appearance="outline" class="matInput">

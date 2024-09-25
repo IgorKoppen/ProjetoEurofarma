@@ -21,7 +21,7 @@ export class LoginPageComponent {
   errorMenssage = "";
   isLoading = false;
   loginForm : FormGroup = new FormGroup({
-    userName: new FormControl("",[Validators.required]),
+    userName: new FormControl("",[Validators.required, Validators.pattern("^[0-9]*$")]),
     password: new FormControl("",[Validators.required])
   })
 
@@ -50,7 +50,7 @@ export class LoginPageComponent {
     this.authService.signin(userCredential).subscribe({
       next: (isAuthenticated) => {
         if (isAuthenticated) {
-          this.router.navigate(['/admin']);
+          this.router.navigate(['/admin/treinamentos']);
           this.isLoading = false;
         }
       },

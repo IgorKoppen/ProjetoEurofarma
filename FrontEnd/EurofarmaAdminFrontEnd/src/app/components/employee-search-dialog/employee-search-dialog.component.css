@@ -11,6 +11,15 @@
     grid-template-rows: repeat(2, 1fr);
     grid-row-gap: 5px;
 }
+.matRadio {
+    grid-column: 1 / span 2; 
+    text-align: center;
+}
+.register{
+    grid-column: 1 / span 2;  
+    grid-row: 2;  
+}
+
 .actionsBox{
     display: flex !important;
     justify-content: right !important;

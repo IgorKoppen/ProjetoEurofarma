@@ -9,7 +9,7 @@ import { Tag } from '../interfaces/trainingInterface';
   providedIn: 'root'
 })
 export class TagService {
-  private baseUrl = `${environment.backEndApiBase.url}/eurofarma/tags`
+  private baseUrl = `${environment.backEndApiBase.url}/eurofarma/tag`
   private accessToken = getCookie('accessToken') || ""
   private AuthorizationHeader = new HttpHeaders({
     'Accept': 'application/json',

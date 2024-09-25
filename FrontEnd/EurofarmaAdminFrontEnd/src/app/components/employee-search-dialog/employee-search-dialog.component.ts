@@ -34,13 +34,13 @@ export class EmployeeSearchDialogComponent {
   ) {
     this.searchForm = this.fb.group({
       filterType: ['criteria'],
-      name: [''],
-      surname: [''],
-      employeeRegistration: [''],
-      enabled: [''],
-      roleId: [''],
-      permissionId: [''],
-      departmentId: ['']
+      name: [null],
+      surname: [null],
+      employeeRegistration: [null],
+      enabled: [null],
+      roleId: [null],
+      permissionId: [null],
+      departmentId: [null]
     });
   }
 ngOnInit() {
