@@ -12,6 +12,7 @@ import br.com.connectfy.EurofarmaCliente.repositories.EmployeeRepository;
 import br.com.connectfy.EurofarmaCliente.repositories.RoleRepository;
 import br.com.connectfy.EurofarmaCliente.util.EncryptedPassword;
 import br.com.connectfy.EurofarmaCliente.util.RandomStringGenerator;
+import jakarta.validation.Valid;
 import org.apache.poi.EncryptedDocumentException;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.util.IOUtils;
@@ -153,6 +154,9 @@ public class EmployeeInsertService {
             Long employeeRegistration = getNumericCellValue(row, 0, "RE nulo ou não numérico");
             if (employeeRepository.existsByEmployeeRegistration(employeeRegistration)) {
                 throw new AlreadyExistException("O registro de funcionário " + employeeRegistration + " já existe.");
+            }
+            if(employeeRegistration > 99999 || employeeRegistration < 0){
+                throw new InvalidDataException("RE já existente");
             }
             employee.setEmployeeRegistration(employeeRegistration);
 
