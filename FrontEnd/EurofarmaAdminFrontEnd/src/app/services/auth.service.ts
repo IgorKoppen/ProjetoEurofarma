@@ -6,7 +6,8 @@ import { catchError, map, Observable, throwError } from 'rxjs';
 import { AuthException } from '../Errors/AuthError';
 import { environment } from '../../environments/environment.development';
 import { deleteCookie, getCookie } from '../util/cookieFunction';
-import { TokenResponse } from '../interfaces/tokenResponseInterface';
+import { TokenResponse } from '../interfaces/TokenResponseInterface';
+
 
 
 
@@ -28,7 +29,7 @@ export class AuthService {
         map((res: TokenResponse) => {
             if (res.authenticated && res.roles && res.roles.includes('admin')) {
                 sessionStorage.setItem('user', JSON.stringify(res));
-                const expirationDate = new Date(res.expiration);
+                const expirationDate = new Date(res.expiration * 1000);
                 document.cookie = `employeeRegistration=${res.employeeRegistration}; expires=${expirationDate.toUTCString()}; path=/; secure; SameSite=Strict;`;
                 document.cookie = `accessToken=${res.accessToken}; expires=${expirationDate.toUTCString()}; path=/; secure; SameSite=Strict;`;
                 document.cookie = `refreshToken=${res.refreshToken}; expires=${expirationDate.toUTCString()}; path=/; secure; SameSite=Strict;`;

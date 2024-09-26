@@ -5,7 +5,7 @@ import { getCookie } from '../util/cookieFunction';
 import { Observable } from 'rxjs';
 import { EmployeePaginationResponse } from '../interfaces/employeePagination';
 import { EmployeeSearchParams } from '../interfaces/SearchParamsIntefaces';
-import { Employee, EmployeeUpdate } from '../interfaces/employeeInterface';
+import { Employee, EmployeeInsert, EmployeeUpdate } from '../interfaces/employeeInterface';
 import { Permission } from '../interfaces/permissionInterface';
 
 @Injectable({
@@ -22,28 +22,23 @@ export class EmployeeService {
 
   constructor(private http: HttpClient){}
 
-  insert(employee: Employee): Observable<Employee> {
-    const employeeData = {
-      employee_registration: employee.employee_registration,
-      name: employee.name,
-      surname: employee.surname,
-      cellphone_number: employee.cellphone_number,
-      role: { id: employee.role.id },
-      permission: employee.permission.map((permission: Permission) => { permission.id })
-    };
-
-    return this.http.post<Employee>(`${this.baseUrl}`, employeeData, {
+  insert(employee: EmployeeInsert): Observable<Employee> {
+    return this.http.post<Employee>(`${this.baseUrl}`, employee, {
       headers: this.AuthorizationHeader
     })}
 
     bulkInsertWithExcel(file: File): Observable<any> {
       const formData: FormData = new FormData();
       formData.append('file', file); 
+      const headers = new HttpHeaders({
+        'Authorization': `Bearer ${this.accessToken}`,
+
+      });
+
       return this.http.post(`${this.baseUrl}/createAllEmployees`, formData, {
-        headers: this.AuthorizationHeader
+        headers: headers
       });
     }
-    
 
     update(employeeId: number, employeeUpdateData: EmployeeUpdate): Observable<Employee> {
       const employeeData = {

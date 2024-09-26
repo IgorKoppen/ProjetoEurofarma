@@ -1,75 +1,141 @@
 <h2 class="title" mat-dialog-title>Novo Funcionário</h2>
 <mat-dialog-content>
-    <form [formGroup]="insertForm"  class="form">
+    <form [formGroup]="insertTypeForm" class="selectTypeInsertForm">
   
-      <mat-radio-group formControlName="filterType" color="primary" class="matRadio ">
-        <mat-radio-button value="criteria">Buscar</mat-radio-button>
-        <mat-radio-button value="employeeRegistration">Buscar por RE do Funcionário</mat-radio-button>
+      <mat-radio-group formControlName="insertType" color="primary" class="matRadio">
+        <mat-radio-button value="insert">Um</mat-radio-button>
+        <mat-radio-button value="bulkInsertWithExcel">Em massa</mat-radio-button>
       </mat-radio-group>
-  
-      <mat-form-field appearance="fill">
-        <mat-label>Nome</mat-label>
-        <input matInput formControlName="name" placeholder="Nome">
-      </mat-form-field>
-      
-      <mat-form-field appearance="fill">
-        <mat-label>Sobrenome</mat-label>
-        <input matInput formControlName="surname" placeholder="Sobrenome">
-      </mat-form-field>
-   
-      <mat-form-field appearance="fill">
-        <mat-label>Departamento</mat-label>
-        <mat-select formControlName="departmentId" multiple>
-          @for (department of departments; track department.id) {
-            <mat-option [value]="department.id">{{ department.departName}}</mat-option>
-          } @empty {
-            <mat-option [value]="null">Sem departamento cadastrado</mat-option>
-          }
-         
-        </mat-select>
-      </mat-form-field>
-    
-      <mat-form-field appearance="fill">
-        <mat-label>Cargo</mat-label>
-        <mat-select formControlName="roleId">
-          @for (role of roles; track role.id) {
-            <mat-option [value]="role.id">{{ role.roleName }}</mat-option>
-          } @empty {
-            <mat-option [value]="null">Sem Cargo cadastrado</mat-option>
-          }
-        
-        </mat-select>
-      </mat-form-field>
-    
-      <mat-form-field appearance="fill">
-        <mat-label>Permissão</mat-label>
-        <mat-select formControlName="permissionId">
-          @for (permission of permissions; track permission.id) {
-            <mat-option [value]="permission.id">{{ permission.description }}</mat-option>
-          } @empty {
-            <mat-option [value]="null">Sem Permissão cadastrada</mat-option>
-          }
-      
-        </mat-select>
-      </mat-form-field>
-    
-      <mat-form-field appearance="fill">
-        <mat-label>Registro de Funcionário</mat-label>
-        <input matInput type="number" min="0" max="5" formControlName="employeeRegistration" placeholder="Registro">
-      </mat-form-field>
-   
-      <mat-form-field appearance="fill" >
-        <mat-label>Registro de Funcionário</mat-label>
-        <input matInput type="number" min="0" max="5" formControlName="employeeRegistration" placeholder="Registro">
-      </mat-form-field>
-    
-      <mat-form-field appearance="fill">
-        <mat-label>Número de Celular</mat-label>
-        <input matInput formControlName="cellphoneNumber" placeholder="Número de Celular" type="tel">
-      </mat-form-field>
-      
-      <mat-dialog-actions class="actionsBox">
-        <button class="confirmBtn" mat-button cdkFocusInitial>Confirmar</button>
-        <button class="cancelBtn" mat-button mat-dialog-close cdkFocusInitial>Cancelar</button>
-      </mat-dialog-actions>
     </form>
+
+    @if(insertTypeForm.get('insertType')?.value === 'insert') {
+      <form [formGroup]="singleInsertForm" class="form">
+        <mat-form-field appearance="fill">
+          <mat-label>Nome</mat-label>
+          <input matInput formControlName="name" placeholder="Nome">
+          @if(singleInsertForm.get('name')?.hasError('required')) {
+            <mat-error>Campo requerido</mat-error>
+          } 
+          @if(singleInsertForm.get('name')?.hasError('minlength')) {
+            <mat-error>Nome deve ter no mínimo 4 caracteres</mat-error>
+          }
+        </mat-form-field>
+        
+        <mat-form-field appearance="fill">
+          <mat-label>Sobrenome</mat-label>
+          <input matInput formControlName="surname" placeholder="Sobrenome">
+          @if(singleInsertForm.get('surname')?.hasError('required')) {
+            <mat-error>Campo requerido</mat-error>
+          } 
+          @if(singleInsertForm.get('surname')?.hasError('minlength')) {
+            <mat-error>Sobrenome deve ter no mínimo 4 caracteres</mat-error>
+          }
+        </mat-form-field>
+     
+        <mat-form-field appearance="fill">
+          <mat-label>Departamento</mat-label>
+          <mat-select (selectionChange)="onDepartmentSelectionChange($event)" formControlName="departmentId">
+            @for (department of departments; track department.id) {
+              <mat-option [value]="department.id">{{ department.departName }}</mat-option>
+            } 
+            @empty {
+              <mat-option [value]="null">Sem departamento cadastrado</mat-option>
+            }
+          </mat-select>
+          @if(singleInsertForm.get('departmentId')?.hasError('required')) {
+            <mat-error>Campo requerido</mat-error>
+          }
+        </mat-form-field>
+      
+        <mat-form-field appearance="fill">
+          <mat-label>Cargo</mat-label>
+          <mat-select formControlName="roleId">
+            @for (role of roles; track role.id) {
+              <mat-option [value]="role.id">{{ role.roleName }}</mat-option>
+            } 
+            @empty {
+              @if(roles === []) {
+                <mat-option [value]="null">Selecione o departamento primeiro</mat-option>
+              } 
+              @else {
+                <mat-option [value]="null">Sem cargos cadastrados</mat-option> 
+              }
+            }
+          </mat-select>
+          @if(singleInsertForm.get('roleId')?.hasError('required')) {
+            <mat-error>Campo requerido</mat-error>
+          }
+        </mat-form-field>
+      
+        <mat-form-field appearance="fill">
+          <mat-label>Permissão</mat-label>
+          <mat-select formControlName="permissionId" multiple>
+            @for (permission of permissions; track permission.id) {
+              <mat-option [value]="permission.id">{{ permission.description }}</mat-option>
+            } 
+            @empty {
+              <mat-option [value]="null">Sem Permissão cadastrada</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+      
+        <mat-form-field appearance="fill">
+          <mat-label>Registro de Funcionário</mat-label>
+          <input matInput type="number" formControlName="employeeRegistration" placeholder="Registro">
+          @if(singleInsertForm.get('employeeRegistration')?.hasError('required')) {
+            <mat-error>Campo requerido</mat-error>
+          } 
+          @if(singleInsertForm.get('employeeRegistration')?.hasError('min')) {
+            <mat-error>Registro deve ser no mínimo 1</mat-error>
+          } 
+          @if(singleInsertForm.get('employeeRegistration')?.hasError('max')) {
+            <mat-error>Registro deve ser no máximo 99999</mat-error>
+          } 
+          @if(singleInsertForm.get('employeeRegistration')?.hasError('pattern')) {
+            <mat-error>Somente números são permitidos</mat-error>
+          }
+        </mat-form-field>
+      
+        <mat-form-field appearance="fill" class="register">
+          <mat-label>Número de Celular</mat-label>
+          <input matInput formControlName="cellphoneNumber" placeholder="Número de Celular" type="tel">
+          @if(singleInsertForm.get('cellphoneNumber')?.hasError('required')) {
+            <mat-error>Campo requerido</mat-error>
+          } 
+          @if(singleInsertForm.get('cellphoneNumber')?.hasError('pattern')) {
+            <mat-error>Número de celular deve estar no formato internacional (+999999999)</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-dialog-actions class="actionsBox">
+          <button class="confirmBtn" [ngClass]="!singleInsertForm.valid ? ' disabled-btn ' : ' confirmBtn '"
+              mat-button  [disabled]="!singleInsertForm.valid" (click)="confirmDialog()">Confirmar</button>
+          <button class="cancelBtn" cdkFocusInitial mat-button mat-dialog-close cdkFocusInitial>Cancelar</button>
+      </mat-dialog-actions>
+      </form>
+    } 
+    @else {
+      <form [formGroup]="bulkInsertForm" class="formbulkInsertWithExcel">
+        <div class="inputBox">
+          <label for="file" class="file-label">Arquivo</label>
+          <div class="insideInputBox">
+            <input type="file" id="file" formControlName="file" accept=".xlsx" required (change)="onFileSelected($event)" class="file-input">
+            <button type="button" class="file-btn" (click)=" triggerFileSelection()">Selecionar Arquivo</button>
+            @if(selectedFileName){
+              <span  class="file-name">{{ selectedFileName }}</span>
+            }
+        
+          </div>
+          @if(fileErrorMessage) {
+            <p class="error-text">{{fileErrorMessage}}</p>
+          }
+        </div>
+        
+        <mat-dialog-actions class="actionsBox">
+          <button class="confirmBtn" [ngClass]="!bulkInsertForm.valid ? ' disabled-btn ' : ' confirmBtn '"
+              mat-button  [disabled]="!bulkInsertForm.valid" (click)="confirmDialog()">Confirmar</button>
+          <button class="cancelBtn" cdkFocusInitial mat-button mat-dialog-close cdkFocusInitial>Cancelar</button>
+      </mat-dialog-actions>
+      </form>
+    }
+</mat-dialog-content>

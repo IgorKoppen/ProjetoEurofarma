@@ -62,7 +62,7 @@ public class EmployeeController {
                     @ApiResponse(description = "Unprocessable Entity", responseCode = "422", content = @Content)
 
             })
-    @PostMapping(produces ="application/json")
+    @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<EmployeeInfoDTO> insert(@RequestBody @Valid EmployeeInsertDTO dto) {
         EmployeeInfoDTO employeeDTO = employeeService.insert(dto);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(employeeDTO.getId()).toUri();
@@ -95,7 +95,7 @@ public class EmployeeController {
                     @ApiResponse(description = "Forbidden", responseCode = "403", content = @Content),
                     @ApiResponse(description = "Not Found", responseCode = "404", content = @Content)
             })
-    @GetMapping(value = "/profile/{id}", produces ="application/json")
+    @GetMapping(value = "/profile/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<EmployeeUserProfileInfoDTO> findEmployeeUserProfileInfo(@PathVariable Long id) {
         EmployeeUserProfileInfoDTO employeeUserInfo = employeeService.findEmployeeUserProfileInfoById(id);
         return ResponseEntity.ok(employeeUserInfo);
@@ -110,7 +110,7 @@ public class EmployeeController {
                     @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
                     @ApiResponse(description = "Forbidden", responseCode = "403", content = @Content)
             })
-    @GetMapping(value = "/pagination", produces = "application/json")
+    @GetMapping(value = "/pagination", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<PagedModel<EntityModel<EmployeeInfoDTO>>> findWithPagination(@PageableDefault(size = 10, direction = Sort.Direction.ASC, sort = "name") Pageable pageable,@Parameter(hidden = true) PagedResourcesAssembler<EmployeeInfoDTO> assembler) {
         Page<EmployeeInfoDTO> employeePage = employeeService.findWithPagination(pageable);
         PagedModel<EntityModel<EmployeeInfoDTO>> pagedModel = assembler.toModel(employeePage);
@@ -129,7 +129,7 @@ public class EmployeeController {
                     @ApiResponse(description = "Conflict", responseCode = "409", content = @Content),
                     @ApiResponse(description = "Unprocessable Entity", responseCode = "422", content = @Content)
             })
-    @PutMapping(value = "/{id}", produces ="application/json")
+    @PutMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<EmployeeInfoDTO> update(@PathVariable Long id,
                                                   @RequestBody @Valid EmployeeUpdateDTO employeeDTO) {
        EmployeeInfoDTO employee = employeeService.update(id,employeeDTO);
@@ -146,7 +146,7 @@ public class EmployeeController {
                     @ApiResponse(description = "Forbidden", responseCode = "403", content = @Content),
                     @ApiResponse(description = "Not Found", responseCode = "404", content = @Content)
             })
-    @DeleteMapping(value = "/{id}", produces ="application/json")
+    @DeleteMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         employeeService.delete(id);
         return ResponseEntity.noContent().build();
@@ -163,7 +163,7 @@ public class EmployeeController {
                     @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
                     @ApiResponse(description = "Unprocessable Entity", responseCode = "422", content = @Content)
             })
-    @PatchMapping(value = "/updatePassword/{id}", produces ="application/json")
+    @PatchMapping(value = "/updatePassword/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> updatePassword(@PathVariable Long id, @RequestBody @Valid ChangePasswordDTO changePasswordDTO) {
        employeeService.updatePassword(id,changePasswordDTO);
         return ResponseEntity.noContent().build();
@@ -196,7 +196,7 @@ public class EmployeeController {
                     @ApiResponse(description = "Forbidden", responseCode = "403", content = @Content),
                     @ApiResponse(description = "Not Found", responseCode = "404", content = @Content)
             })
-    @PatchMapping(value = "/disable/{id}", produces ="application/json")
+    @PatchMapping(value = "/disable/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> disable(@PathVariable Long id) {
        employeeService.toggleEmployeeStatus(id);
         return ResponseEntity.noContent().build();
@@ -280,9 +280,10 @@ public class EmployeeController {
                     @ApiResponse(description = "Unprocessable Entity", responseCode = "422", content = @Content)
 
             })
-    @PostMapping(value = "/createAllEmployees", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<EmployeeInfoDTO>> createAllEmployees(@RequestPart MultipartFile file ) throws IOException {
-        return ResponseEntity.ok(employeeInsertService.readExcelFile(file));
+    @PostMapping(value = "/createAllEmployees", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<EmployeeInfoDTO>> createAllEmployees(@RequestPart("file") MultipartFile file) throws IOException {
+        List<EmployeeInfoDTO> employees = employeeInsertService.readExcelFile(file);
+        return ResponseEntity.ok(employees);
     }
-
 }
+

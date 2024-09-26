@@ -4,8 +4,8 @@ export interface TokenResponse {
     name: string,
     roles: string[],
     authenticated: boolean,
-    created: string,
-    expiration: string,
+    created: number,
+    expiration: number,
     accessToken: string,
     refreshToken: string,
     instructorId?: number

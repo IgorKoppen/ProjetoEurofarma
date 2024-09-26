@@ -18,6 +18,9 @@ import {MatDividerModule} from '@angular/material/divider';
 import {MatButtonModule} from '@angular/material/button';
 import { EmployeeSearchParams } from '../../interfaces/SearchParamsIntefaces';
 import { EmployeeService } from '../../services/employee.service';
+import { EmployeeinsertDialogComponent } from '../../components/employeeinsert-dialog/employeeinsert-dialog.component';
+import { Employee, EmployeeInsert } from '../../interfaces/employeeInterface';
+import { Permission } from '../../interfaces/permissionInterface';
 
 
 
@@ -129,7 +132,29 @@ export class EmployeeListPageComponent{
     this.currentPage = 0;
     this.loadEmployees();
   }
+ 
+ insertEmployee(employee: EmployeeInsert): void {
+  this.employeeService.insert(employee).subscribe({
+      next: () => {
+          this.loadEmployees();
+      },
+      error: (error) => {
+          this.openDialog("Erro ao inserir funcionário", "Ocorreu um problema ao tentar inserir o funcionário.", '200ms', '100ms');
+      }
+  });
+}
 
+bulkInsertEmployees(file: File): void {
+  this.employeeService.bulkInsertWithExcel(file).subscribe({
+      next: () => {
+          this.loadEmployees();
+      },
+      error: (error) => {
+        console.log(error)
+          this.openDialog("Erro ao inserir funcionários em massa", "Ocorreu um problema ao tentar inserir os funcionários em massa.", '200ms', '100ms');
+      }
+  });
+}
 
   openDialog(erroTitle: string, erroDescription: string, enterAnimationDuration: string, exitAnimationDuration: string): void {
     this.dialog.open(ErrorDialogComponent, {
@@ -154,6 +179,31 @@ export class EmployeeListPageComponent{
       if (result) {
        
         this.searchEmployees(result);
+      }
+    });
+  }
+  openNewEmployeeDialog = (): void => {
+    const dialogRef = this.dialog.open(EmployeeinsertDialogComponent, {
+      width: '650px',
+      enterAnimationDuration: '300ms',
+      exitAnimationDuration: '300ms'
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        if (result.insertType === 'bulkInsertWithExcel') {
+          this.bulkInsertEmployees(result.file);
+        } else {
+          const employeeData: EmployeeInsert = {
+            name: result.name,
+            surname: result.surname,
+            employeeRegistration: result.employeeRegistration,
+            cellphoneNumber: result.cellphoneNumber,
+            roleId: result.roleId,
+            permissionsIds: result.permissionId
+        };
+           this.insertEmployee(employeeData);
+        }
       }
     });
   }

@@ -5,3 +5,7 @@ export interface Role {
     roleName: string;
     department: Department;
   }
+export interface RoleInfo {
+  id?: number;
+  roleName?: string;
+}

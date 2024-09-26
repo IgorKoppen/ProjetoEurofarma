@@ -1,5 +1,5 @@
 import { Permission } from "./permissionInterface";
-import { Role } from "./roleInterface";
+import { Role, RoleInfo } from "./roleInterface";
 
  interface Employee {
     id?: number;
@@ -14,11 +14,20 @@ import { Role } from "./roleInterface";
     cellphone_number: string;
   }
 
+
 interface EmployeeUpdate {
   name: string;
     surname: string;
   cellphone_number: string;
-  role: Role;
+  role: RoleInfo;
   permission: Permission[];
 }
-export {Employee,EmployeeUpdate}
+interface EmployeeInsert {
+    name: string;
+    surname: string;
+    roleId: number;
+    permissionsIds: number[];
+    employeeRegistration: number;
+    cellphoneNumber: string;
+}
+export {Employee,EmployeeUpdate,EmployeeInsert}

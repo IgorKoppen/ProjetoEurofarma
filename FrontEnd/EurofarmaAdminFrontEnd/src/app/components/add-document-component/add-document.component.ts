@@ -22,6 +22,7 @@ export class AddDocumentComponentComponent {
     const maxSizeInBytes = maxSizeInMB * 1024 * 1024;
 
     if (file) {
+      
       if (file.size > maxSizeInBytes) {
         this.fileErrorMessage = `O tamanho do arquivo excede o limite de  ${maxSizeInMB}MB.`;
         this.selectedFile = null;
