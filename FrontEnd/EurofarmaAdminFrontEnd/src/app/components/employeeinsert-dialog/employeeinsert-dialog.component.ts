@@ -48,8 +48,8 @@ export class EmployeeinsertDialogComponent {
     });
 
     this.singleInsertForm = this.fb.group({
-      name: ['', [Validators.required, Validators.minLength(4)]],
-      surname: ['', [Validators.required, Validators.minLength(4)]],
+      name: ['', [Validators.required, Validators.minLength(3)]],
+      surname: ['', [Validators.required, Validators.minLength(3)]],
       departmentId: [null, Validators.required],
       roleId: [null, Validators.required],
       permissionId: [[], []],

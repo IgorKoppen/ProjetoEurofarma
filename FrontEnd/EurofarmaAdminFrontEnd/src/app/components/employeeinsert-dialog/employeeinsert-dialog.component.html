@@ -17,7 +17,7 @@
             <mat-error>Campo requerido</mat-error>
           } 
           @if(singleInsertForm.get('name')?.hasError('minlength')) {
-            <mat-error>Nome deve ter no mínimo 4 caracteres</mat-error>
+            <mat-error>Nome deve ter no mínimo 3 caracteres</mat-error>
           }
         </mat-form-field>
         
@@ -28,7 +28,7 @@
             <mat-error>Campo requerido</mat-error>
           } 
           @if(singleInsertForm.get('surname')?.hasError('minlength')) {
-            <mat-error>Sobrenome deve ter no mínimo 4 caracteres</mat-error>
+            <mat-error>Sobrenome deve ter no mínimo 3 caracteres</mat-error>
           }
         </mat-form-field>
      
