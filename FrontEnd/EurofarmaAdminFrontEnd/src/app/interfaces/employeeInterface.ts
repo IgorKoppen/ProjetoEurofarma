@@ -18,10 +18,11 @@ import { Role, RoleInfo } from "./roleInterface";
 interface EmployeeUpdate {
   name: string;
     surname: string;
-  cellphone_number: string;
-  role: RoleInfo;
-  permission: Permission[];
+    cellphoneNumber: string;
+    roleId: RoleInfo;
+    permissionsIds: Permission[];
 }
+
 interface EmployeeInsert {
     name: string;
     surname: string;

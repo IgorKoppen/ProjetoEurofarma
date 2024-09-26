@@ -108,7 +108,7 @@
         </mat-form-field>
 
         <mat-dialog-actions class="actionsBox">
-          <button class="confirmBtn" [ngClass]="!singleInsertForm.valid ? ' disabled-btn ' : ' confirmBtn '"
+          <button class="confirmBtn"  type="submit" [ngClass]="!singleInsertForm.valid ? ' disabled-btn ' : ' confirmBtn '"
               mat-button  [disabled]="!singleInsertForm.valid" (click)="confirmDialog()">Confirmar</button>
           <button class="cancelBtn" cdkFocusInitial mat-button mat-dialog-close cdkFocusInitial>Cancelar</button>
       </mat-dialog-actions>
@@ -130,12 +130,18 @@
             <p class="error-text">{{fileErrorMessage}}</p>
           }
         </div>
-        
+        @if(isLoadingDocument){
+          <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+        }
+
         <mat-dialog-actions class="actionsBox">
-          <button class="confirmBtn" [ngClass]="!bulkInsertForm.valid ? ' disabled-btn ' : ' confirmBtn '"
+          <button class="confirmBtn" type="submit" [ngClass]="!bulkInsertForm.valid ? ' disabled-btn ' : ' confirmBtn '"
               mat-button  [disabled]="!bulkInsertForm.valid" (click)="confirmDialog()">Confirmar</button>
           <button class="cancelBtn" cdkFocusInitial mat-button mat-dialog-close cdkFocusInitial>Cancelar</button>
       </mat-dialog-actions>
+      @if(isLoadingDocument){
+        <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+      }
       </form>
     }
 </mat-dialog-content>

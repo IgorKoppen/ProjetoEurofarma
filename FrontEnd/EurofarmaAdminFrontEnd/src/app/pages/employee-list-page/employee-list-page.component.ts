@@ -104,7 +104,7 @@ export class EmployeeListPageComponent{
   disableEmployee = (id: number): void => {
     this.employeeService.disable(id).pipe(
       catchError(error => {
-        this.openDialog("Erro ao desabilitar",  error.error.message, '200ms', '100ms');
+        this.openDialogError("Erro ao desabilitar",  error.error.message, '200ms', '100ms');
         return throwError(() => new InvalidOperation("Não foi possivel desabilitar o funcionário. erro: " + error.error.message));
       })
     )
@@ -121,7 +121,7 @@ export class EmployeeListPageComponent{
     this.employeeService.delete(id).pipe(
       catchError(error => {
    
-        this.openDialog("Erro ao deletar o funcionário", error.error.message === "Falha de integridade referencial" ? "Funcionário vinculado a um treinamento" : error.error.message, '200ms', '100ms');
+        this.openDialogError("Erro ao deletar o funcionário", error.error.message === "Falha de integridade referencial" ? "Funcionário vinculado a um treinamento" : error.error.message, '200ms', '100ms');
         return throwError(() => new DeleteException("Erro ao deletar o funcionário. erro: " + error.error.message));
       })
     ).subscribe(() => {
@@ -141,31 +141,7 @@ export class EmployeeListPageComponent{
     this.loadEmployees();
   }
  
- insertEmployee(employee: EmployeeInsert): void {
-  this.employeeService.insert(employee).subscribe({
-      next: () => {
-          this.loadEmployees();
-      },
-      error: (error) => {
-        console.log(error)
-          this.openDialog(error.error.message, "Ocorreu um problema ao tentar inserir o funcionário.", '200ms', '100ms');
-      }
-  });
-}
-
-bulkInsertEmployees(file: File): void {
-  this.employeeService.bulkInsertWithExcel(file).subscribe({
-      next: () => {
-          this.loadEmployees();
-      },
-      error: (error) => {
-        console.log(error)
-          this.openDialog("Erro ao inserir funcionários em massa", "Ocorreu um problema ao tentar inserir os funcionários em massa. Erro:" + error.error.message, '200ms', '100ms');
-      }
-  });
-}
-
-  openDialog(erroTitle: string, erroDescription: string, enterAnimationDuration: string, exitAnimationDuration: string): void {
+  openDialogError(erroTitle: string, erroDescription: string, enterAnimationDuration: string, exitAnimationDuration: string): void {
     this.dialog.open(ErrorDialogComponent, {
       width: '400px',
       data: { 
@@ -200,19 +176,7 @@ bulkInsertEmployees(file: File): void {
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
-        if (result.insertType === 'bulkInsertWithExcel') {
-          this.bulkInsertEmployees(result.file);
-        } else {
-          const employeeData: EmployeeInsert = {
-            name: result.name,
-            surname: result.surname,
-            employeeRegistration: result.employeeRegistration,
-            cellphoneNumber: result.cellphoneNumber,
-            roleId: result.roleId,
-            permissionsIds: result.permissionId
-        };
-           this.insertEmployee(employeeData);
-        }
+        this.loadEmployees();
       }
     });
   }

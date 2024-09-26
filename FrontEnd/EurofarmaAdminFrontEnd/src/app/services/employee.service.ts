@@ -41,14 +41,7 @@ export class EmployeeService {
     }
 
     update(employeeId: number, employeeUpdateData: EmployeeUpdate): Observable<Employee> {
-      const employeeData = {
-        name: employeeUpdateData.name,
-        surname: employeeUpdateData.surname,
-        cellphone_number: employeeUpdateData.cellphone_number,
-        role: { id: employeeUpdateData.role.id },
-        permission: employeeUpdateData.permission.map((permission: Permission) => { permission.id })
-      };
-      return this.http.put<Employee>(`${this.baseUrl}/${employeeId}`, employeeData, {
+      return this.http.put<Employee>(`${this.baseUrl}/${employeeId}`, employeeUpdateData, {
         headers: this.AuthorizationHeader
       });
     }
