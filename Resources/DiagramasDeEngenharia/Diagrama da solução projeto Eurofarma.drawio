@@ -1,0 +1,260 @@
+<mxfile host="Electron" modified="2024-08-28T20:41:23.117Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/24.0.4 Chrome/120.0.6099.109 Electron/28.1.0 Safari/537.36" etag="N6_qRLPwaMlD7XVXklUk" version="24.0.4" type="device">
+  <diagram name="Página-1" id="fqhWIEe8gUN8pwczmAbc">
+    <mxGraphModel dx="1687" dy="984" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="1tR9jpnuT_GENMgGY_IX-8" value="Frontend&lt;div&gt;&amp;nbsp;chatbot compliance&lt;/div&gt;" style="image;points=[];aspect=fixed;html=1;align=center;shadow=0;dashed=0;image=img/lib/allied_telesis/computer_and_terminals/Personal_Computer.svg;" vertex="1" parent="1">
+          <mxGeometry x="205.3" y="28.200000000000003" width="45.6" height="61.800000000000004" as="geometry" />
+        </mxCell>
+        <mxCell id="1tR9jpnuT_GENMgGY_IX-11" value="Frontend mobile&amp;nbsp;&lt;div&gt;de treinamentos&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;/div&gt;" style="verticalLabelPosition=bottom;sketch=0;aspect=fixed;html=1;verticalAlign=top;strokeColor=none;align=center;outlineConnect=0;shape=mxgraph.citrix.cell_phone;" vertex="1" parent="1">
+          <mxGeometry x="245" y="550" width="25" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="1tR9jpnuT_GENMgGY_IX-13" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="1tR9jpnuT_GENMgGY_IX-12" target="1tR9jpnuT_GENMgGY_IX-8">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="1tR9jpnuT_GENMgGY_IX-12" value="Colaborador Externo" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" vertex="1" parent="1">
+          <mxGeometry x="70" y="30" width="30" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="1tR9jpnuT_GENMgGY_IX-20" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="1tR9jpnuT_GENMgGY_IX-19" target="1tR9jpnuT_GENMgGY_IX-11">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="1tR9jpnuT_GENMgGY_IX-60" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="1tR9jpnuT_GENMgGY_IX-19" target="1tR9jpnuT_GENMgGY_IX-8">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="1tR9jpnuT_GENMgGY_IX-19" value="Funcionário&lt;div&gt;&amp;nbsp;da Eurofarma&lt;/div&gt;" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" vertex="1" parent="1">
+          <mxGeometry x="59.4" y="430" width="30" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="1tR9jpnuT_GENMgGY_IX-62" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="1tR9jpnuT_GENMgGY_IX-26" target="1tR9jpnuT_GENMgGY_IX-11">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="1tR9jpnuT_GENMgGY_IX-63" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="1tR9jpnuT_GENMgGY_IX-26" target="1tR9jpnuT_GENMgGY_IX-54">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="74" y="720" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="1tR9jpnuT_GENMgGY_IX-26" value="Trein&lt;span style=&quot;background-color: initial;&quot;&gt;ador&lt;/span&gt;" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" vertex="1" parent="1">
+          <mxGeometry x="59.4" y="550" width="30" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="1tR9jpnuT_GENMgGY_IX-56" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="1tR9jpnuT_GENMgGY_IX-27" target="1tR9jpnuT_GENMgGY_IX-55">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="1tR9jpnuT_GENMgGY_IX-76" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="1tR9jpnuT_GENMgGY_IX-27" target="1tR9jpnuT_GENMgGY_IX-55">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="1tR9jpnuT_GENMgGY_IX-27" value="Coloborador admin" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" vertex="1" parent="1">
+          <mxGeometry x="59.4" y="881.8" width="30" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="1tR9jpnuT_GENMgGY_IX-31" value="Backe&lt;span style=&quot;background-color: initial;&quot;&gt;nd Chatbot Compliance (RAG)&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="360" y="30" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="1tR9jpnuT_GENMgGY_IX-32" value="Backend Chatbot Eurodata (RAG)" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="359" y="320" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="1tR9jpnuT_GENMgGY_IX-33" value="Vectored db&lt;br&gt;Compliance" style="strokeWidth=2;html=1;shape=mxgraph.flowchart.database;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="580" y="15" width="80" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="1tR9jpnuT_GENMgGY_IX-34" value="Vectored db&lt;br&gt;Eurodata" style="strokeWidth=2;html=1;shape=mxgraph.flowchart.database;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="580" y="320" width="80" height="88.2" as="geometry" />
+        </mxCell>
+        <mxCell id="1tR9jpnuT_GENMgGY_IX-36" value="" style="endArrow=none;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="1tR9jpnuT_GENMgGY_IX-31" target="1tR9jpnuT_GENMgGY_IX-33">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="510" y="240" as="sourcePoint" />
+            <mxPoint x="560" y="190" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="1tR9jpnuT_GENMgGY_IX-37" value="" style="endArrow=none;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.85;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="1tR9jpnuT_GENMgGY_IX-32" target="1tR9jpnuT_GENMgGY_IX-33">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="660" y="280" as="sourcePoint" />
+            <mxPoint x="710" y="230" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="1tR9jpnuT_GENMgGY_IX-38" value="" style="endArrow=none;html=1;rounded=0;exitX=1;exitY=0.75;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="1tR9jpnuT_GENMgGY_IX-32" target="1tR9jpnuT_GENMgGY_IX-34">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="640" y="280" as="sourcePoint" />
+            <mxPoint x="690" y="230" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="1tR9jpnuT_GENMgGY_IX-40" value="Armazena documentos de compliance vetorizados" style="whiteSpace=wrap;html=1;shape=mxgraph.basic.document" vertex="1" parent="1">
+          <mxGeometry x="700" y="15" width="100" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="1tR9jpnuT_GENMgGY_IX-41" value="Armazena documentos da Eurofarma vetorizados" style="whiteSpace=wrap;html=1;shape=mxgraph.basic.document" vertex="1" parent="1">
+          <mxGeometry x="700" y="314.1" width="100" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="1tR9jpnuT_GENMgGY_IX-42" value="" style="endArrow=none;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="1tR9jpnuT_GENMgGY_IX-33" target="1tR9jpnuT_GENMgGY_IX-40">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="810" y="-50" as="sourcePoint" />
+            <mxPoint x="860" y="-100" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="1tR9jpnuT_GENMgGY_IX-43" value="" style="endArrow=none;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="1tR9jpnuT_GENMgGY_IX-34" target="1tR9jpnuT_GENMgGY_IX-41">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="840" y="270" as="sourcePoint" />
+            <mxPoint x="890" y="220" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="1tR9jpnuT_GENMgGY_IX-44" value="Servidor de IA / Serviço de IA" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="360" y="170" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="1tR9jpnuT_GENMgGY_IX-46" value="" style="endArrow=none;html=1;rounded=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;" edge="1" parent="1" source="1tR9jpnuT_GENMgGY_IX-44" target="1tR9jpnuT_GENMgGY_IX-31">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="310" y="150" as="sourcePoint" />
+            <mxPoint x="360" y="100" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="1tR9jpnuT_GENMgGY_IX-47" value="" style="endArrow=none;html=1;rounded=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;" edge="1" parent="1" source="1tR9jpnuT_GENMgGY_IX-32" target="1tR9jpnuT_GENMgGY_IX-44">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="350" y="240" as="sourcePoint" />
+            <mxPoint x="400" y="190" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="1tR9jpnuT_GENMgGY_IX-48" value="" style="endArrow=none;html=1;rounded=0;exitX=1.017;exitY=0.523;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="1tR9jpnuT_GENMgGY_IX-8" target="1tR9jpnuT_GENMgGY_IX-31">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="310" y="90" as="sourcePoint" />
+            <mxPoint x="360" y="40" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="1tR9jpnuT_GENMgGY_IX-54" value="Frontend web&amp;nbsp;&lt;div&gt;de treinamentos&lt;div&gt;&lt;br style=&quot;background-color: rgb(251, 251, 251);&quot;&gt;&lt;/div&gt;&lt;/div&gt;" style="image;points=[];aspect=fixed;html=1;align=center;shadow=0;dashed=0;image=img/lib/allied_telesis/computer_and_terminals/Personal_Computer.svg;" vertex="1" parent="1">
+          <mxGeometry x="234.70000000000002" y="690" width="45.6" height="61.800000000000004" as="geometry" />
+        </mxCell>
+        <mxCell id="1tR9jpnuT_GENMgGY_IX-55" value="Frontend web&lt;div&gt;&amp;nbsp;painel de admin&lt;/div&gt;&lt;div&gt;&lt;div&gt;&lt;br style=&quot;background-color: rgb(251, 251, 251);&quot;&gt;&lt;/div&gt;&lt;/div&gt;" style="image;points=[];aspect=fixed;html=1;align=center;shadow=0;dashed=0;image=img/lib/allied_telesis/computer_and_terminals/Personal_Computer.svg;" vertex="1" parent="1">
+          <mxGeometry x="234.70000000000002" y="880" width="45.6" height="61.800000000000004" as="geometry" />
+        </mxCell>
+        <mxCell id="1tR9jpnuT_GENMgGY_IX-61" value="" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="500" y="570" width="440" height="250" as="geometry" />
+        </mxCell>
+        <mxCell id="1tR9jpnuT_GENMgGY_IX-70" value="" style="endArrow=none;html=1;rounded=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="1tR9jpnuT_GENMgGY_IX-11" target="1tR9jpnuT_GENMgGY_IX-32">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="330" y="530" as="sourcePoint" />
+            <mxPoint x="380" y="480" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="1tR9jpnuT_GENMgGY_IX-71" value="" style="endArrow=none;html=1;rounded=0;entryX=0.001;entryY=0.121;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="1tR9jpnuT_GENMgGY_IX-11" target="1tR9jpnuT_GENMgGY_IX-61">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="420" y="590" as="sourcePoint" />
+            <mxPoint x="470" y="540" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="1tR9jpnuT_GENMgGY_IX-74" value="" style="endArrow=none;html=1;rounded=0;entryX=0.001;entryY=0.45;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="1tR9jpnuT_GENMgGY_IX-11" target="1tR9jpnuT_GENMgGY_IX-61">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="410" y="580" as="sourcePoint" />
+            <mxPoint x="460" y="530" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="1tR9jpnuT_GENMgGY_IX-75" value="" style="endArrow=none;html=1;rounded=0;exitX=1.001;exitY=0.399;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.001;entryY=0.585;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="1tR9jpnuT_GENMgGY_IX-54" target="1tR9jpnuT_GENMgGY_IX-61">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="360" y="750" as="sourcePoint" />
+            <mxPoint x="410" y="700" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="1tR9jpnuT_GENMgGY_IX-77" value="Serviço de upload dos documentos para db vetorizados" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="500" y="900" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="1tR9jpnuT_GENMgGY_IX-79" value="" style="endArrow=none;html=1;rounded=0;entryX=0.008;entryY=0.914;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="1tR9jpnuT_GENMgGY_IX-55" target="1tR9jpnuT_GENMgGY_IX-61">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="380" y="940" as="sourcePoint" />
+            <mxPoint x="430" y="890" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="1tR9jpnuT_GENMgGY_IX-80" value="" style="endArrow=none;html=1;rounded=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="1tR9jpnuT_GENMgGY_IX-55" target="1tR9jpnuT_GENMgGY_IX-77">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="380" y="970" as="sourcePoint" />
+            <mxPoint x="430" y="920" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="1tR9jpnuT_GENMgGY_IX-82" value="Backend Eurofarma" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="670" y="540" width="130" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="1tR9jpnuT_GENMgGY_IX-89" value="Vectored db&lt;br&gt;Compliance" style="strokeWidth=2;html=1;shape=mxgraph.flowchart.database;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="680" y="885" width="80" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="1tR9jpnuT_GENMgGY_IX-90" value="Vectored db&lt;br&gt;Eurodata" style="strokeWidth=2;html=1;shape=mxgraph.flowchart.database;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="520" y="1000.0000000000001" width="80" height="88.2" as="geometry" />
+        </mxCell>
+        <mxCell id="1tR9jpnuT_GENMgGY_IX-91" value="Armazena documentos de compliance vetorizados" style="whiteSpace=wrap;html=1;shape=mxgraph.basic.document" vertex="1" parent="1">
+          <mxGeometry x="670" y="1010" width="100" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="1tR9jpnuT_GENMgGY_IX-92" value="Armazena documentos da Eurofarma vetorizados" style="whiteSpace=wrap;html=1;shape=mxgraph.basic.document" vertex="1" parent="1">
+          <mxGeometry x="350" y="994.1" width="100" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="1tR9jpnuT_GENMgGY_IX-95" value="" style="endArrow=none;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="1tR9jpnuT_GENMgGY_IX-77" target="1tR9jpnuT_GENMgGY_IX-89">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="640" y="910" as="sourcePoint" />
+            <mxPoint x="690" y="860" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="1tR9jpnuT_GENMgGY_IX-96" value="" style="endArrow=none;html=1;rounded=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;exitPerimeter=0;" edge="1" parent="1" source="1tR9jpnuT_GENMgGY_IX-90" target="1tR9jpnuT_GENMgGY_IX-77">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="670" y="1040" as="sourcePoint" />
+            <mxPoint x="720" y="990" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="1tR9jpnuT_GENMgGY_IX-99" value="" style="endArrow=none;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="1tR9jpnuT_GENMgGY_IX-92" target="1tR9jpnuT_GENMgGY_IX-90">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="490" y="1090" as="sourcePoint" />
+            <mxPoint x="540" y="1040" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="1tR9jpnuT_GENMgGY_IX-100" value="" style="endArrow=none;html=1;rounded=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="1tR9jpnuT_GENMgGY_IX-91" target="1tR9jpnuT_GENMgGY_IX-89">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="710" y="1020" as="sourcePoint" />
+            <mxPoint x="760" y="970" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="1tR9jpnuT_GENMgGY_IX-101" value="Authenticação" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="523" y="590" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="1tR9jpnuT_GENMgGY_IX-102" value="Funcionários" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="661" y="590" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="1tR9jpnuT_GENMgGY_IX-103" value="Treinamentos" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="801" y="590" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="1tR9jpnuT_GENMgGY_IX-104" value="Permissões" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="523" y="665" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="1tR9jpnuT_GENMgGY_IX-105" value="Serviço de sms" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="580" y="460" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="1tR9jpnuT_GENMgGY_IX-106" value="" style="endArrow=none;html=1;rounded=0;exitX=0.32;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;exitPerimeter=0;" edge="1" parent="1" source="1tR9jpnuT_GENMgGY_IX-61" target="1tR9jpnuT_GENMgGY_IX-105">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="520" y="540" as="sourcePoint" />
+            <mxPoint x="570" y="490" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="1tR9jpnuT_GENMgGY_IX-107" value="Instrutores" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="663" y="665" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="1tR9jpnuT_GENMgGY_IX-108" value="Cargos" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="801" y="665" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="1tR9jpnuT_GENMgGY_IX-109" value="Departamento" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="523" y="740" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="1tR9jpnuT_GENMgGY_IX-115" value="" style="endArrow=none;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="1tR9jpnuT_GENMgGY_IX-61" target="1tR9jpnuT_GENMgGY_IX-121">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="980" y="710" as="sourcePoint" />
+            <mxPoint x="1009.9999999999998" y="695" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="1tR9jpnuT_GENMgGY_IX-117" value="Serviço de Quiz" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="810" y="860" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="1tR9jpnuT_GENMgGY_IX-118" value="Tags" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="661" y="740" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="1tR9jpnuT_GENMgGY_IX-120" value="" style="endArrow=none;html=1;rounded=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.843;entryY=0.998;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="1tR9jpnuT_GENMgGY_IX-117" target="1tR9jpnuT_GENMgGY_IX-61">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="880" y="830" as="sourcePoint" />
+            <mxPoint x="930" y="780" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="1tR9jpnuT_GENMgGY_IX-121" value="Db backend eurofarma" style="strokeWidth=2;html=1;shape=mxgraph.flowchart.database;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="1000" y="650" width="80" height="90" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
