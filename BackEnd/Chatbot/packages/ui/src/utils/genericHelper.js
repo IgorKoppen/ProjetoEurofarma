@@ -1,5 +1,5 @@
-import moment from 'moment'
 import { uniq } from 'lodash'
+import moment from 'moment'
 
 export const getUniqueNodeId = (nodeData, nodes) => {
     // Get amount of same nodes
@@ -207,6 +207,15 @@ export const updateOutdatedNodeData = (newComponentNodeData, existingComponentNo
             }
         }
     }
+    // Check for tabs
+    const inputParamsWithTabIdentifiers = initNewComponentNodeData.inputParams.filter((param) => param.tabIdentifier) || []
+
+    for (const inputParam of inputParamsWithTabIdentifiers) {
+        const tabIdentifier = `${inputParam.tabIdentifier}_${existingComponentNodeData.id}`
+        let selectedTabValue = existingComponentNodeData.inputs[tabIdentifier] || inputParam.default
+        initNewComponentNodeData.inputs[tabIdentifier] = selectedTabValue
+        initNewComponentNodeData.inputs[selectedTabValue] = existingComponentNodeData.inputs[selectedTabValue]
+    }
 
     // Update outputs with existing outputs
     if (existingComponentNodeData.outputs) {
@@ -215,6 +224,24 @@ export const updateOutdatedNodeData = (newComponentNodeData, existingComponentNo
                 initNewComponentNodeData.outputs[key] = existingComponentNodeData.outputs[key]
             }
         }
+    }
+
+    // Special case for Condition node to update outputAnchors
+    if (initNewComponentNodeData.name.includes('seqCondition')) {
+        const options = existingComponentNodeData.outputAnchors[0].options || []
+
+        const newOptions = []
+        for (let i = 0; i < options.length; i += 1) {
+            if (options[i].isAnchor) {
+                newOptions.push({
+                    ...options[i],
+                    id: `${initNewComponentNodeData.id}-output-${options[i].name}-Condition`,
+                    type: 'Condition'
+                })
+            }
+        }
+
+        initNewComponentNodeData.outputAnchors[0].options = newOptions
     }
 
     return initNewComponentNodeData
@@ -344,18 +371,6 @@ export const getFolderName = (base64ArrayStr) => {
     } catch (e) {
         return ''
     }
-}
-
-export const sanitizeChatflows = (arrayChatflows) => {
-    const sanitizedChatflows = arrayChatflows.map((chatFlow) => {
-        const sanitizeFlowData = generateExportFlowData(JSON.parse(chatFlow.flowData))
-        return {
-            id: chatFlow.id,
-            name: chatFlow.name,
-            flowData: JSON.stringify(sanitizeFlowData, null, 2)
-        }
-    })
-    return sanitizedChatflows
 }
 
 export const generateExportFlowData = (flowData) => {
@@ -831,7 +846,7 @@ const createJsonArray = (labels) => {
         return {
             label: label,
             name: toCamelCase(label),
-            baseClasses: ['Agent', 'LLMNode', 'ToolNode'],
+            baseClasses: ['Condition'],
             isAnchor: true
         }
     })
