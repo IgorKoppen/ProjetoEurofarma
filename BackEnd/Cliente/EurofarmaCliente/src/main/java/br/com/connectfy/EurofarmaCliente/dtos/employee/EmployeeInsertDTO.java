@@ -13,10 +13,10 @@ public record EmployeeInsertDTO(
         @Positive(message = "Registro de funcionário precisa ser positivo.")
         Long employeeRegistration,
         @NotBlank(message = "O nome é obrigatório e não pode estar em branco.")
-        @Size(min = 4, message = "O nome deve ter pelo menos 4 caracteres.")
+        @Size(min = 3, message = "O nome deve ter pelo menos 3 caracteres.")
         String name,
         @NotBlank(message = "O sobrenome é obrigatório e não pode estar em branco.")
-        @Size(min = 4, message = "O sobrenome deve ter pelo menos 4 caracteres.")
+        @Size(min = 3, message = "O sobrenome deve ter pelo menos 3 caracteres.")
         String surname,
         @NotBlank(message = "O número de celular é obrigatório e não pode estar em branco.")
         String cellphoneNumber,
