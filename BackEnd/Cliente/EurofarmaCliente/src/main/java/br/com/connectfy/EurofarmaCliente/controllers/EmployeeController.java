@@ -280,7 +280,7 @@ public class EmployeeController {
                     @ApiResponse(description = "Unprocessable Entity", responseCode = "422", content = @Content)
 
             })
-    @PostMapping(value = "/createAllEmployees")
+    @PostMapping(value = "/createAllEmployees", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<EmployeeInfoDTO>> createAllEmployees(@RequestPart MultipartFile file ) throws IOException {
         return ResponseEntity.ok(employeeInsertService.readExcelFile(file));
     }
