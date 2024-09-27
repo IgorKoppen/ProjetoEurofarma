@@ -1,5 +1,6 @@
 package br.com.connectfy.EurofarmaCliente.services;
 
+import br.com.connectfy.EurofarmaCliente.dtos.ValidationResultDTO;
 import br.com.connectfy.EurofarmaCliente.dtos.quiz.QuizDTO;
 import br.com.connectfy.EurofarmaCliente.dtos.quiz.QuizInsertDTO;
 import br.com.connectfy.EurofarmaCliente.dtos.quiz.QuizUpdateDTO;
@@ -15,6 +16,8 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -80,7 +83,7 @@ public class QuizService {
     }
 
     @Transactional(readOnly = true)
-    public Boolean validateQuizAnswers(Long quizId, QuizValidateDTO quizValidateBatchDTO) {
+    public ValidationResultDTO validateQuizAnswers(Long quizId, QuizValidateDTO quizValidateBatchDTO) {
         Quiz quiz = quizRepository.findById(quizId)
                 .orElseThrow(() -> new ResourceNotFoundException("Quiz not found"));
 
@@ -114,7 +117,11 @@ public class QuizService {
 
         double userScore = ((double) correctAnswersCount / totalQuestions) * 10;
 
-        return userScore >= notaMinima;
+        Boolean isPassed = userScore >= notaMinima;
+
+        BigDecimal roundedScore = BigDecimal.valueOf(userScore)
+                .setScale(2, RoundingMode.HALF_UP);
+        return new ValidationResultDTO(isPassed, roundedScore.doubleValue());
     }
 
 

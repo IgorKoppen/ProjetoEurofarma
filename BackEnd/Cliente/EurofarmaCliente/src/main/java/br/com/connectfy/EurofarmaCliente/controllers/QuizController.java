@@ -1,6 +1,7 @@
 package br.com.connectfy.EurofarmaCliente.controllers;
 
 import br.com.connectfy.EurofarmaCliente.dtos.ValidationResponseDTO;
+import br.com.connectfy.EurofarmaCliente.dtos.ValidationResultDTO;
 import br.com.connectfy.EurofarmaCliente.dtos.quiz.QuizDTO;
 import br.com.connectfy.EurofarmaCliente.dtos.quiz.QuizInsertDTO;
 import br.com.connectfy.EurofarmaCliente.dtos.quiz.QuizUpdateDTO;
@@ -126,9 +127,9 @@ public class QuizController {
                     @ApiResponse(description = "Unprocessable Entity", responseCode = "422", content = @Content)
             })
     @PostMapping(value = "/validate/{quizId}", produces ="application/json")
-    public ResponseEntity<ValidationResponseDTO> validateQuiz(@PathVariable Long quizId, @RequestBody QuizValidateDTO quizValidateBatchDTO) {
-        Boolean isPassed = quizService.validateQuizAnswers(quizId, quizValidateBatchDTO);
-        return ResponseEntity.ok(new ValidationResponseDTO(isPassed));
+    public ResponseEntity<ValidationResultDTO> validateQuiz(@PathVariable Long quizId, @RequestBody QuizValidateDTO quizValidateBatchDTO) {
+        ValidationResultDTO validationResult = quizService.validateQuizAnswers(quizId, quizValidateBatchDTO);
+        return ResponseEntity.ok(validationResult);
     }
 
 

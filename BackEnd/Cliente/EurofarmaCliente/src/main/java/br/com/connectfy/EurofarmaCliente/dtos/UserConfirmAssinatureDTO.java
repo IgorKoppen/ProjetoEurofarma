@@ -12,5 +12,8 @@ public record UserConfirmAssinatureDTO(
         @NotBlank(message = "A senha é obrigatória e não pode estar em branco.")
         String password,
         @NotBlank(message = "A assinatura é obrigatória e não pode estar em branco.")
-        String signature) {
+        String signature,
+        Integer quizTries,
+        Double nota
+) {
 }

@@ -30,6 +30,10 @@ public class EmployeeTraining {
     @Column(nullable = false)
     LocalDateTime registrationDate;
 
+    Integer quizTries;
+
+    Double nota;
+
     public EmployeeTraining() {
     }
 
@@ -79,6 +83,22 @@ public class EmployeeTraining {
 
     public void setRegistrationDate(LocalDateTime registrationDate) {
         this.registrationDate = registrationDate;
+    }
+
+    public Integer getQuizTries() {
+        return quizTries;
+    }
+
+    public void setQuizTries(Integer quizTries) {
+        this.quizTries = quizTries;
+    }
+
+    public Double getNota() {
+        return nota;
+    }
+
+    public void setNota(Double nota) {
+        this.nota = nota;
     }
 
     @Override
