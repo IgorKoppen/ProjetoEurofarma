@@ -2,6 +2,7 @@ package br.com.connectfy.EurofarmaCliente.services;
 
 import br.com.connectfy.EurofarmaCliente.dtos.*;
 import br.com.connectfy.EurofarmaCliente.dtos.department.DepartmentDTO;
+import br.com.connectfy.EurofarmaCliente.dtos.department.DepartmentInfoDTO;
 import br.com.connectfy.EurofarmaCliente.dtos.employee.EmployeeInfoDTO;
 import br.com.connectfy.EurofarmaCliente.dtos.instructor.InstructorDTO;
 import br.com.connectfy.EurofarmaCliente.dtos.instructor.InstructorDetailsDTO;
@@ -397,7 +398,7 @@ public class TrainingService {
     }
 
     private Department getDepartmentById(Long id) {
-        DepartmentDTO departmentDTO = departmentService.findById(id);
+        DepartmentInfoDTO departmentDTO = departmentService.findById(id);
         return new Department(departmentDTO);
     }
 

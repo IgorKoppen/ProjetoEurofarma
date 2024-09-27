@@ -1,6 +1,7 @@
 package br.com.connectfy.EurofarmaCliente.models;
 
 import br.com.connectfy.EurofarmaCliente.dtos.department.DepartmentDTO;
+import br.com.connectfy.EurofarmaCliente.dtos.department.DepartmentInfoDTO;
 import jakarta.persistence.*;
 
 import java.util.Objects;
@@ -36,6 +37,11 @@ public class Department {
     }
 
     public Department(DepartmentDTO departmentDTO) {
+        this.id = departmentDTO.getId();
+        this.departName = departmentDTO.getDepartName();
+    }
+
+    public Department(DepartmentInfoDTO departmentDTO) {
         this.id = departmentDTO.getId();
         this.departName = departmentDTO.getDepartName();
     }

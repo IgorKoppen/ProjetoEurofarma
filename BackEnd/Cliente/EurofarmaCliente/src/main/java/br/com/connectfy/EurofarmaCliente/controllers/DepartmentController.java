@@ -70,8 +70,8 @@ public class DepartmentController {
                     @ApiResponse(description = "Not Found", responseCode = "404", content = @Content)
             })
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<DepartmentDTO> findById(@PathVariable Long id) {
-        DepartmentDTO departmentDTO = departmentService.findById(id);
+    public ResponseEntity<DepartmentInfoDTO> findById(@PathVariable Long id) {
+        DepartmentInfoDTO departmentDTO = departmentService.findById(id);
         return ResponseEntity.ok(departmentDTO);
     }
 

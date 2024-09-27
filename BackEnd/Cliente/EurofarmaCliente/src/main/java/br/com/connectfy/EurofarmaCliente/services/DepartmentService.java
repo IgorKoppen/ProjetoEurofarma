@@ -31,9 +31,9 @@ public class DepartmentService {
     }
 
     @Transactional(readOnly = true)
-    public DepartmentDTO findById(Long id) {
+    public DepartmentInfoDTO findById(Long id) {
         return departmentRepository.findById(id)
-                .map(this::toDTO)
+                .map(this::toInfoDTO)
                 .orElseThrow(() -> new ResourceNotFoundException("Nenhum departamento encontrado com id: " + id));
     }
 
