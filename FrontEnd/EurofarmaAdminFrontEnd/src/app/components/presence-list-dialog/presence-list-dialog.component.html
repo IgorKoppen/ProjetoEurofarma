@@ -7,6 +7,7 @@
 <mat-dialog-content>
     
     <app-presence-list 
+    [hasQuizTraining]="data.trainingData.hasQuiz"
     [dataSource]="dataSourceAttendanceList" [filterByEmployeeRegistration]="data.filterByEmployeeRegistration" [isLoadingResults]="loading" [instructors]="dataSourceTrainers"
    ></app-presence-list>
 </mat-dialog-content>

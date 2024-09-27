@@ -25,9 +25,12 @@ import {ShortInstructorInfo } from '../../interfaces/instructorInfoInterface';
 export class PresenceListComponent {
   @Input({required: true}) instructors!: MatTableDataSource<ShortInstructorInfo>;
   @Input() filterByEmployeeRegistration: number | undefined = undefined;
-  displayedColumnsAttendece: string[] = ['id', 'name', 'surname', 'employeeRegistration', 'signature', 'registrationDate'];
+  @Input({required: true}) hasQuizTraining!: boolean;
+  displayedColumnsAttendece: string[] = []
   displayedColumnsInstructors: string[] = ['name', 'surname', 'employeeRegistration'];
   private _dataSource!: MatTableDataSource<Attendance>;
+
+
 
   @Input({required: true})
   set dataSource(value: MatTableDataSource<Attendance>) {
@@ -36,6 +39,11 @@ export class PresenceListComponent {
       this._dataSource.sort = this.sort;
       this.applyInitialFilter();
     }
+  }
+  ngOnInit(){
+    this.displayedColumnsAttendece = this.hasQuizTraining
+    ? ['id', 'name', 'surname', 'employeeRegistration', 'signature', 'registrationDate', 'quizTries', 'nota']
+    : ['id', 'name', 'surname', 'employeeRegistration', 'signature', 'registrationDate'];
   }
 
   get dataSource(): MatTableDataSource<Attendance> {
@@ -48,6 +56,8 @@ export class PresenceListComponent {
 
   ngAfterViewInit() {
     if (this.dataSource) {
+      console.log('Data Source:', this.dataSource.data); // Check the content
+  
       this.dataSource.sort = this.sort;
     }
 

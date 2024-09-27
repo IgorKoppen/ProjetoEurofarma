@@ -68,7 +68,7 @@ export class TableTrainingsComponent {
     this.dialog.open(PresenceListDialogComponent, {
       data: { title, trainingId, filterByEmployeeRegistration: this.employeeRegistrationParamenter, trainingData},
       width: '1200px',
-      height: '750px'
+      height: '850px'
     });
   }
 

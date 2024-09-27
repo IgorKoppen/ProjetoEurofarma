@@ -61,6 +61,31 @@
         <td mat-cell *matCellDef="let row" class="dateRegister"> {{ row.registrationDate}} </td>
       </ng-container>
 
+      @if(hasQuizTraining === true){
+      <ng-container matColumnDef="quizTries">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Tentativas do quiz</th>
+        <td mat-cell *matCellDef="let row" >
+          @if(!row.quizTries || row.quizTries === null ){
+            {{0}}
+          }@else {
+            {{row.quizTries}} 
+          }
+       </td>
+      </ng-container>
+
+      <ng-container matColumnDef="nota">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Nota </th>
+        
+          <td mat-cell *matCellDef="let row">
+            @if(!row.nota || row.nota === null ){
+              {{0}}
+            }@else {
+             {{row.nota}}
+            }
+
+          </td>
+      </ng-container>
+    }
       <tr mat-header-row *matHeaderRowDef="displayedColumnsAttendece"></tr>
       <tr mat-row *matRowDef="let row; columns: displayedColumnsAttendece;"></tr>
 

@@ -8,6 +8,8 @@ export interface Attendance {
     employeeRegistration: number;
     signature: string;
     registrationDate: string;
+    quizTries?: number | null;
+    nota?: number | null;
 }
 
 export interface FullList {
