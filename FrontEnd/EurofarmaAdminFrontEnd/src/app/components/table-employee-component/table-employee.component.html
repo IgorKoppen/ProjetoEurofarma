@@ -1,95 +1,133 @@
-
-
 <div class="tableMain">
-
   @if (isLoading) {
-    <div class="loading-shade">
-        <mat-spinner></mat-spinner>
-    </div>
+  <div class="loading-shade">
+    <mat-spinner></mat-spinner>
+  </div>
   }
 
-  <table class="table" mat-table [dataSource]="dataSource" matSort (matSortChange)="onSortChanged($event)">
+  <table
+    class="table"
+    mat-table
+    [dataSource]="dataSource"
+    matSort
+    (matSortChange)="onSortChanged($event)"
+  >
     <ng-container matColumnDef="id">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header="id" > ID </th>
-      <td mat-cell *matCellDef="let employee"> {{employee.id}} </td>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header="id">ID</th>
+      <td mat-cell *matCellDef="let employee">{{ employee.id }}</td>
     </ng-container>
 
     <ng-container matColumnDef="name">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header="name"> Nome </th>
-      <td mat-cell *matCellDef="let employee"> {{employee.name}} </td>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header="name">Nome</th>
+      <td mat-cell *matCellDef="let employee">{{ employee.name }}</td>
     </ng-container>
 
     <ng-container matColumnDef="surname">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header="surname"> Sobrenome </th>
-      <td mat-cell *matCellDef="let employee"> {{employee.surname}} </td>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header="surname">
+        Sobrenome
+      </th>
+      <td mat-cell *matCellDef="let employee">{{ employee.surname }}</td>
     </ng-container>
 
     <ng-container matColumnDef="enabled">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header="enabled"> Ativo </th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header="enabled">Ativo</th>
       <td mat-cell *matCellDef="let employee">
         @if(employee.enabled === true){
-          <div class="ativo chip">Ativo</div>
+        <div class="ativo chip">Ativo</div>
         }@else {
-          <div class=" desativo chip">Desativo</div>
+        <div class="desativo chip">Desativo</div>
         }
-         </td>
+      </td>
     </ng-container>
-   
 
     <ng-container matColumnDef="role">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header="role.roleName"> Cargo </th>
-      <td mat-cell *matCellDef="let employee"> {{employee.role.roleName}} </td>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header="role.roleName">
+        Cargo
+      </th>
+      <td mat-cell *matCellDef="let employee">{{ employee.role.roleName }}</td>
     </ng-container>
 
     <ng-container matColumnDef="department">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header="role.department.departName"> Departamento </th>
-      <td mat-cell *matCellDef="let employee"> {{employee.role.department.departName}} </td>
+      <th
+        mat-header-cell
+        *matHeaderCellDef
+        mat-sort-header="role.department.departName"
+      >
+        Departamento
+      </th>
+      <td mat-cell *matCellDef="let employee">
+        {{ employee.role.department.departName }}
+      </td>
     </ng-container>
 
     <ng-container matColumnDef="employee_registration">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header="employeeRegistration"> Registro</th>
-      <td mat-cell *matCellDef="let employee"> {{employee.employee_registration}} </td>
+      <th
+        mat-header-cell
+        *matHeaderCellDef
+        mat-sort-header="employeeRegistration"
+      >
+        Registro
+      </th>
+      <td mat-cell *matCellDef="let employee">
+        {{ employee.employee_registration }}
+      </td>
     </ng-container>
 
     <ng-container matColumnDef="cellphone_number">
-      <th mat-header-cell *matHeaderCellDef>Celular </th>
-      <td mat-cell *matCellDef="let employee"><p class="cellPhone">{{employee.cellphone_number | phoneMask}}</p>  </td>
+      <th mat-header-cell *matHeaderCellDef>Celular</th>
+      <td mat-cell *matCellDef="let employee">
+        <p class="cellPhone">{{ employee.cellphone_number | phoneMask }}</p>
+      </td>
     </ng-container>
 
     <ng-container matColumnDef="permission">
-      <th mat-header-cell *matHeaderCellDef> Permissões </th>
-      
-      <td mat-cell *matCellDef="let employee"> 
-        <div class="ChipBox">
-        @for(permission of employee.permission; track $index){
-       
-        @if(permission.id === 3){
-          <div class="chipEmployee chip"> {{permission.description}}</div>
-        }
-        @if(permission.id === 2){
-          <div class="chipTrainer chip"> {{permission.description}}</div>
-        }
-        @if(permission.id === 1){
-          <div class="chipAdmin chip"> {{permission.description}}</div>
-        }
-      }
-      
-    </div> 
-   </td>
-    </ng-container>
+      <th mat-header-cell *matHeaderCellDef>Permissões</th>
 
-    
+      <td mat-cell *matCellDef="let employee">
+        <div class="ChipBox">
+          @for(permission of employee.permission; track $index){
+          @if(permission.id === 3){
+          <div class="chipEmployee chip">{{ permission.description }}</div>
+          } @if(permission.id === 2){
+          <div class="chipTrainer chip">{{ permission.description }}</div>
+          } @if(permission.id === 1){
+          <div class="chipAdmin chip">{{ permission.description }}</div>
+          } }
+        </div>
+      </td>
+    </ng-container>
 
     <ng-container matColumnDef="actions">
       <th mat-header-cell *matHeaderCellDef></th>
       <td mat-cell *matCellDef="let employee">
         <div class="actionBox">
-          <app-disable-employee-btn  (disableCallback)="callbackDisable(employee.id)" [dialogTitle]="employee.enabled ? 'Confirmar Desativação' : 'Confirmar Reativação'" [employeeId]="employee.id" [isDisabled]="employee.enabled"></app-disable-employee-btn>
-          <app-edit-btn></app-edit-btn>
-          <app-delete-btn (deleteCallBack)="callbackDelete(employee.id)"  [deleteId]="employee.id"  [dialogTitle]="'Confirmar exclusão'" [dialogDescription]="'Você tem certeza que deseja deletar o funcionário com id '+ employee.id +' ?'"></app-delete-btn>    
+          @if(!hasAdminRole(employee.permission)){
+          <app-disable-employee-btn
+            (disableCallback)="callbackDisable(employee.id)"
+            [dialogTitle]="
+              employee.enabled
+                ? 'Confirmar Desativação'
+                : 'Confirmar Reativação'
+            "
+            [employeeId]="employee.id"
+            [isDisabled]="employee.enabled"
+          ></app-disable-employee-btn>
 
+          <app-edit-btn [callback]="getUpdateCallback(employee)"></app-edit-btn>
+          
+
+          <app-delete-btn
+            (deleteCallBack)="callbackDelete(employee.id)"
+            [deleteId]="employee.id"
+            [dialogTitle]="'Confirmar exclusão'"
+            [dialogDescription]="
+              'Você tem certeza que deseja deletar o funcionário com id ' +
+              employee.id +
+              ' ?'
+            "
+          ></app-delete-btn>
+          }
         </div>
-     
       </td>
     </ng-container>
 
@@ -97,15 +135,16 @@
       <td class="mat-cell" colspan="4">Nenhum dado encontrado</td>
     </tr>
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
   </table>
   <mat-paginator
-  [length]="totalElements"
-  [pageSize]="pageSize"
-  [pageSizeOptions]="pageSizeOptions"
-  [pageIndex]="currentPage"
-  (page)="onPageChange($event)"
-  aria-label="Selecione página de funcionários"
-  showFirstLastButtons>
-</mat-paginator>
+    [length]="totalElements"
+    [pageSize]="pageSize"
+    [pageSizeOptions]="pageSizeOptions"
+    [pageIndex]="currentPage"
+    (page)="onPageChange($event)"
+    aria-label="Selecione página de funcionários"
+    showFirstLastButtons
+  >
+  </mat-paginator>
 </div>

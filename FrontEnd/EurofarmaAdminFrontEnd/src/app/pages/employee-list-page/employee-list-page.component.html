@@ -23,6 +23,7 @@
 [currentPage]="currentPage"
 (pageChange)="onPageChange($event)"
 (sortChange)="onSortChanged($event)"
+(updateData)="loadEmployees()"
 [callbackDelete]="deleteEmployee"
 [callbackDisable]="disableEmployee"
 >
