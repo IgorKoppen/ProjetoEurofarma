@@ -21,6 +21,7 @@ public class EmployeeTrainingInfoDTO implements Serializable {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy HH:mm:ss")
     private LocalDateTime registrationDate;
     private Integer quizTries;
+    private Double nota;
 
     public EmployeeTrainingInfoDTO() {
     }
@@ -89,5 +90,13 @@ public class EmployeeTrainingInfoDTO implements Serializable {
 
     public void setQuizTries(Integer quizTries) {
         this.quizTries = quizTries;
+    }
+
+    public Double getNota() {
+        return nota;
+    }
+
+    public void setNota(Double nota) {
+        this.nota = nota;
     }
 }
