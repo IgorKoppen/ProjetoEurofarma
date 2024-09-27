@@ -63,7 +63,7 @@ export class PresenceListComponent {
 
  
   applyInitialFilter() {
-    if (this.filterByEmployeeRegistration !== undefined) {
+    if (this.filterByEmployeeRegistration !== undefined && this.filterByEmployeeRegistration !== null) {
       this.dataSource.filterPredicate = (data: Attendance, filter: string) => {
         return data.employeeRegistration
           .toString()

@@ -5,7 +5,9 @@
           <mat-spinner></mat-spinner>
       </div>
     }
- 
+   
+  
+
     <table class="table" mat-table [dataSource]="dataSource" matSort (matSortChange)="onSortChanged($event)">
      
       <ng-container matColumnDef="id">
@@ -87,7 +89,7 @@
         <td mat-cell *matCellDef="let training">
           <div class="actionBox">
     
-           <button mat-flat-button color="primary" class="presencelistBtn" (click)="openListOfPresence(training.name,training.id)">
+           <button mat-flat-button color="primary" class="presencelistBtn" (click)="openListOfPresence(training.name,training.id,training)">
             <mat-icon>checklist</mat-icon>
               Lista de presença
            </button>

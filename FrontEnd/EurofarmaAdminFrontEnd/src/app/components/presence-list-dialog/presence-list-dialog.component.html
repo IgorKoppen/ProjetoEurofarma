@@ -1,5 +1,11 @@
+<div class="topContent">
 <h2 class="title" mat-dialog-title>Lista de presença: {{data.title}}</h2>
+<button mat-flat-button color="primary" (click)="generatePDF()" class="downloadBtn">
+    Download PDF
+  </button>
+</div>
 <mat-dialog-content>
+    
     <app-presence-list 
     [dataSource]="dataSourceAttendanceList" [filterByEmployeeRegistration]="data.filterByEmployeeRegistration" [isLoadingResults]="loading" [instructors]="dataSourceTrainers"
    ></app-presence-list>

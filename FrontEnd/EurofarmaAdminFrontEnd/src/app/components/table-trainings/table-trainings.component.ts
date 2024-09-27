@@ -13,6 +13,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { DefaultBtnComponent } from '../default-btn/default-btn.component';
 import { MatButtonModule } from '@angular/material/button';
+import { Training } from '../../interfaces/trainingInterface';
 
 @Component({
   selector: 'app-table-trainings',
@@ -63,9 +64,9 @@ export class TableTrainingsComponent {
   
   }
 
-  openListOfPresence = (title: string, trainingId: number): void => {
+  openListOfPresence = (title: string, trainingId: number,trainingData: Training): void => {
     this.dialog.open(PresenceListDialogComponent, {
-      data: { title, trainingId, filterByEmployeeRegistration: this.employeeRegistrationParamenter},
+      data: { title, trainingId, filterByEmployeeRegistration: this.employeeRegistrationParamenter, trainingData},
       width: '1200px',
       height: '750px'
     });

@@ -139,9 +139,7 @@
               mat-button  [disabled]="!bulkInsertForm.valid" (click)="confirmDialog()">Confirmar</button>
           <button class="cancelBtn" cdkFocusInitial mat-button mat-dialog-close cdkFocusInitial>Cancelar</button>
       </mat-dialog-actions>
-      @if(isLoadingDocument){
-        <mat-progress-bar mode="indeterminate"></mat-progress-bar>
-      }
+    
       </form>
     }
 </mat-dialog-content>
