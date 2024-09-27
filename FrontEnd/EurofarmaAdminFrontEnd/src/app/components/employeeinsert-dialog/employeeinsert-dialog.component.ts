@@ -4,20 +4,23 @@ import { Permission } from '../../interfaces/permissionInterface';
 import {RoleInfo } from '../../interfaces/roleInterface';
 import { Department } from '../../interfaces/departmentInterface';
 import { PermissionService } from '../../services/permission.service';
-import { RoleService } from '../../services/role.service';
+import {MatProgressBarModule} from '@angular/material/progress-bar';
 import { DepartmentService } from '../../services/department.service';
 import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatDialogActions, MatDialogClose, MatDialogContent, MatDialogRef, MatDialogTitle } from '@angular/material/dialog';
+import { MatDialog, MatDialogActions, MatDialogClose, MatDialogContent, MatDialogRef, MatDialogTitle } from '@angular/material/dialog';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatButtonModule } from '@angular/material/button';
 import { NgClass } from '@angular/common';
+import { ErrorDialogComponent } from '../error-dialog/error-dialog.component';
+import { EmployeeInsert } from '../../interfaces/employeeInterface';
+import { EmployeeService } from '../../services/employee.service';
 
 @Component({
   selector: 'app-employeeinsert-dialog',
   standalone: true,
-  imports: [MatButtonModule,MatRadioModule,NgClass, MatDialogActions, MatDialogClose, MatDialogTitle, MatDialogContent,MatFormFieldModule,MatInputModule,FormsModule,ReactiveFormsModule,MatSelectModule],
+  imports: [MatButtonModule,MatProgressBarModule,MatRadioModule,NgClass, MatDialogActions, MatDialogClose, MatDialogTitle, MatDialogContent,MatFormFieldModule,MatInputModule,FormsModule,ReactiveFormsModule,MatSelectModule],
   templateUrl: './employeeinsert-dialog.component.html',
   styleUrl: './employeeinsert-dialog.component.css'
 })
@@ -31,12 +34,14 @@ export class EmployeeinsertDialogComponent {
   roles: RoleInfo[] = [];
   departments: Department[] = [];
   selectedFileName: string = '';
-
+  isLoadingDocument:boolean = false;
   constructor(
     private fb: FormBuilder,
     private permissionService: PermissionService,
     private departmentService: DepartmentService,
-    public dialogRef: MatDialogRef<EmployeeinsertDialogComponent>
+    private employeeService: EmployeeService,  
+    public dialogRef: MatDialogRef<EmployeeinsertDialogComponent>,
+    private dialog: MatDialog 
   ) {}
 
   ngOnInit() {
@@ -48,8 +53,8 @@ export class EmployeeinsertDialogComponent {
     });
 
     this.singleInsertForm = this.fb.group({
-      name: ['', [Validators.required, Validators.minLength(4)]],
-      surname: ['', [Validators.required, Validators.minLength(4)]],
+      name: ['', [Validators.required, Validators.minLength(3)]],
+      surname: ['', [Validators.required, Validators.minLength(3)]],
       departmentId: [null, Validators.required],
       roleId: [null, Validators.required],
       permissionId: [[], []],
@@ -94,7 +99,6 @@ export class EmployeeinsertDialogComponent {
   onFileSelected(event: any) {
     const file = event.target.files[0];
     if (file) {
-
       this.insertFile = file;
       this.selectedFileName = file.name;
       if (!this.insertFile.name.endsWith('.xlsx')) {
@@ -118,11 +122,53 @@ export class EmployeeinsertDialogComponent {
     return { insertType: 'insert', ...this.singleInsertForm.value };
   }
 
-confirmDialog() {
+  confirmDialog() {
     if (this.insertTypeForm.value.insertType === 'bulkInsertWithExcel') {
-      this.dialogRef.close({ insertType: 'bulkInsertWithExcel', file: this.insertFile });
+      this.bulkInsertEmployees(this.insertFile);
     } else {
-      this.dialogRef.close(this.getSingleInsertPayload());
+      const employeeData: EmployeeInsert = {
+        name: this.singleInsertForm.value.name,
+        surname: this.singleInsertForm.value.surname,
+        employeeRegistration: this.singleInsertForm.value.employeeRegistration,
+        cellphoneNumber: this.singleInsertForm.value.cellphoneNumber,
+        roleId: this.singleInsertForm.value.roleId,
+        permissionsIds: this.singleInsertForm.value.permissionId
+      };
+      this.insertEmployee(employeeData);
     }
+  }
+
+  insertEmployee(employee: EmployeeInsert): void {
+    this.employeeService.insert(employee).subscribe({
+      next: () => {
+        this.dialogRef.close(true); 
+      },
+      error: (error: any) => {
+        this.openDialogError(error.error.message, "Ocorreu um problema ao tentar inserir o funcionário.", '200ms', '100ms');
+      }
+    });
+  }
+
+  bulkInsertEmployees(file: File): void {
+    this.isLoadingDocument = true;
+    this.employeeService.bulkInsertWithExcel(file).subscribe({
+      next: () => {
+        this.isLoadingDocument = false;
+        this.dialogRef.close(true); 
+      },
+      error: (error : any) => {
+        this.isLoadingDocument = false;
+        this.openDialogError("Erro ao inserir funcionários em massa", "Ocorreu um problema ao tentar inserir os funcionários em massa. Erro:" + error.error.message, '200ms', '100ms');
+      }
+    });
+  }
+
+  openDialogError(title: string, description: string, enterDuration: string, exitDuration: string) {
+    this.dialog.open(ErrorDialogComponent, {
+      width: "500px",
+      data: { title, description },
+      enterAnimationDuration: enterDuration,
+      exitAnimationDuration: exitDuration
+    });
   }
 }

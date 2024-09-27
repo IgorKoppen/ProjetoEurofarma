@@ -19,8 +19,9 @@ import {MatButtonModule} from '@angular/material/button';
 import { EmployeeSearchParams } from '../../interfaces/SearchParamsIntefaces';
 import { EmployeeService } from '../../services/employee.service';
 import { EmployeeinsertDialogComponent } from '../../components/employeeinsert-dialog/employeeinsert-dialog.component';
-import { Employee, EmployeeInsert } from '../../interfaces/employeeInterface';
-import { Permission } from '../../interfaces/permissionInterface';
+import { EmployeeInsert } from '../../interfaces/employeeInterface';
+import { InvalidOperation } from '../../Errors/InvalidOperation';
+
 
 
 
@@ -101,7 +102,13 @@ export class EmployeeListPageComponent{
   }
 
   disableEmployee = (id: number): void => {
-    this.employeeService.disable(id).subscribe(() => {
+    this.employeeService.disable(id).pipe(
+      catchError(error => {
+        this.openDialogError("Erro ao desabilitar",  error.error.message, '200ms', '100ms');
+        return throwError(() => new InvalidOperation("Não foi possivel desabilitar o funcionário. erro: " + error.error.message));
+      })
+    )
+    .subscribe(() => {
       if (this.searchParams) {
         this.searchEmployees({...this.searchParams});
       } else {
@@ -113,8 +120,9 @@ export class EmployeeListPageComponent{
   deleteEmployee = (id: number): void => {
     this.employeeService.delete(id).pipe(
       catchError(error => {
-        this.openDialog("Erro ao deletar o funcionário", "Não é possível excluir este funcionário porque ele está associado a registros de treinamentos.", '200ms', '100ms');
-        return throwError(() => new DeleteException("Erro ao deletar o funcionário"));
+   
+        this.openDialogError("Erro ao deletar o funcionário", error.error.message === "Falha de integridade referencial" ? "Funcionário vinculado a um treinamento" : error.error.message, '200ms', '100ms');
+        return throwError(() => new DeleteException("Erro ao deletar o funcionário. erro: " + error.error.message));
       })
     ).subscribe(() => {
       if (this.totalElements - 1 <= this.currentPage * this.pageSize && this.currentPage > 0) {
@@ -133,32 +141,9 @@ export class EmployeeListPageComponent{
     this.loadEmployees();
   }
  
- insertEmployee(employee: EmployeeInsert): void {
-  this.employeeService.insert(employee).subscribe({
-      next: () => {
-          this.loadEmployees();
-      },
-      error: (error) => {
-          this.openDialog("Erro ao inserir funcionário", "Ocorreu um problema ao tentar inserir o funcionário.", '200ms', '100ms');
-      }
-  });
-}
-
-bulkInsertEmployees(file: File): void {
-  this.employeeService.bulkInsertWithExcel(file).subscribe({
-      next: () => {
-          this.loadEmployees();
-      },
-      error: (error) => {
-        console.log(error)
-          this.openDialog("Erro ao inserir funcionários em massa", "Ocorreu um problema ao tentar inserir os funcionários em massa.", '200ms', '100ms');
-      }
-  });
-}
-
-  openDialog(erroTitle: string, erroDescription: string, enterAnimationDuration: string, exitAnimationDuration: string): void {
+  openDialogError(erroTitle: string, erroDescription: string, enterAnimationDuration: string, exitAnimationDuration: string): void {
     this.dialog.open(ErrorDialogComponent, {
-      width: '300px',
+      width: '400px',
       data: { 
         title: erroTitle, 
         description: erroDescription 
@@ -191,19 +176,7 @@ bulkInsertEmployees(file: File): void {
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
-        if (result.insertType === 'bulkInsertWithExcel') {
-          this.bulkInsertEmployees(result.file);
-        } else {
-          const employeeData: EmployeeInsert = {
-            name: result.name,
-            surname: result.surname,
-            employeeRegistration: result.employeeRegistration,
-            cellphoneNumber: result.cellphoneNumber,
-            roleId: result.roleId,
-            permissionsIds: result.permissionId
-        };
-           this.insertEmployee(employeeData);
-        }
+        this.loadEmployees();
       }
     });
   }

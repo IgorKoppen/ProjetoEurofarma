@@ -1,8 +1,8 @@
 import { START } from '@langchain/langgraph'
+import { NodeVM } from '@flowiseai/nodevm'
+import { DataSource } from 'typeorm'
 import { ICommonObject, IDatabaseEntity, INode, INodeData, INodeParams, ISeqAgentNode } from '../../../src/Interface'
 import { availableDependencies, defaultAllowBuiltInDep, getVars, prepareSandboxVars } from '../../../src/utils'
-import { NodeVM } from 'vm2'
-import { DataSource } from 'typeorm'
 
 const defaultFunc = `{
     aggregate: {
@@ -34,21 +34,23 @@ class State_SeqAgents implements INode {
     icon: string
     category: string
     baseClasses: string[]
+    documentation?: string
     credential: INodeParams
     inputs: INodeParams[]
 
     constructor() {
         this.label = 'State'
         this.name = 'seqState'
-        this.version = 1.0
+        this.version = 2.0
         this.type = 'State'
         this.icon = 'state.svg'
         this.category = 'Sequential Agents'
         this.description = 'A centralized state object, updated by nodes in the graph, passing from one node to another'
         this.baseClasses = [this.type]
+        this.documentation = 'https://docs.flowiseai.com/using-flowise/agentflows/sequential-agents#id-3.-state-node'
         this.inputs = [
             {
-                label: 'State',
+                label: 'Custom State',
                 name: 'stateMemory',
                 type: 'tabs',
                 tabIdentifier: TAB_IDENTIFIER,
@@ -56,7 +58,7 @@ class State_SeqAgents implements INode {
                 default: 'stateMemoryUI',
                 tabs: [
                     {
-                        label: 'State (Table)',
+                        label: 'Custom State (Table)',
                         name: 'stateMemoryUI',
                         type: 'datagrid',
                         description:
@@ -80,7 +82,7 @@ class State_SeqAgents implements INode {
                         additionalParams: true
                     },
                     {
-                        label: 'State (Code)',
+                        label: 'Custom State (Code)',
                         name: 'stateMemoryCode',
                         type: 'code',
                         description: `JSON object representing the state`,

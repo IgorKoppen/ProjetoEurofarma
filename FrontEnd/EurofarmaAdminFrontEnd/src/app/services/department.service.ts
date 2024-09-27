@@ -26,6 +26,9 @@ export class DepartmentService {
  update(id:number,updateDepartment: Department): Observable<Department>{
   return this.http.put<Department>(`${this.baseUrl}/${id}`,updateDepartment, {headers: this.AuthorizationHeader});
  }
+ findById(id:number) : Observable<Department>{
+  return this.http.get<Department>(`${this.baseUrl}/${id}`, {headers: this.AuthorizationHeader});
+ }
 
  findAll(): Observable<Department[]>{
   return this.http.get<Department[]>(this.baseUrl, {headers: this.AuthorizationHeader});

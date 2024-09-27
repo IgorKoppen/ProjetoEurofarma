@@ -12,6 +12,11 @@ import { DeleteBtnComponent } from '../delete-btn/delete-btn.component';
 import { DisableEmployeeBtnComponent } from '../disable-employee-btn/disable-employee-btn.component';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 
+import { MatDialog } from '@angular/material/dialog';
+import { Employee } from '../../interfaces/employeeInterface';
+import { EmployeeUpdateDialogComponent } from '../employeeupdate-dialog/employeeupdate-dialog.component';
+import { Permission } from '../../interfaces/permissionInterface';
+
 
 @Component({
   selector: 'app-table-employee-component',
@@ -34,11 +39,12 @@ export class TableEmployeeComponent {
 
   @Output() pageChange = new EventEmitter<PageEvent>();
   @Output() sortChange = new EventEmitter<Sort>();
+  @Output() updateData = new EventEmitter<void>();
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
-  constructor(public _MatPaginatorIntl: MatPaginatorIntl) { }
+  constructor(public _MatPaginatorIntl: MatPaginatorIntl,private dialog: MatDialog) { }
 
 
 
@@ -64,6 +70,23 @@ export class TableEmployeeComponent {
   
   }
 
+  openUpdateDialog(employee: Employee): void {
+    const dialogRef = this.dialog.open(EmployeeUpdateDialogComponent, {
+      width: '650px',
+      data: employee
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.updateData.emit();
+      }
+    });
+  }
+
+  getUpdateCallback(employee: Employee): () => void {
+    return () => this.openUpdateDialog(employee);
+  }
+
   emitPageChangeEvent(event?: PageEvent) {
     const pageEvent: PageEvent = event || {
       pageIndex: this.paginator.pageIndex,
@@ -79,6 +102,9 @@ export class TableEmployeeComponent {
 
   onSortChanged(event: Sort){
     this.sortChange.emit(event);
+  }
+  hasAdminRole(permissions: Permission[]): boolean {
+    return permissions.some(permission => permission.id === 1);
   }
 }
 
