@@ -171,7 +171,7 @@ public class TrainingService {
             Employee employee = employeeRepository.findById(userConfirmAssinatureDTO.userId()).orElseThrow(() -> new ResourceNotFoundException("Treinamento não encontrada com id: " + userConfirmAssinatureDTO.userId()));
 
 
-            addEmployeeToTraining(training, employee, userConfirmAssinatureDTO.signature());
+            addEmployeeToTraining(training, employee, userConfirmAssinatureDTO.signature(), userConfirmAssinatureDTO.quizTries());
             trainingRepository.save(training);
         } catch (Exception e) {
             throw new ResourceNotFoundException(e.getMessage());
@@ -306,6 +306,7 @@ public class TrainingService {
                     dto.setEmployeeRegistration(employee.getEmployeeRegistration());
                     dto.setSignature(employeeTraining.getSignature());
                     dto.setRegistrationDate(employeeTraining.getRegistrationDate());
+                    dto.setQuizTries(employeeTraining.getQuizTries());
                     return dto;
                 })
                 .collect(Collectors.toList());
@@ -341,10 +342,13 @@ public class TrainingService {
         }
     }
 
-    private void addEmployeeToTraining(Training training, Employee employee, String signature) {
+    private void addEmployeeToTraining(Training training, Employee employee, String signature, Integer quizTries) {
         validateEmployeeForTraining(employee,training);
         EmployeeTrainingKey key = new EmployeeTrainingKey(employee.getId(), training.getId());
         EmployeeTraining employeeTraining = new EmployeeTraining(key, employee, training, signature);
+        if(quizTries != null) {
+            employeeTraining.setQuizTries(quizTries);
+        }
 
         training.getEmployees().add(employeeTraining);
         employee.getEmployeeTrainings().add(employeeTraining);

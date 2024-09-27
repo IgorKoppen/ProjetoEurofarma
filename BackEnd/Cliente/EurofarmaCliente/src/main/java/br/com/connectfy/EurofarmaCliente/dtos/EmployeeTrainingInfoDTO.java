@@ -20,17 +20,19 @@ public class EmployeeTrainingInfoDTO implements Serializable {
     private String signature;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy HH:mm:ss")
     private LocalDateTime registrationDate;
+    private Integer quizTries;
 
     public EmployeeTrainingInfoDTO() {
     }
 
-    public EmployeeTrainingInfoDTO(Long id, String name, String surname, Long employeeRegistration, String signature, LocalDateTime registrationDate) {
+    public EmployeeTrainingInfoDTO(Long id, String name, String surname, Long employeeRegistration, String signature, LocalDateTime registrationDate, Integer quizTries) {
         this.id = id;
         this.name = name;
         this.surname = surname;
         this.employeeRegistration = employeeRegistration;
         this.signature = signature;
         this.registrationDate = registrationDate;
+        this.quizTries = quizTries;
     }
 
     public Long getId() {
@@ -79,5 +81,13 @@ public class EmployeeTrainingInfoDTO implements Serializable {
 
     public void setRegistrationDate(LocalDateTime registrationDate) {
         this.registrationDate = registrationDate;
+    }
+
+    public Integer getQuizTries() {
+        return quizTries;
+    }
+
+    public void setQuizTries(Integer quizTries) {
+        this.quizTries = quizTries;
     }
 }
