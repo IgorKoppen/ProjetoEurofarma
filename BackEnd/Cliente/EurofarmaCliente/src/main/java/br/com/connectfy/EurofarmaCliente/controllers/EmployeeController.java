@@ -1,13 +1,13 @@
 package br.com.connectfy.EurofarmaCliente.controllers;
 
 import br.com.connectfy.EurofarmaCliente.dtos.ChangePasswordDTO;
+import br.com.connectfy.EurofarmaCliente.dtos.EmployeeRegistrationResponseDTO;
 import br.com.connectfy.EurofarmaCliente.dtos.PhoneNumberUpdateDTO;
 import br.com.connectfy.EurofarmaCliente.dtos.employee.EmployeeInfoDTO;
 import br.com.connectfy.EurofarmaCliente.dtos.employee.EmployeeInsertDTO;
 import br.com.connectfy.EurofarmaCliente.dtos.employee.EmployeeUpdateDTO;
 import br.com.connectfy.EurofarmaCliente.dtos.employee.EmployeeUserProfileInfoDTO;
-import br.com.connectfy.EurofarmaCliente.dtos.training.TrainingDTO;
-import br.com.connectfy.EurofarmaCliente.services.EmployeeInsertService;
+import br.com.connectfy.EurofarmaCliente.services.DocumentEmployeeInsertService;
 import br.com.connectfy.EurofarmaCliente.services.EmployeeService;
 import br.com.connectfy.EurofarmaCliente.specification.SearchCriteria;
 import io.swagger.v3.oas.annotations.Operation;
@@ -47,7 +47,7 @@ public class EmployeeController {
     private EmployeeService employeeService;
 
     @Autowired
-    private EmployeeInsertService employeeInsertService;
+    private DocumentEmployeeInsertService employeeInsertService;
 
 
     @PreAuthorize("hasAnyAuthority('admin')")
@@ -281,8 +281,8 @@ public class EmployeeController {
 
             })
     @PostMapping(value = "/createAllEmployees", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<EmployeeInfoDTO>> createAllEmployees(@RequestPart("file") MultipartFile file) throws IOException {
-        List<EmployeeInfoDTO> employees = employeeInsertService.readExcelFile(file);
+    public ResponseEntity<EmployeeRegistrationResponseDTO> createAllEmployees(@RequestPart("file") MultipartFile file) throws IOException {
+        EmployeeRegistrationResponseDTO employees = employeeInsertService.readExcelFile(file);
         return ResponseEntity.ok(employees);
     }
 }

@@ -40,7 +40,7 @@ public class RoleController {
                     @ApiResponse(description = "Unprocessable Entity", responseCode = "422", content = @Content)
             })
     @PostMapping(produces = "application/json")
-    public ResponseEntity<RoleDTO> insert(@RequestBody @Valid RoleDTO dto) {
+    public ResponseEntity<RoleDTO> insert(@RequestBody @Valid RoleInsertDTO dto) {
         RoleDTO roleDTO = roleService.insert(dto);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(roleDTO.getId()).toUri();
         return ResponseEntity.created(uri).body(roleDTO);

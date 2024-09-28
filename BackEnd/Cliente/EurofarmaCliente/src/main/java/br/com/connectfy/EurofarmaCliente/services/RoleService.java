@@ -36,9 +36,10 @@ public class RoleService {
     }
 
     @Transactional
-    public RoleDTO insert(RoleDTO roleDTO) {
-        DepartmentInfoDTO departmentDTO = departmentService.findById(roleDTO.getDepartment().getId());
-        Role role = new Role(roleDTO);
+    public RoleDTO insert(RoleInsertDTO roleDTO) {
+        DepartmentInfoDTO departmentDTO = departmentService.findById(roleDTO.departmentId());
+        Role role = new Role();
+        role.setRoleName(roleDTO.name());
         role.setDepartment(new Department(departmentDTO));
         return toDTO(roleRepository.save(role));
     }
@@ -46,7 +47,7 @@ public class RoleService {
     @Transactional
     public RoleDTO update(Long id, RoleInsertDTO roleInsertDTO) {
         Role role = roleRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Nenhum funcionário encontrado com id: " + id));
-        role.setRoleName(roleInsertDTO.nome());
+        role.setRoleName(roleInsertDTO.name());
         return toDTO(roleRepository.save(role));
     }
 

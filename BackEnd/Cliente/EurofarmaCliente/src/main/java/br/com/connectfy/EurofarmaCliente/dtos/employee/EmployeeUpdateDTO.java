@@ -12,6 +12,7 @@ public record EmployeeUpdateDTO(
         String surname,
         @NotBlank(message = "O número de celular é obrigatório e não pode estar em branco.")
         String cellphoneNumber,
+
         @NotNull(message = "O cargo do funcionário é obrigatório e deve ser especificado.")
         Long roleId,
         @NotNull(message = "O funcionário deve ter pelo menos uma permissão atribuída.")

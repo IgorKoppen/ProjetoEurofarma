@@ -1,6 +1,7 @@
 package br.com.connectfy.EurofarmaCliente.models;
 
 import br.com.connectfy.EurofarmaCliente.dtos.role.RoleDTO;
+import br.com.connectfy.EurofarmaCliente.dtos.role.RoleInsertDTO;
 import br.com.connectfy.EurofarmaCliente.dtos.role.RoleWithEmployeeDTO;
 import jakarta.persistence.*;
 
@@ -52,6 +53,9 @@ public class Role {
         this.roleName = roleName;
         this.department = department;
     }
+
+
+
 
     public Long getId() {
         return id;
