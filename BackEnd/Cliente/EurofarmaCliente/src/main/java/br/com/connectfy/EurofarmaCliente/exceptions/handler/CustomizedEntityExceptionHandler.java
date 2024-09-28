@@ -16,7 +16,10 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestControllerAdvice
 public class CustomizedEntityExceptionHandler {
@@ -93,6 +96,12 @@ public class CustomizedEntityExceptionHandler {
         return new ResponseEntity<>(exceptionResponseDTO, HttpStatus.UNPROCESSABLE_ENTITY);
     }
 
+    @ExceptionHandler(InvalidFileException.class)
+    public final ResponseEntity<ExceptionResponseDTO> handleInvalidFileException(InvalidFileException ex, WebRequest request) {
+        ExceptionResponseDTO exceptionResponseDTO = new ExceptionResponseDTO(new Date(), ex.getMessage(), request.getDescription(false));
+        return new ResponseEntity<>(exceptionResponseDTO, HttpStatus.BAD_REQUEST);
+    }
+
     @ExceptionHandler(IncorrectPasswordException.class)
     public final ResponseEntity<ExceptionResponseDTO> handleIncorrectPasswordException(IncorrectPasswordException ex, WebRequest request) {
         ExceptionResponseDTO exceptionResponseDTO = new ExceptionResponseDTO(new Date(), ex.getMessage(), request.getDescription(false));
@@ -131,4 +140,5 @@ public class CustomizedEntityExceptionHandler {
         ExceptionResponseDTO exceptionResponseDTO = new ExceptionResponseDTO(new Date(), ex.getMessage(), request.getDescription(false));
         return new ResponseEntity<>(exceptionResponseDTO, HttpStatus.FORBIDDEN);
     }
+
 }
