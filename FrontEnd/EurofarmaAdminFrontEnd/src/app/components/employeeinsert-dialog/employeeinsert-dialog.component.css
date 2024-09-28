@@ -1,0 +1,124 @@
+.form{
+    margin-top: 10px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(5, 1fr);
+    grid-column-gap: 20px;
+    grid-row-gap: 20px;
+}
+.selectTypeInsertForm{
+    text-align: center;
+}
+
+.matRadio {
+    grid-column: 1 / span 2; 
+    text-align: center;
+}
+.register{
+    grid-column: 1 / span 2;  
+    grid-row: 4;  
+}
+
+.actionsBox{
+    grid-column: 1 / span 2;  
+    grid-row: 5;  
+    display: flex !important;
+    justify-content: right !important;
+    padding: 0 10px 10px 0;
+}
+.depDiv{
+  display: grid;
+  grid-template-columns: 1fr 50px;
+  gap: 15px;
+  align-items: start;
+}
+.btnOpen{
+  width: 45px;
+  height: 45px;
+}
+.mat-icon{
+  width: 100%;
+  height: 100%;
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+ }
+ .mdc-fab--extended{
+  padding-right: 0 !important;
+ }
+.confirmBtn{
+   
+        padding: 15px;
+        transition: 200ms ease;
+        background: var(--main-color);
+        color: var(--font-color) !important;
+        cursor: pointer;
+    }
+   
+.confirmBtn:hover{
+        transition: 200ms ease;
+        background: var(--accent);
+    }
+    .cancelBtn{
+        padding: 15px;
+        transition: 200ms ease;
+        cursor: pointer;
+    }
+.cancelBtn:hover{
+    color: #c70000;
+}
+
+.inputBox {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1rem;
+  }
+  
+  .inputBox .file-label {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+  }
+  
+  .insideInputBox {
+    display: flex;
+    align-items: center;
+  }
+  
+  .insideInputBox .file-input {
+    display: none;
+  }
+  .file-name {
+    margin-left: 10px;
+    font-style: italic;
+    color: #555;
+  }
+  .insideInputBox .file-btn {
+    padding: 0.5rem 1rem;
+    border: 1px solid #ccc;
+    background-color: var(--main-color);
+    font-size: 18px;
+    color: var(--font-color);
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s, border-color 0.3s;
+  }
+  
+  .insideInputBox .file-btn:hover {
+    background-color: var(--accent);
+    border-color: #bbb;
+  }
+  .disabled-btn {
+    padding: 15px;
+    transition: background-color 200ms ease, color 200ms ease;
+    background-color: lightgray !important;
+    color: black !important;
+    cursor: not-allowed !important;
+}
+
+  .error-text {
+    color: red;
+    font-size: 0.875rem;
+    margin-top: 0.5rem;
+  }

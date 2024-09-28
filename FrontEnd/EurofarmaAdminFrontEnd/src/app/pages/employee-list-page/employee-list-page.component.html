@@ -1,0 +1,31 @@
+
+<div class="container ">
+    <div class="topDiv">
+      <h1>Funcionário</h1>
+      <div class="actionsDiv">
+        @if(searchParams != null){
+          <button class="btnCleanSearch" (click)="cleanSearch()" mat-fab aria-label="Limpar pesquisa">
+            <mat-icon>search_off</mat-icon>
+          </button>
+        }
+         <app-default-btn  iconName="search" text="Filtrar" [callback]="openSearchDialog"></app-default-btn>
+         <app-default-btn  iconName="add" text="Novo" [callback]="openNewEmployeeDialog"></app-default-btn>
+        </div>
+  </div>
+</div>
+<app-table-employee-component
+[isLoading]="isLoadingResults"
+[displayedColumns]="displayedColumns"
+[totalElements]="totalElements"
+[pageSize]="pageSize"
+[pageSizeOptions]="[10,30,50,100]"
+[dataSource]="dataSource"
+[currentPage]="currentPage"
+(pageChange)="onPageChange($event)"
+(sortChange)="onSortChanged($event)"
+(updateData)="loadEmployees()"
+[callbackDelete]="deleteEmployee"
+[callbackDisable]="disableEmployee"
+>
+>
+</app-table-employee-component>

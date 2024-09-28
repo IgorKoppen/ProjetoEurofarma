@@ -1,0 +1,96 @@
+// Custom Theming for Angular Material
+// For more information: https://material.angular.io/guide/theming
+@use '@angular/material' as mat;
+
+// Include the common styles for Angular Material
+@include mat.core();
+
+// Define the primary color palette using custom colors
+$EurofarmaAdminFrontEnd-primary: (
+  50: #e1ecf6,
+  100: #b3cce8,
+  200: #80a9d9,
+  300: #4d86ca,
+  400: #266cbe,
+  500: rgb(0, 72, 142), // main color
+  600: rgb(0, 63, 124),
+  700: rgb(0, 55, 108),
+  800: #003588,
+  900: #002570,
+  A100: #a3c2ff,
+  A200: #70aaff,
+  A400: #3d92ff,
+  A700: #237aff,
+  contrast: (
+    50: rgba(0, 0, 0, 0.87),
+    100: rgba(0, 0, 0, 0.87),
+    200: rgba(0, 0, 0, 0.87),
+    300: white,
+    400: white,
+    500: white,
+    600: white,
+    700: white,
+    800: white,
+    900: white,
+    A100: rgba(0, 0, 0, 0.87),
+    A200: rgba(0, 0, 0, 0.87),
+    A400: rgba(0, 0, 0, 0.87),
+    A700: white,
+  )
+);
+
+// Define the accent color palette using custom colors
+$EurofarmaAdminFrontEnd-accent: (
+  50: #fffce6,
+  100: #fff5c0,
+  200: #ffef95,
+  300: #ffe96a,
+  400: #ffe448,
+  500: rgb(255, 242, 0), // main color
+  600: rgb(230, 218, 0),
+  700: rgb(204, 193, 0),
+  800: #d5c000,
+  900: #ad9a00,
+  A100: #ffffff,
+  A200: #fffec2,
+  A400: #ffee0f,
+  A700: #e6c800,
+  contrast: (
+    50: rgba(0, 0, 0, 0.87),
+    100: rgba(0, 0, 0, 0.87),
+    200: rgba(0, 0, 0, 0.87),
+    300: rgba(0, 0, 0, 0.87),
+    400: rgba(0, 0, 0, 0.87),
+    500: rgba(0, 0, 0, 0.87),
+    600: rgba(0, 0, 0, 0.87),
+    700: rgba(0, 0, 0, 0.87),
+    800: rgba(0, 0, 0, 0.87),
+    900: rgba(0, 0, 0, 0.87),
+    A100: rgba(0, 0, 0, 0.87),
+    A200: rgba(0, 0, 0, 0.87),
+    A400: rgba(0, 0, 0, 0.87),
+    A700: rgba(0, 0, 0, 0.87),
+  )
+);
+
+// Define Angular Material palettes
+$EurofarmaAdminFrontEnd-primary-palette: mat.define-palette($EurofarmaAdminFrontEnd-primary);
+$EurofarmaAdminFrontEnd-accent-palette: mat.define-palette($EurofarmaAdminFrontEnd-accent, A200, A100, A400);
+
+// The warn palette is optional (defaulting to red).
+$EurofarmaAdminFrontEnd-warn: mat.define-palette(mat.$red-palette);
+
+// Create the theme object. A theme consists of configurations for individual
+// theming systems such as "color" or "typography".
+$EurofarmaAdminFrontEnd-theme: mat.define-light-theme((
+  color: (
+    primary: $EurofarmaAdminFrontEnd-primary-palette,
+    accent: $EurofarmaAdminFrontEnd-accent-palette,
+    warn: $EurofarmaAdminFrontEnd-warn,
+  ),
+  typography: mat.define-typography-config(),
+  density: 0
+));
+
+// Include theme styles for core and each component used in your app.
+@include mat.all-component-themes($EurofarmaAdminFrontEnd-theme);

@@ -1,0 +1,33 @@
+/* You can add global styles to this file, and also import other style files */
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root{
+  --main-color: rgb(0,72,142);
+  --second-color: rgb(84,86,91);
+  --third-color: rgb(255,242,0);
+  --accent: rgb(0,130,203);
+  --font-color: #ffff;
+}
+html, body { 
+
+height: 100%; }
+
+.mdc-text-field--outlined:not(.mdc-text-field--disabled) .mdc-notched-outline__leading,
+.mdc-text-field--outlined:not(.mdc-text-field--disabled) .mdc-notched-outline__notch,
+.mdc-text-field--outlined:not(.mdc-text-field--disabled) .mdc-notched-outline__trailing {
+border-color: var(--font-color) !important;
+border-width: 3px !important;
+}
+
+.mdc-text-field--outlined:not(.mdc-text-field--disabled).mdc-text-field--focused
+.mdc-notched-outline__leading,
+.mdc-text-field--outlined:not(.mdc-text-field--disabled).mdc-text-field--focused
+.mdc-notched-outline__notch,
+.mdc-text-field--outlined:not(.mdc-text-field--disabled).mdc-text-field--focused
+.mdc-notched-outline__trailing {
+border-color: #747474 !important;
+}

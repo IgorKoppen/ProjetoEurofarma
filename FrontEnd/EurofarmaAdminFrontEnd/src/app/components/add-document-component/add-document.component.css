@@ -1,0 +1,85 @@
+.mainPage{
+   display: flex;
+   flex-direction: column;
+   height: 100%;
+   width: 100%;
+   align-items: center;
+   padding: 50px;
+   position: relative;
+
+}
+.pageTitle{
+    margin-top: 200px;
+    font-size: 3rem;
+    color: #284678;
+}
+.formDocument{
+    
+    margin-top: 100px;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: repeat(2, 1fr);
+    grid-row-gap: 10px;
+}
+.formDocument label {
+    font-size: 20px;
+    font-weight: bold;
+}
+.inputBox{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    
+}
+.insideInputBox{
+    border: 3px #284678 solid;
+    padding: 15px;
+    border-radius: 15px;
+}
+.formDocument input::file-selector-button{
+    font-weight: bold;
+    font-size: 1rem;
+    color: #284678;
+    padding: 0.6em;
+    border: 3px solid #284678;
+    border-radius: 10px;
+    transition: 200ms ease;
+    cursor: pointer;
+}
+#sendBtn{
+    font-size: 1.5rem;
+    border: none;
+    background: #284678;;
+    border-radius: 15px;
+    color: #fff;
+    height: 65px;
+    cursor: pointer;
+}
+#sendBtn:hover{
+    background: gray;
+
+}
+.actionBox{
+    margin-top: 50px;
+    width: 100%;
+    gap: 20px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+}
+.actionBox a{
+    display: grid;
+    align-items: center;
+    justify-items: center;
+    font-size: 1.5rem;
+    border: none;
+    background: #284678;;
+    border-radius: 15px;
+    color: #fff;
+    height: 65px;
+    cursor: pointer;
+    text-decoration: none;
+}
+.actionBox a:hover{
+    background: gray;
+}

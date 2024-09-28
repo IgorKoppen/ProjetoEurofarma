@@ -1,0 +1,59 @@
+
+.filterBox{
+  display: flex;
+  justify-content: end;
+  padding-right: 30px;
+}
+
+.tableMain {
+  padding: 0 20px 0 20px;
+}
+th {
+  font-size: 17px;
+  font-weight: bold;
+}
+td {
+  font-size: 15px;
+  font-weight: 500;
+}
+td,
+th {
+  font-family: "Inter", sans-serif;
+}
+.demo-table {
+  width: 100%;
+}
+::ng-deep .mat-mdc-row .mat-mdc-cell {
+  border-bottom: 1px solid transparent;
+  border-top: 1px solid transparent;
+  cursor: pointer;
+}
+
+::ng-deep .mat-mdc-row:hover .mat-mdc-cell {
+  border-color: currentColor;
+}
+
+::ng-deep .demo-row-is-clicked .mat-mdc-cell {
+  font-weight: bold;
+  border-top: 1px solid black;
+  border-bottom: 1px solid black;
+}
+
+.filter {
+  width: 15%;
+}
+.chipStatus {
+  padding: 6px;
+  border-radius: 10px;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 600;
+}
+.ativo {
+  color: #0a580e;
+  background: #4be75d;
+}
+.desativo {
+  color: #331212;
+  background: #b00b1e;
+}

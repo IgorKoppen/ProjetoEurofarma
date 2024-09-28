@@ -1,0 +1,30 @@
+.mat-icon{
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+   }
+.btnAlterar{
+    width: 35px;
+    height: 35px;
+   }
+   .mat-icon-button{
+    width: 35px;
+    height: 35px;
+   }
+
+
+  @media screen and (max-width: 1200px) {
+    .mat-icon{
+        font-size: calc(20px * 0.8);
+
+       }
+       .btnAlterar{
+        width: calc(35px * 0.8);;
+        height: calc(35px * 0.8);
+       }
+       .mat-icon-button{
+        width: calc(35px * 0.8);
+        height: calc(35px * 0.8);
+       }
+  }

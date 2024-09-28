@@ -1,0 +1,190 @@
+.container {
+  width: 100%;
+  height: 100%;
+}
+
+.sidenav-content {
+  height: 100%;
+  width: 100%;
+}
+.sidenav{
+  width: 40%;
+  background: linear-gradient(var(--main-color), var(--second-color));
+  transition: 200ms ease;
+}
+.sidenav-open {
+  max-width: 360px;
+}
+.sidenav-minimized{
+  max-width: 85px;
+}
+.iconBtnMinimize{
+  margin-top: 10px;
+  background: transparent;
+  border: none;
+  color: white;
+  transition: 200ms ease;
+}
+
+.rotateIcon{
+  transform: rotate(180deg);
+}
+.centerIcon{
+  justify-self: center;
+}
+.rightIcon{
+  justify-self: end;
+}
+.sidebarDiv {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  overflow: hidden;
+  grid-template-columns: 1fr;
+  grid-template-rows:  0.3fr 1fr 3fr 0.5fr;
+  grid-column-gap: 5px;
+  grid-row-gap: 5px;
+  align-items: center;
+}
+.logoImg {
+  width: 80%;
+  max-width: 125px;
+  justify-self: center;
+  
+}
+.navigation {
+  align-self: start;
+}
+.navigation ul li {
+  padding: 15px;
+  font-size: 30px;
+  color: white;
+  border-top: 3px white solid;
+  transition: 150ms ease-in;
+  font-family: "Inter", sans-serif;
+  background: transparent;
+}
+.navigation ul a:hover li{
+  background: gray;
+}
+
+.navigationMinimized {
+  align-self: baseline;
+}
+.navigationMinimized ul{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  gap: 35px;
+  list-style: none;
+}
+.navigationMinimized ul a {
+  color: white;
+  transition: 150ms ease-in;
+  font-family: "Inter", sans-serif;
+  background: rgb(255, 255, 255);
+  width: 75%;
+  height: 62.5px;
+  border-radius: 25%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.navigationMinimized ul a:hover{
+  background: gray;
+}
+
+.navigationMinimized ul a:hover .sidebarIconMinimized{
+  color: white;
+}
+
+.navigationMinimized ul li {
+margin-top: 5px;
+}
+
+.sidebarIconMinimized{
+  color:black;
+  width: 100%;
+  height: 100%;
+  font-size: 35px;
+}
+.itensBox {
+  margin-top: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+.itensBox a {
+  font-size: 28px;
+  text-decoration: none;
+}
+
+.sidebarIcon {
+  font-size: 35px;
+  width: 35px;
+  height: 35px;
+}
+.titleLink {
+  font-size: 30px;
+  width: 50px;
+  height: 50px;
+  text-decoration: none;
+}
+
+.titleLinkMinimized{
+  font-size: 30px;
+  text-decoration: none;
+}
+.iconBox {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.subMenu {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: white;
+  height: 35px;
+}
+.logoutBtn {
+  justify-self: center;
+  width: 85%;
+  height: 60px;
+  border-radius: 30px;
+  margin-bottom: 20px;
+  font-size: 20px;
+  font-weight: bold;
+  border: none;
+  background-color: white;
+  cursor: pointer;
+}
+.logoutBtnIcon{
+  background: transparent;
+  width: 40px;
+  height: 40px;
+  border: none;
+  color: white;
+  text-align: center;
+  justify-self: center;
+  cursor: pointer;
+}
+.logoutBtnIcon mat-icon{
+  justify-self: center;
+  align-self: center;
+  font-size: 40px;
+  width: 100%;
+ height: 100%;
+
+}
+.logoutBtnIcon:hover {
+  color: lightgray;
+}
+.logoutBtn:hover {
+  background-color: lightgray;
+}

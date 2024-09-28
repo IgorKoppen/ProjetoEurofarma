@@ -1,0 +1,13 @@
+<button  mat-fab color="primary"
+  aria-label="Disable Icon"
+  class="btnDisable" 
+  (click)="openDialog('200ms', '100ms')"
+  >
+    @if(isDisabled === true){
+        <mat-icon   fontIcon="lock_open"></mat-icon>
+        
+    }@else {
+        <mat-icon   fontIcon="lock_outline"></mat-icon>
+    }
+
+</button>

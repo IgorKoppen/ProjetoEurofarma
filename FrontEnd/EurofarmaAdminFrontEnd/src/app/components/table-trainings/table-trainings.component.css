@@ -1,0 +1,147 @@
+.tableMain {
+  padding: 0 20px 0 20px;
+  overflow-x: auto;
+}
+.table{
+  min-width: 1200px;
+}
+th {
+  font-size: 16px;
+  font-weight: bold;
+}
+td {
+  font-size: 14px;
+  font-weight: 500;
+}
+.mdc-data-table__cell,
+.mdc-data-table__header-cell {
+  padding: 0 4px 0 4px !important;
+}
+
+.presencelistBtn{
+  text-wrap: nowrap;
+ 
+}
+.loading-shade {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.15);
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+td,
+th {
+  font-family: "Inter", sans-serif;
+}
+.table {
+  width: 100%;
+}
+.filter {
+  width: 15%;
+}
+.chip {
+  padding: 6px;
+  margin: 0 5px 0 0;
+  border-radius: 10px;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 600;
+  text-wrap: nowrap;
+}
+.description {
+  inline-size: 200px;
+  overflow-wrap: break-word;
+}
+.chipDepartment {
+
+  color: var(--font-color);
+  background: var(--main-color);
+}
+.chipActive {
+  color: #0a580e;
+  background: #4be75d;
+}
+.cellPhone {
+  white-space: nowrap;
+}
+.chipInactive {
+  color: #331212;
+  background: #b00b1e;
+}
+.ChipBox {
+  
+  display: grid;
+  grid-template-columns: repeat(3,0.7fr);
+  column-gap: 5px;
+  row-gap: 10px;
+  margin: 5px 0 5px 0;
+  padding: 5px;
+  flex-wrap: wrap;
+}
+.chipEmployee {
+  color: var(--font-color);
+  background: var(--main-color);
+}
+.chipTrainer {
+  color: var(--font-color);
+  background: var(--main-color);
+}
+.chipAdmin {
+  color: var(--font-color);
+  background: var(--main-color);
+}
+.actionBox {
+  display: flex;
+  gap: 15px;
+  margin: 5px 0 5px 0;
+  padding: 0 5px 0 5px;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+}
+@media screen and (max-width: 1550px) {
+  th {
+    font-size: calc(17px * 0.8);
+  }
+  .presencelistBtn{
+    font-size: calc(17px * 0.8);
+  }
+  td {
+    font-size: calc(15px * 0.8);
+  }
+
+  .chip {
+    font-size: calc(14px * 0.8);
+  }
+  .tableMain {
+    padding: 0 5px 0 5px;
+  }
+  .mdc-data-table__cell,
+  .mdc-data-table__header-cell {
+    padding: 0 1px 0 1px !important;
+  }
+}
+
+@media screen and (max-width: 1200px) {
+  th {
+    font-size: calc(17px * 0.7);
+  }
+  .presencelistBtn{
+    font-size: calc(17px * 0.7);
+  }
+  td {
+    font-size: calc(15px * 0.7);
+  }
+
+  .chip {
+    font-size: calc(14px * 0.7);
+  }
+  .tableMain {
+    padding: 0 3px 0 3px;
+  }
+}

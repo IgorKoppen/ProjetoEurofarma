@@ -1,0 +1,15 @@
+<div class="topDiv">
+    <h1>EuroCompliance Documentos</h1>
+    <div class="actionsDiv">
+        <a [routerLink]="['/admin/complianceAdicionar']">Novo <mat-icon>add_circle</mat-icon></a>
+      </div>
+</div>
+  
+
+<app-table-document
+[dataSource]="dataSource"
+[displayedColumns]="displayedColumns"
+[deleteDoc]="deleteDoc"
+[refreshDocuments]="refreshDocuments"
+[isLoadingResults]="isLoading">
+</app-table-document>

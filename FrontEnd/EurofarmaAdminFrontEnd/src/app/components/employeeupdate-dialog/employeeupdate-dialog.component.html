@@ -1,0 +1,99 @@
+<h2 class="title" mat-dialog-title>Atualizar Registro</h2>
+<mat-dialog-content>
+<form [formGroup]="updateEmployeeForm" class="form">
+    <mat-form-field appearance="fill">
+      <mat-label>ID do Funcionário</mat-label>
+      <input matInput [value]="employeeData.id" readonly placeholder="ID do Funcionário">
+    </mat-form-field>
+  
+   
+    <mat-form-field appearance="fill">
+      <mat-label>Registro de Funcionário</mat-label>
+      <input matInput [value]="employeeData.employee_registration" readonly placeholder="Registro de Funcionário">
+    </mat-form-field>
+ 
+    <mat-form-field appearance="fill">
+      <mat-label>Nome</mat-label>
+      <input matInput formControlName="name" placeholder="Nome">
+      @if(updateEmployeeForm.get('name')?.hasError('required')) {
+        <mat-error>Campo requerido</mat-error>
+      } 
+      @if(updateEmployeeForm.get('name')?.hasError('minlength')) {
+        <mat-error>Nome deve ter no mínimo 3 caracteres</mat-error>
+      }
+    </mat-form-field>
+  
+ 
+    <mat-form-field appearance="fill">
+      <mat-label>Sobrenome</mat-label>
+      <input matInput formControlName="surname" placeholder="Sobrenome">
+      @if(updateEmployeeForm.get('surname')?.hasError('required')) {
+        <mat-error>Campo requerido</mat-error>
+      } 
+      @if(updateEmployeeForm.get('surname')?.hasError('minlength')) {
+        <mat-error>Sobrenome deve ter no mínimo 3 caracteres</mat-error>
+      }
+    </mat-form-field>
+  
+ 
+    <mat-form-field appearance="fill">
+      <mat-label>Departamento</mat-label>
+      <mat-select (selectionChange)="onDepartmentSelectionChange($event)" formControlName="departmentId">
+        @for (department of departments; track department.id) {
+          <mat-option [value]="department.id">{{ department.departName }}</mat-option>
+        } 
+        @empty {
+          <mat-option [value]="null">Sem departamento cadastrado</mat-option>
+        }
+      </mat-select>
+      @if(updateEmployeeForm.get('departmentId')?.hasError('required')) {
+        <mat-error>Campo requerido</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Cargo</mat-label>
+      <mat-select formControlName="roleId">
+        @for (role of roles; track role.id) {
+          <mat-option [value]="role.id">{{ role.roleName }}</mat-option>
+        } 
+        @empty {
+          <mat-option [value]="null">Sem cargos cadastrados</mat-option>
+        }
+      </mat-select>
+      @if(updateEmployeeForm.get('roleId')?.hasError('required')) {
+        <mat-error>Campo requerido</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Permissões</mat-label>
+      <mat-select formControlName="permissionsIds" multiple>
+        @for (permission of permissions; track permission.id) {
+          <mat-option [value]="permission.id">
+            {{ permission.description }}
+          </mat-option>
+        } 
+        @empty {
+          <mat-option [value]="null">Sem Permissão cadastrada</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Número de Celular</mat-label>
+      <input matInput formControlName="cellphoneNumber" placeholder="Número de Celular" type="tel">
+      @if(updateEmployeeForm.get('cellphoneNumber')?.hasError('required')) {
+        <mat-error>Campo requerido</mat-error>
+      } 
+      @if(updateEmployeeForm.get('cellphoneNumber')?.hasError('pattern')) {
+        <mat-error>Número de celular deve estar no formato internacional (+999999999)</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-dialog-actions class="actionsBox">
+      <button mat-button class="confirmBtn" color="primary" [disabled]="!updateEmployeeForm.valid" (click)="updateEmployee()">Atualizar</button>
+      <button mat-button class="cancelBtn" mat-dialog-close>Cancelar</button>
+    </mat-dialog-actions>
+  </form>
+  </mat-dialog-content>

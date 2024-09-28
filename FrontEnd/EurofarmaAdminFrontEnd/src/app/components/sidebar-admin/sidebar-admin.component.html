@@ -1,0 +1,61 @@
+<mat-drawer-container class="container" autosize>
+  <mat-drawer #drawer class="sidenav"  [class]="isOpen ? 'sidenav-open' : 'sidenav-minimized'" [opened]="true" mode="side">
+    <div class="sidebarDiv">
+      <button (click)="minimizeOrOpen()" class="iconBtnMinimize" [class]="isOpen ? 'rightIcon' : 'centerIcon'"><mat-icon class="sidebarIcon" [class]="isOpen ? '' : 'rotateIcon'" >keyboard_arrow_left</mat-icon></button>
+      <img
+        class="logoImg"
+        src="../../../assets/image/logoEurofarma.png"
+        alt="Logo da Eurofarma"
+        draggable="false"
+      />
+    
+      <nav [className]="isOpen ? 'navigation' : 'navigationMinimized'">
+        <ul>
+          <a [className]="isOpen ? 'titleLink' : 'titleLinkMinimized'" href="#" >
+            <li class="iconBox">
+              <mat-icon [class]="isOpen ?  'sidebarIcon' : 'sidebarIconMinimized'"  [routerLink]="['/admin/treinamentos']">assignment</mat-icon>
+              @if(isOpen){
+             Treinamentos
+              }
+            </li></a
+          >
+          <a [class]="isOpen ? 'titleLink' : 'titleLinkMinimized'"  [routerLink]="['/admin/funcionarios']"
+            ><li class="iconBox">
+              <mat-icon [class]="isOpen ?  'sidebarIcon' : 'sidebarIconMinimized'">person</mat-icon>
+              @if(isOpen){
+              Funcionários
+              }
+            </li></a
+          >
+          <a [routerLink]="['/admin/euroComplianceDocs']" [class]="isOpen ? 'titleLink' : 'titleLinkMinimized'" >
+            <li class="iconBox">
+                <mat-icon [class]="isOpen ?  'sidebarIcon' : 'sidebarIconMinimized'">assured_workload</mat-icon>
+                @if(isOpen){
+                  ChatbotCompliance
+                }
+              </li>
+            </a>
+            <a [routerLink]="['/admin/euroDataDocs']"[class]="isOpen ? 'titleLink' : 'titleLinkMinimized'" >
+            <li class="iconBox">
+             <mat-icon [class]="isOpen ?  'sidebarIcon' : 'sidebarIconMinimized'">chat</mat-icon>
+             @if(isOpen){
+              ChatbotEuroData
+            }
+            </li>
+            </a>
+            <li></li>
+        </ul>
+      </nav>
+    
+    @if(isOpen){
+      <button class="logoutBtn" (click)="logout()">Sair</button>
+    }@else{
+      <button class="logoutBtnIcon" (click)="logout()"><mat-icon>logout</mat-icon></button>
+    }
+    </div>
+
+  </mat-drawer>
+  <div class="sidenav-content">
+    <ng-content></ng-content>
+  </div>
+</mat-drawer-container>

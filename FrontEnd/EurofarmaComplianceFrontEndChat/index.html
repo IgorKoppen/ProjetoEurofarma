@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat - Eurofarma Compliance</title>
+    <link rel="icon" type="image/x-icon" href="./Imagens/favicon.ico">
+</head>
+<body style="margin: 0;">
+    <flowise-fullchatbot></flowise-fullchatbot>
+</body>
+<script type="module">
+    import Chatbot from "https://cdn.jsdelivr.net/npm/flowise-embed/dist/web.js"
+    Chatbot.initFull({
+      chatflowid: "c28d9248-97b4-4800-9462-1227901dc5dd",
+      apiHost: "http://localhost:3000",
+        theme: {
+      button: {
+        backgroundColor: '#00478d',
+        right: 20,
+        bottom: 20,
+        size: 400, // small | medium | large | number
+        dragAndDrop: true,
+        iconColor: 'white',
+        customIconSrc: './Imagens/logo.png',
+      },
+      tooltip: {
+        showTooltip: true,
+        tooltipMessage: 'Olá 👋!',
+        tooltipBackgroundColor: 'black',
+        tooltipTextColor: 'white',
+        tooltipFontSize: 16,
+      },
+      chatWindow: {
+        showTitle: true,
+        showAgentMessages: false,
+        title: 'Compliance Eurofarma Chat',
+        titleAvatarSrc: './Imagens/logo.png',
+        welcomeMessage: 'Olá, Eu sou o Eurinho Compliance. Como posso te ajudar?',
+        errorMessage: 'Erro ao se conectar com o bot',
+        backgroundColor: '#ffffff',
+        fontSize: 16,
+        botMessage: {
+          backgroundColor: '#00478d',
+          textColor: '#ffffff',
+          showAvatar: true,
+          avatarsize: 120,
+          avatarSrc: './Imagens/Eurinho.png',
+        },
+        userMessage: {
+          backgroundColor: '#00478d',
+          textColor: '#ffffff',
+          avatarsize: 60,
+        },
+        
+        textInput: {
+          placeholder: 'Digite sua pergunta para o Eurinho',
+          backgroundColor: '#ffffff',
+          textColor: '#303235',
+          sendButtonColor: '#00478d',
+          maxChars: 150,
+          maxCharsWarningMessage: 'Você excedeu o limite de caracteres. Insira menos de 150 caracteres.',
+          autoFocus: true, 
+          sendMessageSound: true,
+          receiveMessageSound: false,
+        },
+        feedback: {
+          color: '#303235',
+        },
+        footer: {
+          textColor: '#303235',
+          text: 'Powered by',
+          company: 'Connetfy',
+          companyLink: '#',
+        },
+      },
+    },
+    })
+</script>
+</html>

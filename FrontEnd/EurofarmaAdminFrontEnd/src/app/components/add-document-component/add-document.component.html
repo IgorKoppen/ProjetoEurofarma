@@ -1,0 +1,19 @@
+<div class="mainPage">
+    <h1 class="pageTitle">Adicionar documento {{titulo}}</h1>
+    <form class="formDocument" >
+        <div class="inputBox">
+            <label for="file">Arquivo</label>
+            <div class="insideInputBox">
+                <input type="file" id="file" name="file" accept=".pdf,.docx" required="true"  (change)="onFileSelected($event)">
+            </div>
+            @if(fileErrorMessage){
+                <p>{{fileErrorMessage}}</p>
+            }
+        </div>
+        <div class="actionBox">   
+            <a [routerLink]="[linkBack]"><p>Voltar</p> </a>
+            <input id="sendBtn" type="submit" value="Enviar"  (click)="sendForm($event)">
+        </div>
+    </form>
+ 
+</div>

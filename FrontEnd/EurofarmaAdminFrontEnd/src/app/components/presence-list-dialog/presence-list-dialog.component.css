@@ -1,0 +1,11 @@
+.title{
+    font-size: 23px;
+}
+.topContent{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.downloadBtn{
+    margin-right: 24px ;
+}

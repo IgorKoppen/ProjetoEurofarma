@@ -1,0 +1,21 @@
+.dateRegister{
+    text-wrap: nowrap;
+}
+.scrollable-container {
+    max-height: 300px; 
+    overflow-y: auto; 
+  }
+  
+  .mat-elevation-z8 {
+    margin-bottom: 20px; 
+  }
+  
+  h3 {
+    margin-top: 10px;
+  }
+  .titleTable{
+    padding: 10px;
+  }
+  .disable{
+    display: none;
+  }
