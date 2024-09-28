@@ -14,10 +14,7 @@ form{
     grid-column: 1 / span 2; 
     text-align: center;
 }
-.register{
-    grid-column: 1 / span 2;  
-    grid-row: 4;  
-}
+
 
 .actionsBox{
     grid-column: 1 / span 2;  

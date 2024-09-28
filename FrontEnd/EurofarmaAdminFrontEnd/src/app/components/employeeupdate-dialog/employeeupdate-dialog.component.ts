@@ -25,6 +25,7 @@ export class EmployeeUpdateDialogComponent  {
   updateEmployeeForm!: FormGroup;
   permissions: Permission[] = [];
   roles: RoleInfo[] = [];
+  departments!: Department[];
   department!: Department;
 
   constructor(
@@ -32,31 +33,34 @@ export class EmployeeUpdateDialogComponent  {
     private permissionService: PermissionService,
     private departmentService: DepartmentService,
     private employeeService: EmployeeService,
-    private dialog:MatDialog,
+    private dialog: MatDialog,
     public dialogRef: MatDialogRef<EmployeeUpdateDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public employeeData: Employee
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.loadPermissions();
+    this.loadDepartments();
+    this.initializeForm();
+  }
 
+  private initializeForm(): void {
     this.updateEmployeeForm = this.fb.group({
       name: [this.employeeData.name, Validators.required],
       surname: [this.employeeData.surname, Validators.required],
       cellphoneNumber: [this.employeeData.cellphone_number, Validators.required],
+      departmentId: [this.employeeData.role.department.id, Validators.required],  // Pre-select the current department
       roleId: [this.employeeData.role.id, Validators.required],
       permissionsIds: [this.employeeData.permission.map(p => p.id), Validators.required]
     });
 
-    this.loadDepartmentRoles(this.employeeData.role.department.id!).then(() => {
-      this.updateEmployeeForm = this.fb.group({
-        name: [this.employeeData.name, Validators.required],
-        surname: [this.employeeData.surname, Validators.required],
-        cellphoneNumber: [this.employeeData.cellphone_number, Validators.required],
-        roleId: [this.employeeData.role.id, Validators.required],
-        permissionsIds: [this.employeeData.permission.map(p => p.id), Validators.required]
-      });
-    });
+    this.loadDepartmentRoles(this.employeeData.role.department.id!);
+  }
+
+  onDepartmentSelectionChange(event: any): void {
+    const departmentId = event.value;
+    this.loadRoles(departmentId);
+    this.updateEmployeeForm.get('roleId')?.reset(); 
   }
 
   loadPermissions(): void {
@@ -65,16 +69,30 @@ export class EmployeeUpdateDialogComponent  {
     });
   }
 
-  loadDepartmentRoles(departmentId: number): Promise<void> {
-    return new Promise((resolve, reject) => {
-      this.departmentService.findById(departmentId).subscribe(
-        (department: Department) => {
-          this.department = department;
-          this.roles = department.roles;
-          resolve();
-        },
-        (error) => reject(error)
-      );
+  private loadRoles(departmentId: number): void {
+    const department = this.departments.find((dept) => dept.id === departmentId);
+    if (department) {
+      this.roles = department.roles;
+    } else {
+      this.roles = [];
+    }
+  }
+
+  private loadDepartmentRoles(departmentId: number): void {
+    this.departmentService.findById(departmentId).subscribe({
+      next: (department: Department) => {
+        this.department = department;
+        this.roles = department.roles;
+      },
+      error: (error) => {
+        this.openDialogError('Error loading department roles', error.error.message, '200ms', '100ms');
+      }
+    });
+  }
+
+  private loadDepartments(): void {
+    this.departmentService.findAll().subscribe((data: Department[]) => {
+      this.departments = data;
     });
   }
 
@@ -86,16 +104,16 @@ export class EmployeeUpdateDialogComponent  {
       roleId: this.updateEmployeeForm.value.roleId,
       permissionsIds: this.updateEmployeeForm.value.permissionsIds
     };
-    this.employeeService.update(this.employeeData.id!, updatedEmployee).subscribe(
-      () => {
+    this.employeeService.update(this.employeeData.id!, updatedEmployee).subscribe({
+      next: () => {
         this.dialogRef.close(true);
       },
-      (error) => {
-        this.openDialogError("Erro ao atualiar funcionario", error.error.message, '200ms', '100ms');
-        console.error('Erro ao atualizar o funcionário', error);
+      error: (error: any) => {
+        this.openDialogError("Erro ao atualizar funcionário", error.error.message, '200ms', '100ms');
       }
-    );
+    });
   }
+
   openDialogError(title: string, description: string, enterDuration: string, exitDuration: string) {
     this.dialog.open(ErrorDialogComponent, {
       width: "500px",

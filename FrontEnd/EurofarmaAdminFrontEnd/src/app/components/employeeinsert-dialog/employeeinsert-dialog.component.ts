@@ -16,11 +16,16 @@ import { NgClass } from '@angular/common';
 import { ErrorDialogComponent } from '../error-dialog/error-dialog.component';
 import { EmployeeInsert } from '../../interfaces/employeeInterface';
 import { EmployeeService } from '../../services/employee.service';
+import { EmployeeRegistrationResponse } from '../../interfaces/MassInsertResponseInterface';
+import { BulkInsertDialogComponent } from '../bulk-insert-dialog/bulk-insert-dialog.component';
+import { InsertDepartmentDialogComponent } from '../insert-department-dialog/insert-department-dialog.component';
+import { MatIcon } from '@angular/material/icon';
+import { InsertRoleDialogComponent } from '../insert-role-dialog/insert-role-dialog.component';
 
 @Component({
   selector: 'app-employeeinsert-dialog',
   standalone: true,
-  imports: [MatButtonModule,MatProgressBarModule,MatRadioModule,NgClass, MatDialogActions, MatDialogClose, MatDialogTitle, MatDialogContent,MatFormFieldModule,MatInputModule,FormsModule,ReactiveFormsModule,MatSelectModule],
+  imports: [MatButtonModule,MatIcon,MatProgressBarModule,MatRadioModule,NgClass, MatDialogActions, MatDialogClose, MatDialogTitle, MatDialogContent,MatFormFieldModule,MatInputModule,FormsModule,ReactiveFormsModule,MatSelectModule],
   templateUrl: './employeeinsert-dialog.component.html',
   styleUrl: './employeeinsert-dialog.component.css'
 })
@@ -152,14 +157,24 @@ export class EmployeeinsertDialogComponent {
   bulkInsertEmployees(file: File): void {
     this.isLoadingDocument = true;
     this.employeeService.bulkInsertWithExcel(file).subscribe({
-      next: () => {
+      next: (response: EmployeeRegistrationResponse) => {
         this.isLoadingDocument = false;
+        this.openDialogShowBulkInsert(response, '200ms', '100ms');
         this.dialogRef.close(true); 
       },
       error: (error : any) => {
         this.isLoadingDocument = false;
         this.openDialogError("Erro ao inserir funcionários em massa", "Ocorreu um problema ao tentar inserir os funcionários em massa. Erro:" + error.error.message, '200ms', '100ms');
       }
+    });
+  }
+
+  openDialogShowBulkInsert(data: EmployeeRegistrationResponse, enterDuration: string, exitDuration: string) {
+    this.dialog.open(BulkInsertDialogComponent, {
+      width: "600px",
+      data: data,
+      enterAnimationDuration: enterDuration,
+      exitAnimationDuration: exitDuration
     });
   }
 
@@ -170,5 +185,32 @@ export class EmployeeinsertDialogComponent {
       enterAnimationDuration: enterDuration,
       exitAnimationDuration: exitDuration
     });
+  }
+
+  openNewDepartmentDialog(enterDuration: string, exitDuration: string){
+    const dialogRef = this.dialog.open(InsertDepartmentDialogComponent, {
+      width: "350px",
+      enterAnimationDuration: enterDuration,
+      exitAnimationDuration: exitDuration
+    }
+  );
+  dialogRef.afterClosed().subscribe((result) => {
+    if (result) {
+      this.loadDepartments();
+    }
+  })
+  }
+  openNewRoleDialog(enterDuration: string, exitDuration: string){
+    const dialogRef = this.dialog.open(InsertRoleDialogComponent, {
+      width: "350px",
+      enterAnimationDuration: enterDuration,
+      exitAnimationDuration: exitDuration
+    }
+  );
+  dialogRef.afterClosed().subscribe((result) => {
+    if (result) {
+      this.loadDepartments();
+    }
+  })
   }
 }

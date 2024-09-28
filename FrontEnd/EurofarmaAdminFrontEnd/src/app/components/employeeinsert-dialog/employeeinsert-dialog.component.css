@@ -26,6 +26,27 @@
     justify-content: right !important;
     padding: 0 10px 10px 0;
 }
+.depDiv{
+  display: grid;
+  grid-template-columns: 1fr 50px;
+  gap: 15px;
+  align-items: start;
+}
+.btnOpen{
+  width: 45px;
+  height: 45px;
+}
+.mat-icon{
+  width: 100%;
+  height: 100%;
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+ }
+ .mdc-fab--extended{
+  padding-right: 0 !important;
+ }
 .confirmBtn{
    
         padding: 15px;

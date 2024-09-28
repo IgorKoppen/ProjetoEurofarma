@@ -31,7 +31,7 @@
             <mat-error>Sobrenome deve ter no mínimo 3 caracteres</mat-error>
           }
         </mat-form-field>
-     
+        <div  class="depDiv">
         <mat-form-field appearance="fill">
           <mat-label>Departamento</mat-label>
           <mat-select (selectionChange)="onDepartmentSelectionChange($event)" formControlName="departmentId">
@@ -42,11 +42,16 @@
               <mat-option [value]="null">Sem departamento cadastrado</mat-option>
             }
           </mat-select>
+        
           @if(singleInsertForm.get('departmentId')?.hasError('required')) {
             <mat-error>Campo requerido</mat-error>
           }
         </mat-form-field>
-      
+        <button type="button" class="btnOpen"  mat-fab [color]="'primary'" extended (click)="openNewDepartmentDialog( '200ms', '100ms')">
+          <mat-icon>add</mat-icon>
+        </button>
+      </div>
+      <div  class="depDiv">
         <mat-form-field appearance="fill">
           <mat-label>Cargo</mat-label>
           <mat-select formControlName="roleId">
@@ -66,7 +71,10 @@
             <mat-error>Campo requerido</mat-error>
           }
         </mat-form-field>
-      
+        <button type="button" class="btnOpen"  mat-fab [color]="'primary'" extended (click)="openNewRoleDialog( '200ms', '100ms')">
+          <mat-icon>add</mat-icon>
+        </button>
+      </div>
         <mat-form-field appearance="fill">
           <mat-label>Permissão</mat-label>
           <mat-select formControlName="permissionId" multiple>

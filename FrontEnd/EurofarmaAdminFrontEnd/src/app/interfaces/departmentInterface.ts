@@ -5,3 +5,6 @@ export interface Department {
     departName: string;
     roles: RoleInfo[];
   }
+export interface DepartmentInsert{
+  departName: string;
+}

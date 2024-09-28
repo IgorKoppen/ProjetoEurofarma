@@ -1,0 +1,25 @@
+.divErros{
+    margin-top: 15px;
+    max-height: 300px;
+    overflow-y: scroll;
+}
+.errorTitle{
+    margin-top: 10px;
+    font-size: 22px;
+    color: #c70000;
+}
+.actionsBox{
+    display: flex !important;
+    justify-content: right !important;
+}
+.cancelBtn{
+    padding: 15px;
+    transition: 200ms ease;
+    background: var(--main-color);
+    color: var(--font-color) !important;
+    cursor: pointer;
+}
+.cancelBtn:hover{
+    transition: 200ms ease;
+    background: var(--accent);
+}

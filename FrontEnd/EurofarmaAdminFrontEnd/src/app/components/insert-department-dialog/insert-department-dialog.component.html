@@ -1,0 +1,21 @@
+<h1 mat-dialog-title>Novo Departamento</h1>
+<div mat-dialog-content>
+  <form [formGroup]="insertDepartmentForm" class="form">
+    <mat-form-field appearance="fill">
+      <mat-label>Nome do departamento</mat-label>
+      <input matInput formControlName="departName" required>
+      @if(insertDepartmentForm.get('departName')?.hasError('required')){
+        <mat-error>
+            Nome do departamento é obrigatório
+          </mat-error>
+      }
+    
+    </mat-form-field>
+  </form>
+</div>
+<div mat-dialog-actions class="actionsBox">
+    <button mat-raised-button color="primary" [disabled]="!insertDepartmentForm.valid" (click)="insertDepartment()">
+        Confirmar
+      </button>
+  <button mat-button (click)="dialogRef.close()">Cancelar</button>
+</div>

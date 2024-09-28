@@ -6,7 +6,10 @@ import { Observable } from 'rxjs';
 import { EmployeePaginationResponse } from '../interfaces/employeePagination';
 import { EmployeeSearchParams } from '../interfaces/SearchParamsIntefaces';
 import { Employee, EmployeeInsert, EmployeeUpdate } from '../interfaces/employeeInterface';
-import { Permission } from '../interfaces/permissionInterface';
+import { EmployeeRegistrationResponse } from '../interfaces/MassInsertResponseInterface';
+
+
+
 
 @Injectable({
   providedIn: 'root'
@@ -35,7 +38,7 @@ export class EmployeeService {
 
       });
 
-      return this.http.post(`${this.baseUrl}/createAllEmployees`, formData, {
+      return this.http.post<EmployeeRegistrationResponse>(`${this.baseUrl}/createAllEmployees`, formData, {
         headers: headers
       });
     }

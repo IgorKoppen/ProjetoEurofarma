@@ -3,7 +3,7 @@ import { environment } from '../../environments/environment.development';
 import { getCookie } from '../util/cookieFunction';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Role } from '../interfaces/roleInterface';
+import { Role, RoleInsert } from '../interfaces/roleInterface';
 
 @Injectable({
   providedIn: 'root'
@@ -19,12 +19,8 @@ export class RoleService {
 
   constructor(private http: HttpClient){}
 
-  insert(role: Role) : Observable<Role>{
-    const roleInsert = {
-      roleName: role.roleName,
-      department: role.department.id
-    };
-     return this.http.post<Role>(this.baseUrl,roleInsert,  { headers: this.AuthorizationHeader})
+  insert(role: RoleInsert) : Observable<Role>{
+     return this.http.post<Role>(this.baseUrl,role,  { headers: this.AuthorizationHeader})
   }
 
   update(id: number,role:Role){

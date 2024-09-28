@@ -1,0 +1,15 @@
+.form{
+    margin-top: 10px;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr;
+    grid-column-gap: 20px;
+    grid-row-gap: 20px;
+}
+.actionsBox{
+    grid-column: 1 / span 2;  
+    grid-row: 5;  
+    display: flex !important;
+    justify-content: right !important;
+    padding: 0 10px 10px 0;
+}

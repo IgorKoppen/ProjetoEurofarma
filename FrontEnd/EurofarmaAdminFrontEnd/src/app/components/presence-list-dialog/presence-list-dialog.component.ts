@@ -79,6 +79,7 @@ export class PresenceListDialogComponent {
 
   generatePDF() {
     const doc = new jsPDF();
+    doc.setLanguage("pt-BR");
     const margin = 14;
     let yPosition = 20;
 
@@ -89,7 +90,7 @@ export class PresenceListDialogComponent {
     doc.addImage(image, 'png', margin, yPosition, imgWidth, imgHeight);
     yPosition += imgHeight + 10;
 
-    doc.setFontSize(14);
+    doc.setFontSize(18);
     doc.text('Informações do treinamento', margin, yPosition);
     doc.setFontSize(12);
     yPosition += 10;
@@ -119,7 +120,7 @@ export class PresenceListDialogComponent {
 
     doc.addPage();
     yPosition = 20;
-    doc.setFontSize(14);
+    doc.setFontSize(20);
     doc.text('Treinadores', margin, yPosition);
     yPosition += 10;
 
@@ -140,7 +141,7 @@ export class PresenceListDialogComponent {
 
     doc.addPage();
     yPosition = 20;
-    doc.setFontSize(14);
+    doc.setFontSize(20);
     doc.text('Lista de Presença', margin, yPosition);
     yPosition += 10;
 

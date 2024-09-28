@@ -1,0 +1,17 @@
+<h1 mat-dialog-title>Resultado da Inserção em Massa</h1>
+    <div mat-dialog-content>
+      <p>Funcionários Inseridos: {{data.numberOfEmployeesInserted}}</p>
+      @if( data.errors.length > 0){
+        <h2 class="errorTitle">Erros</h2>
+        <ul class="divErros">
+            @for (error of data.errors; track $index) {
+                <div >
+                    Linha: {{error.rowIndex}}, Mensagem: {{error.message}}
+                  </div>
+            }
+        </ul>
+      }
+    </div>
+    <div mat-dialog-actions class="actionsBox">
+      <button class="cancelBtn" mat-button (click)="onClose()">Fechar</button>
+    </div>

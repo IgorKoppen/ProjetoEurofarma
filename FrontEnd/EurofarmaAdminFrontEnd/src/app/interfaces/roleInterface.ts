@@ -9,3 +9,7 @@ export interface RoleInfo {
   id?: number;
   roleName?: string;
 }
+export interface RoleInsert {
+  departmentId: number;
+  name: string;
+}
