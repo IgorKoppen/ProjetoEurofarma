@@ -23,7 +23,7 @@ O chatbot é integrado utilizando a biblioteca `flowise-embed` e está configura
 
 1. Clone o repositório:
     ```sh
-    git clone https://github.com/SeuUsuario/ProjetoEuroFarma.git
+    git clone https://github.com/igorKoppen/ProjetoEuroFarma.git
     ```
 
 2. Navegue até o diretório do front-end do chatbot:
