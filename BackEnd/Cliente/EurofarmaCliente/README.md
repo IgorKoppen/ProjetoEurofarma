@@ -1,6 +1,6 @@
 # Projeto Eurofarma - Backend Cliente
 
-Este repositório contém o projeto backend do cliente Eurofarma, implementado utilizando Spring Boot. A API fornece endpoints para gerenciar quiz e treinamento, incluindo operações com usuários, permissões, departamentos, instrutores, entre outros componentes.
+Este repositório contém o projeto backend do cliente Eurofarma para treinamentos, implementado utilizando Spring Boot. A API fornece endpoints para gerenciar quiz e treinamento, incluindo operações com usuários, permissões, departamentos, instrutores, entre outros componentes.
 
 ## Índice
 
