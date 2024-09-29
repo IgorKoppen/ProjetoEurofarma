@@ -8,14 +8,13 @@ Este repositório contém o projeto backend do cliente Eurofarma para treinament
 - [Estrutura do Projeto](#estrutura-do-projeto)
 - [Configuração e Instalação](#configuração-e-instalação)
 - [Dependências](#dependências)
-- [Contribuição](#contribuição)
 - [Licença](#licença)
 
 ## Documentação da API
 
 A documentação da API pode ser acessada localmente e na web:
 
-- **Documentação Local:** [SwaggerDoc Local](https://github.com/IgorKoppen/ProjetoEuroFarma/blob/main/BackEnd/Cliente/EurofarmaCliente/SwaggerDoc/index.html)
+- **Documentação Local:** [SwaggerDoc Local](https://htmlpreview.github.io/?https://github.com/IgorKoppen/ProjetoEuroFarma/blob/main/BackEnd/Cliente/EurofarmaCliente/SwaggerDoc/index.html)
 - **Documentação Web:** [SwaggerHub](https://app.swaggerhub.com/apis/IGORPASQUALINO/projeto-euro_farma/v1.0.0)
 
 ## Estrutura do Projeto
