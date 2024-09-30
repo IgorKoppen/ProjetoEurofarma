@@ -1,4 +1,4 @@
-# Projeto EuroFarma
+# Projeto Eurofarma
 
 ## Descrição do Projeto
 
