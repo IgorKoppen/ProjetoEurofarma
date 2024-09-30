@@ -39,7 +39,6 @@ public class TrainingService {
     private final MessageService messageService;
     private final EmployeeRepository employeeRepository;
     private final DepartmentService departmentService;
-    private QuizRepository quizRepository;
 
     public TrainingService(TrainingRepository trainingRepository, TagService tagsService, InstructorService instructorService, EmployeeService employeeService, MessageService messageService, EmployeeRepository employeeRepository, DepartmentService departmentService) {
         this.trainingRepository = trainingRepository;
@@ -150,16 +149,16 @@ public class TrainingService {
     }
 
     @Transactional(readOnly = true)
-    public TrainingDTO findById(Long id) {
+    public TrainingDTO findById(Long id,DateTimeFormatter formatter) {
         Training training = trainingRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("No records found with id: " + id));
-        return toDTO(training);
+        return new TrainingDTO(training,formatter);
     }
 
     @Transactional(readOnly = true)
-    public Page<TrainingDTO> findWithPagination(Pageable pageable) {
+    public Page<TrainingDTO> findWithPagination(Pageable pageable,DateTimeFormatter formatter) {
         Page<Training> trainingPage = trainingRepository.findAll(pageable);
-        return trainingPage.map(this::toDTO);
+        return trainingPage.map(trainingDTO -> new TrainingDTO(trainingDTO, formatter));
     }
 
     @Transactional

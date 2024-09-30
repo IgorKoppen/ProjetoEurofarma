@@ -1,6 +1,5 @@
 package br.com.connectfy.EurofarmaCliente.controllers;
 
-import br.com.connectfy.EurofarmaCliente.dtos.ValidationResponseDTO;
 import br.com.connectfy.EurofarmaCliente.dtos.ValidationResultDTO;
 import br.com.connectfy.EurofarmaCliente.dtos.quiz.QuizDTO;
 import br.com.connectfy.EurofarmaCliente.dtos.quiz.QuizInsertDTO;

@@ -19,7 +19,6 @@ import {MatButtonModule} from '@angular/material/button';
 import { EmployeeSearchParams } from '../../interfaces/SearchParamsIntefaces';
 import { EmployeeService } from '../../services/employee.service';
 import { EmployeeinsertDialogComponent } from '../../components/employeeinsert-dialog/employeeinsert-dialog.component';
-import { EmployeeInsert } from '../../interfaces/employeeInterface';
 import { InvalidOperation } from '../../Errors/InvalidOperation';
 
 
