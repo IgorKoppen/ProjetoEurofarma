@@ -1,153 +1,214 @@
+<!-- markdownlint-disable MD030 -->
+
+<img width="100%" src="https://github.com/FlowiseAI/Flowise/blob/main/images/flowise.png?raw=true"></a>
+
 # Flowise - Build LLM Apps Easily
 
-Flowise é uma plataforma de arrastar e soltar para construir fluxos personalizados de LLM (Language Model). Ela facilita a criação de aplicações baseadas em modelos de linguagem, permitindo integração de várias fontes de dados e APIs.
+[![Release Notes](https://img.shields.io/github/release/FlowiseAI/Flowise)](https://github.com/FlowiseAI/Flowise/releases)
+[![Discord](https://img.shields.io/discord/1087698854775881778?label=Discord&logo=discord)](https://discord.gg/jbaHfsRVBW)
+[![Twitter Follow](https://img.shields.io/twitter/follow/FlowiseAI?style=social)](https://twitter.com/FlowiseAI)
+[![GitHub star chart](https://img.shields.io/github/stars/FlowiseAI/Flowise?style=social)](https://star-history.com/#FlowiseAI/Flowise)
+[![GitHub fork](https://img.shields.io/github/forks/FlowiseAI/Flowise?style=social)](https://github.com/FlowiseAI/Flowise/fork)
 
-Este projeto foi utilizado no desenvolvimento de fluxos dos chatbots de compliance e de dados da Eurofarma.
 
-## ⚡ Início Rápido
+<h3>Drag & drop UI to build your customized LLM flow</h3>
+<a href="https://github.com/FlowiseAI/Flowise">
+<img width="100%" src="https://github.com/FlowiseAI/Flowise/blob/main/images/flowise.gif?raw=true"></a>
 
-### Instalação e Execução
+## ⚡Quick Start
 
-1. **Instalar o Flowise**
+Download and Install [NodeJS](https://nodejs.org/en/download) >= 18.15.0
+
+1. Install Flowise
     ```bash
     npm install -g flowise
     ```
-2. **Iniciar o Flowise**
+2. Start Flowise
+
     ```bash
     npx flowise start
     ```
-    Com nome de usuário e senha:
+
+    With username & password
+
     ```bash
-    npx flowise start --FLOWISE_USERNAME=usuario --FLOWISE_PASSWORD=1234
+    npx flowise start --FLOWISE_USERNAME=user --FLOWISE_PASSWORD=1234
     ```
-3. **Acessar a Aplicação**
-    Abra [http://localhost:3000](http://localhost:3000).
+
+3. Open [http://localhost:3000](http://localhost:3000)
 
 ## 🐳 Docker
 
 ### Docker Compose
 
-1. Vá para a pasta `docker` no diretório raiz do projeto.
-2. Copie o arquivo `.env.example`, cole na mesma localização e renomeie para `.env`.
-3. Execute:
-    ```bash
-    docker compose up -d
-    ```
-4. Abra [http://localhost:3000](http://localhost:3000).
-5. Para parar os containers:
-    ```bash
-    docker compose stop
-    ```
+1. Go to `docker` folder at the root of the project
+2. Copy `.env.example` file, paste it into the same location, and rename to `.env`
+3. `docker compose up -d`
+4. Open [http://localhost:3000](http://localhost:3000)
+5. You can bring the containers down by `docker compose stop`
 
 ### Docker Image
 
-1. Construa a imagem localmente:
+1. Build the image locally:
     ```bash
     docker build --no-cache -t flowise .
     ```
-2. Execute a imagem:
+2. Run image:
+
     ```bash
     docker run -d --name flowise -p 3000:3000 flowise
     ```
-3. Pare a imagem:
+
+3. Stop image:
     ```bash
     docker stop flowise
     ```
 
-## 👨‍💻 Desenvolvimento
+## 👨‍💻 Developers
 
-O Flowise possui 3 módulos diferentes em um único repositório monolítico:
+Flowise has 3 different modules in a single mono repository.
 
-- `server`: Backend Node.js para servir lógicas de API.
-- `ui`: Frontend em React.
-- `components`: Integrações com nós de terceiros.
+-   `server`: Node backend to serve API logics
+-   `ui`: React frontend
+-   `components`: Third-party nodes integrations
+-   `api-documentation`: Auto-generated swagger-ui API docs from express
 
-### Pré-requisitos
+### Prerequisite
 
-- Instalar [PNPM](https://pnpm.io/installation)
+-   Install [PNPM](https://pnpm.io/installation)
     ```bash
     npm i -g pnpm
     ```
 
-### Configuração
+### Setup
 
-1. Clone o repositório:
+1.  Clone the repository
+
     ```bash
     git clone https://github.com/FlowiseAI/Flowise.git
     ```
-2. Entre na pasta do repositório:
+
+2.  Go into repository folder
+
     ```bash
     cd Flowise
     ```
-3. Instale todas as dependências de todos os módulos:
+
+3.  Install all dependencies of all modules:
+
     ```bash
     pnpm install
     ```
-4. Construa todo o código:
+
+4.  Build all the code:
+
     ```bash
     pnpm build
     ```
-5. Inicie a aplicação:
+
+    <details>
+    <summary>Exit code 134 (JavaScript heap out of memory)</summary>  
+      If you get this error when running the above `build` script, try increasing the Node.js heap size and run the script again:
+
+        export NODE_OPTIONS="--max-old-space-size=4096"
+        pnpm build
+
+    </details>
+
+5.  Start the app:
+
     ```bash
     pnpm start
     ```
-   Acesse a aplicação em [http://localhost:3000](http://localhost:3000).
 
-Para o build de desenvolvimento:
+    You can now access the app on [http://localhost:3000](http://localhost:3000)
 
-- Crie um arquivo `.env` e especifique `VITE_PORT` em `packages/ui`.
-- Crie um arquivo `.env` e especifique `PORT` em `packages/server`.
-- Execute:
-    ```bash
-    pnpm dev
-    ```
+6.  For development build:
 
-Qualquer mudança no código recarregará automaticamente a aplicação em [http://localhost:8080](http://localhost:8080).
+    -   Create `.env` file and specify the `VITE_PORT` (refer to `.env.example`) in `packages/ui`
+    -   Create `.env` file and specify the `PORT` (refer to `.env.example`) in `packages/server`
+    -   Run
 
-## 🔒 Autenticação
+        ```bash
+        pnpm dev
+        ```
 
-Para habilitar a autenticação a nível de aplicativo, adicione `FLOWISE_USERNAME` e `FLOWISE_PASSWORD` ao arquivo `.env` em `packages/server`:
+    Any code changes will reload the app automatically on [http://localhost:8080](http://localhost:8080)
+
+## 🔒 Authentication
+
+To enable app level authentication, add `FLOWISE_USERNAME` and `FLOWISE_PASSWORD` to the `.env` file in `packages/server`:
 
 ```
-FLOWISE_USERNAME=usuario
+FLOWISE_USERNAME=user
 FLOWISE_PASSWORD=1234
 ```
 
-## 🌱 Variáveis de Ambiente
+## 🌱 Env Variables
 
-Flowise suporta diferentes variáveis de ambiente para configurar sua instância. Você pode especificar as variáveis no arquivo `.env` dentro da pasta `packages/server`.
+Flowise support different environment variables to configure your instance. You can specify the following variables in the `.env` file inside `packages/server` folder. Read [more](https://github.com/FlowiseAI/Flowise/blob/main/CONTRIBUTING.md#-env-variables)
 
-## 📖 Documentação
+## 📖 Documentation
 
-Confira a documentação completa em [Flowise Docs](https://docs.flowiseai.com/).
+[Flowise Docs](https://docs.flowiseai.com/)
 
-## 🌐 Auto-Hospedagem
+## 🌐 Self Host
 
-Implante o Flowise auto-hospedado em sua infraestrutura existente. Suporte para várias [opções de deployment](https://docs.flowiseai.com/configuration/deployment):
+Deploy Flowise self-hosted in your existing infrastructure, we support various [deployments](https://docs.flowiseai.com/configuration/deployment)
 
-- [AWS](https://docs.flowiseai.com/deployment/aws)
-- [Azure](https://docs.flowiseai.com/deployment/azure)
-- [Digital Ocean](https://docs.flowiseai.com/deployment/digital-ocean)
-- [GCP](https://docs.flowiseai.com/deployment/gcp)
-- [Alibaba Cloud](https://computenest.console.aliyun.com/service/instance/create/default?type=user&ServiceName=Flowise社区版)
+-   [AWS](https://docs.flowiseai.com/deployment/aws)
+-   [Azure](https://docs.flowiseai.com/deployment/azure)
+-   [Digital Ocean](https://docs.flowiseai.com/deployment/digital-ocean)
+-   [GCP](https://docs.flowiseai.com/deployment/gcp)
+-   [Alibaba Cloud](https://computenest.console.aliyun.com/service/instance/create/default?type=user&ServiceName=Flowise社区版)
+-   <details>
+      <summary>Others</summary>
+
+    -   [Railway](https://docs.flowiseai.com/deployment/railway)
+
+        [![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/template/pn4G8S?referralCode=WVNPD9)
+
+    -   [Render](https://docs.flowiseai.com/deployment/render)
+
+        [![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://docs.flowiseai.com/deployment/render)
+
+    -   [HuggingFace Spaces](https://docs.flowiseai.com/deployment/hugging-face)
+
+        <a href="https://huggingface.co/spaces/FlowiseAI/Flowise"><img src="https://huggingface.co/datasets/huggingface/badges/raw/main/open-in-hf-spaces-sm.svg" alt="HuggingFace Spaces"></a>
+
+    -   [Elestio](https://elest.io/open-source/flowiseai)
+
+        [![Deploy on Elestio](https://elest.io/images/logos/deploy-to-elestio-btn.png)](https://elest.io/open-source/flowiseai)
+
+    -   [Sealos](https://cloud.sealos.io/?openapp=system-template%3FtemplateName%3Dflowise)
+
+        [![](https://raw.githubusercontent.com/labring-actions/templates/main/Deploy-on-Sealos.svg)](https://cloud.sealos.io/?openapp=system-template%3FtemplateName%3Dflowise)
+
+    -   [RepoCloud](https://repocloud.io/details/?app_id=29)
+
+        [![Deploy on RepoCloud](https://d16t0pc4846x52.cloudfront.net/deploy.png)](https://repocloud.io/details/?app_id=29)
+
+      </details>
 
 ## ☁️ Flowise Cloud
 
-Comece com o [Flowise Cloud](https://flowiseai.com/).
+[Get Started with Flowise Cloud](https://flowiseai.com/)
 
-## 🙋 Suporte
+## 🙋 Support
 
-Sinta-se à vontade para fazer perguntas, relatar problemas e solicitar novos recursos na [discussão](https://github.com/FlowiseAI/Flowise/discussions).
+Feel free to ask any questions, raise problems, and request new features in [discussion](https://github.com/FlowiseAI/Flowise/discussions)
 
-## 🙌 Contribuição
+## 🙌 Contributing
 
-Agradecimentos aos incríveis contribuidores do projeto:
+Thanks go to these awesome contributors
+
 <a href="https://github.com/FlowiseAI/Flowise/graphs/contributors">
 <img src="https://contrib.rocks/image?repo=FlowiseAI/Flowise" />
 </a>
 
-Veja o [guia de contribuição](CONTRIBUTING.md). Entre em contato conosco no [Discord](https://discord.gg/jbaHfsRVBW) se tiver dúvidas ou problemas.
+See [contributing guide](CONTRIBUTING.md). Reach out to us at [Discord](https://discord.gg/jbaHfsRVBW) if you have any questions or issues.
+[![Star History Chart](https://api.star-history.com/svg?repos=FlowiseAI/Flowise&type=Timeline)](https://star-history.com/#FlowiseAI/Flowise&Date)
 
-## 📄 Licença
+## 📄 License
 
-O código fonte deste repositório está disponível sob a [Licença Apache Versão 2.0](LICENSE.md).
+Source code in this repository is made available under the [Apache License Version 2.0](LICENSE.md).
