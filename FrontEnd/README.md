@@ -1,3 +1,1 @@
-# ProjetoEuroFarma
-
-##Repositorio dos frontends do projeto
+# Repositorio dos frontends do projeto
