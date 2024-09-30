@@ -2,7 +2,7 @@
 
 ## Descrição do Projeto
 
-O **Projeto EuroFarma** busca solucionar três desafios principais: gestão digital de treinamentos, transformação ética em ação e gestão de conhecimento com inteligência artificial. Este projeto utiliza várias tecnologias e ferramentas para criar soluções integradas e eficazes.
+O **Projeto Eurofarma** busca solucionar três desafios principais: gestão digital de treinamentos, transformação ética em ação e gestão de conhecimento com inteligência artificial. Este projeto utiliza várias tecnologias e ferramentas para criar soluções integradas e eficazes.
 
 ---
 
