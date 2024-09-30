@@ -13,7 +13,6 @@ public class TrainingDetailsDTO implements Serializable {
     private List<InstructorDetailsDTO> instructors;
     private List<EmployeeTrainingInfoDTO> attendanceList;
 
-    // Getters and Setters
 
     public List<InstructorDetailsDTO> getInstructors() {
         return instructors;

@@ -18,7 +18,7 @@ import { Training } from '../../interfaces/trainingInterface';
 @Component({
   selector: 'app-table-trainings',
   standalone: true,
-  imports: [MatFormFieldModule,MatButtonModule,MatIconModule,MatProgressSpinnerModule,DefaultBtnComponent, MatInputModule, MatTableModule, MatSortModule, MatPaginatorModule,TextColorPipe,DatePipe],
+  imports: [MatFormFieldModule,MatButtonModule,MatIconModule,MatProgressSpinnerModule,DefaultBtnComponent, MatInputModule, MatTableModule, MatSortModule, MatPaginatorModule,TextColorPipe],
   templateUrl: './table-trainings.component.html',
   styleUrl: './table-trainings.component.css'
 })
@@ -89,12 +89,6 @@ export class TableTrainingsComponent {
     this.sortChange.emit(event);
   }
 
-  convertStringToDate(dateString: string): Date {
-    const cleanDateString = dateString.split(',')[0];
-    const [datePart, timePart] = cleanDateString.split(' ');
-    const [day, month, year] = datePart.split('/');
-    const isoString = `20${year}-${month}-${day}T${timePart}`;
-    return new Date(isoString);
-  }
+ 
 }
 

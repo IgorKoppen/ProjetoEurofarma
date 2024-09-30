@@ -81,7 +81,7 @@ public class Training {
         this.description = dto.getDescription();
         this.tags = dto.getTags().stream().map(Tag::new).collect(Collectors.toSet());
         this.departments = dto.getDepartments().stream().map(Department::new).collect(Collectors.toSet());
-        this.hasQuiz = dto.getHasQuiz();
+        this.hasQuiz = dto.isHasQuiz();
         if(dto.getQuiz() != null){
             this.quiz = new Quiz(dto.getQuiz());
         }

@@ -1,6 +1,5 @@
 package br.com.connectfy.EurofarmaCliente.dtos.role;
 
-import br.com.connectfy.EurofarmaCliente.dtos.department.DepartmentDTO;
 import br.com.connectfy.EurofarmaCliente.dtos.employee.EmployeeInfoDTO;
 import br.com.connectfy.EurofarmaCliente.models.Role;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;

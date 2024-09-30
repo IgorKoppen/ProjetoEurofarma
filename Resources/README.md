@@ -1,6 +1,6 @@
 # Resources
 
-Esta pasta contém os recursos utilizados no ProjetoEuroFarma. Abaixo está uma descrição detalhada do propósito de cada subpasta:
+Esta pasta contém os recursos utilizados no ProjetoEurofarma. Abaixo está uma descrição detalhada do propósito de cada subpasta:
 
 ## DiagramaDeEngenharia
 
