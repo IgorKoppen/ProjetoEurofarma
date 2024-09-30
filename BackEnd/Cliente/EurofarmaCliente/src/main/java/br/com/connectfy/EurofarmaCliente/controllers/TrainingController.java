@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -60,7 +61,7 @@ public class TrainingController {
     }
 
     @PreAuthorize("hasAnyAuthority('admin')")
-    @Operation(summary = "Consulta treinamentos com paginação", description = "Retorna treinamentos com paginação",
+    @Operation(summary = "Consulta treinamentos com paginação. Um parâmetro opcional de máscara de formatação de data pode ser fornecido.", description = "Retorna treinamentos com paginação",
             tags = {"Training"},
             responses = {
                     @ApiResponse(description = "Success", responseCode = "200", content = @Content()),
@@ -71,14 +72,17 @@ public class TrainingController {
     @GetMapping(value = "/pagination", produces = "application/json")
     public ResponseEntity<PagedModel<EntityModel<TrainingDTO>>> findWithPagination(
             @PageableDefault(size = 10, direction = Sort.Direction.ASC)
-            Pageable pageable,@Parameter(hidden = true) PagedResourcesAssembler<TrainingDTO> assembler) {
-        Page<TrainingDTO> trainingDTOPage = trainingService.findWithPagination(pageable);
+            Pageable pageable,@Parameter(hidden = true) PagedResourcesAssembler<TrainingDTO> assembler,
+            @RequestParam(value = "formatter", required = false) String formatterStr) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(
+                formatterStr != null ? formatterStr : "dd/MM/yyyy HH:mm:ss");
+        Page<TrainingDTO> trainingDTOPage = trainingService.findWithPagination(pageable,formatter);
         PagedModel<EntityModel<TrainingDTO>> pagedModel = assembler.toModel(trainingDTOPage);
         return ResponseEntity.ok(pagedModel);
     }
 
     @PreAuthorize("hasAnyAuthority('admin')")
-    @Operation(summary = "Consulta um treinamento ", description = "Retorna treinamento com base no id.",
+    @Operation(summary = "Consulta um treinamento. Um parâmetro opcional de máscara de formatação de data pode ser fornecido.", description = "Retorna treinamento com base no id.",
             tags = {"Training"},
             responses = {
                     @ApiResponse(description = "Success", responseCode = "200", content = @Content()),
@@ -88,8 +92,10 @@ public class TrainingController {
                     @ApiResponse(description = "Not Found", responseCode = "404", content = @Content)
             })
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<TrainingDTO> findById(@PathVariable Long id) {
-        TrainingDTO trainingDTO = trainingService.findById(id);
+    public ResponseEntity<TrainingDTO> findById(@PathVariable Long id, @RequestParam(value = "formatter", required = false) String formatterStr) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(
+                formatterStr != null ? formatterStr : "dd/MM/yyyy HH:mm:ss");
+        TrainingDTO trainingDTO = trainingService.findById(id,formatter);
         return ResponseEntity.ok(trainingDTO);
     }
 

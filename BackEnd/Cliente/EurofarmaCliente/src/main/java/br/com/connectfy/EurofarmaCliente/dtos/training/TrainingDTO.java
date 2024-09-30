@@ -50,8 +50,10 @@ public class TrainingDTO implements Serializable {
 
     private QuizDTO quiz;
 
+
+
     public TrainingDTO(Training entity) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yy HH:mm:ss,SSS");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
         this.id = entity.getId();
         this.name = entity.getName();
         this.code = entity.getCode();
@@ -68,6 +70,24 @@ public class TrainingDTO implements Serializable {
             this.quiz = new QuizDTO(entity.getQuiz());
         }
     }
+    public TrainingDTO(Training entity,DateTimeFormatter formatter) {
+        this.id = entity.getId();
+        this.name = entity.getName();
+        this.code = entity.getCode();
+        this.creationDate = formatter.format(entity.getCreationDate());
+        this.closingDate =  formatter.format(entity.getClosingDate());
+        this.isOpened = LocalDateTime.now().isBefore(entity.getClosingDate());
+        this.password = entity.getPassword();
+        this.description = entity.getDescription();
+        this.instructorsInfo = entity.getInstructors().stream().map(InstructorInfoDTO::new).toList();
+        this.tags = entity.getTags().stream().map(TagDTO::new).toList();
+        this.departments = entity.getDepartments().stream().map(DepartmentDTO::new).toList();
+        this.hasQuiz = entity.getHasQuiz();
+        if(entity.getQuiz() != null) {
+            this.quiz = new QuizDTO(entity.getQuiz());
+        }
+    }
+
 
     public Long getId() {
         return id;
