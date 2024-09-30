@@ -6,6 +6,8 @@ import br.com.connectfy.EurofarmaCliente.dtos.quiz.QuizDTO;
 import br.com.connectfy.EurofarmaCliente.dtos.tag.TagDTO;
 import br.com.connectfy.EurofarmaCliente.models.Training;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -17,7 +19,9 @@ public class TrainingDTO {
     private Long id;
     private String name;
     private String code;
+    @JsonProperty("creation_date")
     private String creationDate;
+    @JsonProperty("closing_date")
     private String closingDate;
     private boolean isOpened;
     private String password;
