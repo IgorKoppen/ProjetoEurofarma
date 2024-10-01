@@ -38,7 +38,7 @@
     <ng-container matColumnDef="actions">
       <th mat-header-cell *matHeaderCellDef></th>
       <td mat-cell *matCellDef="let row">
-        <app-delete-btn (deleteCallBack)="deleteDoc(row.id)"  [deleteId]="row.id"  [dialogTitle]="'Confirmar exclusão'" [dialogDescription]="'Você tem certeza que deseja deletar o esse documento com id '+ row.id +' ?'"></app-delete-btn>    
+        <app-delete-btn (deleteCallBack)="deleteDoc(row.id)"  [deleteId]="row.id"  [dialogTitle]="'Confirmar exclusão'" [dialogDescription]="'Você tem certeza que deseja deletar esse documento com id '+ row.id +' ?'"></app-delete-btn>    
      
       </td>
     </ng-container>

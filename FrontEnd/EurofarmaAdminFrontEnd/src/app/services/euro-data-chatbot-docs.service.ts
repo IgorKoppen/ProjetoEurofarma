@@ -14,11 +14,11 @@ export class EuroDataChatbotDocsService {
 
   private headers = new HttpHeaders({
     'Accept': 'application/json',
-    'x-api-key': environment.euroDataApi.api_key,
+    'x-api-key': environment.euroDataApi.api_key
   });
 
   private headersDelete = new HttpHeaders({
-    'x-api-key': environment.euroDataApi.api_key,
+    'x-api-key': environment.euroDataApi.api_key
   });
 
   findAllDocs(): Observable<DocumentApiResponse> {

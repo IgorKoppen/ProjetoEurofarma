@@ -6,7 +6,8 @@ import { catchError, map, Observable, throwError } from 'rxjs';
 import { AuthException } from '../Errors/AuthError';
 import { environment } from '../../environments/environment.development';
 import { deleteCookie, getCookie } from '../util/cookieFunction';
-import { TokenResponse } from '../interfaces/TokenResponseInterface';
+import { TokenResponse } from '../interfaces/tokenResponseInterface';
+
 
 
 
@@ -22,7 +23,7 @@ export class AuthService {
 
   private headers = new HttpHeaders({
     'Accept': 'application/json',
-
+    'ngrok-skip-browser-warning':'banana'
   });
 
   signin(userCredential: UserCredential): Observable<boolean> {
