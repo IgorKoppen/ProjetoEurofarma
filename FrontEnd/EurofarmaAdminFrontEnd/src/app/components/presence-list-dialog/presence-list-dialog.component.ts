@@ -118,6 +118,26 @@ export class PresenceListDialogComponent {
       yPosition += 10;
     });
 
+    if (this.data.trainingData.hasQuiz && this.data.trainingData.quiz) {
+      doc.setFontSize(14);
+      yPosition += 10;
+      doc.text('Quiz', margin, yPosition);
+      yPosition += 10;
+      doc.setFontSize(12);
+      const quizData = [
+        { label: 'Nome', value: this.data.trainingData.quiz.nome },
+        { label: 'Descrição', value: this.data.trainingData.quiz.description },
+        { label: 'Nota Mínima', value: this.data.trainingData.quiz.notaMinima },
+        { label: 'Número de Questões', value: this.data.trainingData.quiz.questionsNumber }
+      ];
+
+      quizData.forEach((item) => {
+        doc.text(`${item.label}: ${item.value}`, margin, yPosition);
+        yPosition += 10;
+      });
+    }
+
+
     doc.addPage();
     yPosition = 20;
     doc.setFontSize(20);

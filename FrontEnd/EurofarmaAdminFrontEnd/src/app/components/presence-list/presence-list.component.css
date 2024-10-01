@@ -19,3 +19,16 @@
   .disable{
     display: none;
   }
+  .signature {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    max-width: 280px;
+  }
+  
+  .signature img {
+    max-width: 280px; 
+    max-height: 150px; 
+    width: 100%; 
+    display: block; 
+  
+  }
