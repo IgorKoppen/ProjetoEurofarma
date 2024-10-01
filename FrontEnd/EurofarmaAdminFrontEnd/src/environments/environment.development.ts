@@ -8,6 +8,6 @@ export const environment = {
         corpus_key: "Eurodata"
     },
     backEndApiBase:{
-        url: "http://localhost:8080"
+        url: "https://closing-lively-woodcock.ngrok-free.app"
     },
 };
