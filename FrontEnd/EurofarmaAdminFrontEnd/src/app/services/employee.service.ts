@@ -6,7 +6,8 @@ import { Observable } from 'rxjs';
 import { EmployeePaginationResponse } from '../interfaces/employeePagination';
 import { EmployeeSearchParams } from '../interfaces/SearchParamsIntefaces';
 import { Employee, EmployeeInsert, EmployeeUpdate } from '../interfaces/employeeInterface';
-import { EmployeeRegistrationResponse } from '../interfaces/MassInsertResponseInterface';
+import { EmployeeRegistrationResponse } from '../interfaces/employeeInsertInMassInterface';
+
 
 
 

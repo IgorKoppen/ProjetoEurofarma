@@ -1,6 +1,5 @@
 import { Component, Input, Output } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
-import { EventEmitter } from 'stream';
 
 @Component({
   selector: 'app-default-btn',

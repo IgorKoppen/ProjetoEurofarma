@@ -16,7 +16,7 @@ import { NgClass } from '@angular/common';
 import { ErrorDialogComponent } from '../error-dialog/error-dialog.component';
 import { EmployeeInsert } from '../../interfaces/employeeInterface';
 import { EmployeeService } from '../../services/employee.service';
-import { EmployeeRegistrationResponse } from '../../interfaces/MassInsertResponseInterface';
+import { EmployeeRegistrationResponse } from '../../interfaces/employeeInsertInMassInterface';
 import { BulkInsertDialogComponent } from '../bulk-insert-dialog/bulk-insert-dialog.component';
 import { InsertDepartmentDialogComponent } from '../insert-department-dialog/insert-department-dialog.component';
 import { MatIcon } from '@angular/material/icon';

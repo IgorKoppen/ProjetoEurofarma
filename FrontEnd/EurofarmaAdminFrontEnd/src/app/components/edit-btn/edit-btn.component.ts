@@ -1,7 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { Employee } from '../../interfaces/employeeInterface';
 
 @Component({
   selector: 'app-edit-btn',
