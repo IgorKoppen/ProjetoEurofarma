@@ -17,7 +17,7 @@
         <td mat-cell *matCellDef="let instructor"> {{instructor.surname}} </td>
       </ng-container>
       <ng-container matColumnDef="employeeRegistration">
-        <th mat-header-cell *matHeaderCellDef> Registro do funcionário </th>
+        <th mat-header-cell *matHeaderCellDef > Registro do funcionário </th>
         <td mat-cell *matCellDef="let instructor"> {{instructor.employeeRegistration}} </td>
       </ng-container>
       <tr mat-header-row *matHeaderRowDef="displayedColumnsInstructors"></tr>
@@ -52,7 +52,7 @@
 
       <ng-container matColumnDef="signature">
         <th mat-header-cell *matHeaderCellDef> Assinatura </th>
-        <td mat-cell *matCellDef="let row"> <img [src]="'data:image/png;base64,' + row.signature" alt="Signature" draggable="false" />
+        <td mat-cell *matCellDef="let row" class="signature"> <img [src]="'data:image/png;base64,' + row.signature" alt="Signature" draggable="false" />
         </td>
       </ng-container>
 

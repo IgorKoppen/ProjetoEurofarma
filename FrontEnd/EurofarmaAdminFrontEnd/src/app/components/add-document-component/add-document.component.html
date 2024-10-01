@@ -10,10 +10,16 @@
                 <p>{{fileErrorMessage}}</p>
             }
         </div>
-        <div class="actionBox">   
+       <div>
+        @if(isLoading){
+            <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+          }
+          <div class="actionBox">
             <a [routerLink]="[linkBack]"><p>Voltar</p> </a>
             <input id="sendBtn" type="submit" value="Enviar"  (click)="sendForm($event)">
         </div>
+       </div>
+     
     </form>
  
 </div>

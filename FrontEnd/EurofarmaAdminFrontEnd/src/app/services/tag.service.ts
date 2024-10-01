@@ -13,7 +13,8 @@ export class TagService {
   private accessToken = getCookie('accessToken') || ""
   private AuthorizationHeader = new HttpHeaders({
     'Accept': 'application/json',
-    'Authorization': `Bearer ${this.accessToken}`
+    'Authorization': `Bearer ${this.accessToken}`,
+        'ngrok-skip-browser-warning':'banana'
   });
 
   constructor(private http: HttpClient) {}

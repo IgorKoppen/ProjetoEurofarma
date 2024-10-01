@@ -11,9 +11,9 @@
     
       <nav [className]="isOpen ? 'navigation' : 'navigationMinimized'">
         <ul>
-          <a [className]="isOpen ? 'titleLink' : 'titleLinkMinimized'" href="#" >
+          <a [className]="isOpen ? 'titleLink' : 'titleLinkMinimized'" [routerLink]="['/admin/treinamentos']" >
             <li class="iconBox">
-              <mat-icon [class]="isOpen ?  'sidebarIcon' : 'sidebarIconMinimized'"  [routerLink]="['/admin/treinamentos']">assignment</mat-icon>
+              <mat-icon [class]="isOpen ?  'sidebarIcon' : 'sidebarIconMinimized'"  >assignment</mat-icon>
               @if(isOpen){
              Treinamentos
               }

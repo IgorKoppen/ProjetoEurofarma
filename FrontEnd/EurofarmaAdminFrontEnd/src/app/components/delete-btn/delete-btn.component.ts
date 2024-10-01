@@ -22,7 +22,7 @@ export class DeleteBtnComponent {
  
   openDialog( enterAnimationDuration: string, exitAnimationDuration: string): void {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-      width: '300px',
+      width: '350px',
       data: { 
         deleteId: this.deleteId,
         title: this.dialogTitle ,

@@ -9,7 +9,7 @@ interface Answer {
 interface Question {
     id: number;
     question: string;
-    answers: Answer[];
+    answers?: Answer[];
 }
 
 
@@ -19,7 +19,7 @@ interface Quiz {
     description: string;
     notaMinima: number;
     questionsNumber: number;
-    questions: Question[];
+    questions?: Question[];
 }
 
 export {Quiz}
